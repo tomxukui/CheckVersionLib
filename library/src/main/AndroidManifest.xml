@@ -24,9 +24,11 @@
             android:authorities="${applicationId}.versionProvider"
             android:exported="false"
             android:grantUriPermissions="true">
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/versionchecklib_file_paths" />
+
         </provider>
 
         <activity
@@ -55,7 +57,7 @@
         <activity
             android:name=".v2.ui.DownloadFailedActivity"
             android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme"></activity>
+            android:theme="@style/versionCheckLibvtransparentTheme" />
     </application>
 
 </manifest>
