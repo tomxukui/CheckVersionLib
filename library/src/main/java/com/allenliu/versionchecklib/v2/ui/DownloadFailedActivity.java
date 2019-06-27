@@ -85,7 +85,7 @@ public class DownloadFailedActivity extends AllenBaseActivity implements DialogI
                 "");
         cancelHandler();
         checkForceUpdate();
-        AllenVersionChecker.getInstance().cancelAllMission(this);
+        AllenVersionChecker.getInstance().cancelAllMission();
         finish();
     }
 

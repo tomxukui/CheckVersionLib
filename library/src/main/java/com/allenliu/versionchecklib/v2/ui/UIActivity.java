@@ -180,7 +180,7 @@ public class UIActivity extends AllenBaseActivity implements DialogInterface.OnC
     public void onCancel(DialogInterface dialogInterface) {
         cancelHandler();
         checkForceUpdate();
-        AllenVersionChecker.getInstance().cancelAllMission(this);
+        AllenVersionChecker.getInstance().cancelAllMission();
         finish();
     }
 

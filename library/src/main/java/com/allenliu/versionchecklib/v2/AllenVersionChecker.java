@@ -51,11 +51,11 @@ public class AllenVersionChecker {
     /**
      * 取消所有请求
      */
-    public void cancelAllMission(Context context) {
+    public void cancelAllMission() {
         AllenHttp.getHttpClient().dispatcher().cancelAll();
-        Intent intent = new Intent(context, VersionService.class);
+        Intent intent = new Intent(mContext, VersionService.class);
         VersionService.builder = null;
-        context.getApplicationContext().stopService(intent);
+        mContext.stopService(intent);
     }
 
 }

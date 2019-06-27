@@ -75,7 +75,7 @@ public class V2Activity extends AppCompatActivity {
                 sendRequest();
                 break;
             case R.id.cancelBtn:
-                AllenVersionChecker.getInstance().cancelAllMission(this);
+                AllenVersionChecker.getInstance().cancelAllMission();
                 break;
         }
     }
@@ -278,6 +278,6 @@ public class V2Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AllenVersionChecker.getInstance().cancelAllMission(this);
+        AllenVersionChecker.getInstance().cancelAllMission();
     }
 }

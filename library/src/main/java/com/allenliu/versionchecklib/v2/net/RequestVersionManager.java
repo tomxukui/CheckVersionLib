@@ -81,7 +81,7 @@ public class RequestVersionManager {
                                 @Override
                                 public void run() {
                                     requestVersionListener.onRequestVersionFailure(response.message());
-                                    AllenVersionChecker.getInstance().cancelAllMission(context);
+                                    AllenVersionChecker.getInstance().cancelAllMission();
                                 }
                             });
                         }
@@ -92,7 +92,7 @@ public class RequestVersionManager {
                             public void run() {
 
                                 requestVersionListener.onRequestVersionFailure(e.getMessage());
-                                AllenVersionChecker.getInstance().cancelAllMission(context);
+                                AllenVersionChecker.getInstance().cancelAllMission();
                             }
                         });
 

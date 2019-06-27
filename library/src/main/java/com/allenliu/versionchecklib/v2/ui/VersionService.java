@@ -128,7 +128,7 @@ public class VersionService extends Service {
                 }
             }
         } else {
-            AllenVersionChecker.getInstance().cancelAllMission(getApplicationContext());
+            AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
 
@@ -206,7 +206,7 @@ public class VersionService extends Service {
             downloadUrl = builder.getVersionBundle().getDownloadUrl();
         }
         if (downloadUrl == null) {
-            AllenVersionChecker.getInstance().cancelAllMission(getApplicationContext());
+            AllenVersionChecker.getInstance().cancelAllMission();
             throw new RuntimeException("you must set a download url for download function using");
         }
         ALog.e("downloadPath:" + downloadPath);
@@ -250,7 +250,7 @@ public class VersionService extends Service {
                     }
                     notificationHelper.showDownloadFailedNotification();
                 } else {
-                    AllenVersionChecker.getInstance().cancelAllMission(getApplicationContext());
+                    AllenVersionChecker.getInstance().cancelAllMission();
                 }
 
             }
@@ -316,7 +316,7 @@ public class VersionService extends Service {
             });
 
         } else {
-            AllenVersionChecker.getInstance().cancelAllMission(this);
+            AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
 
