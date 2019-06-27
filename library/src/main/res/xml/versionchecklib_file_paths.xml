@@ -3,10 +3,14 @@
 
     <external-path
         name="external_files"
-        path="." />
+        path="/" />
+
+    <external-files-path
+        name="ext_pub"
+        path="/" />
 
     <root-path
         name="root_path"
-        path="." />
+        path="/" />
 
 </paths>

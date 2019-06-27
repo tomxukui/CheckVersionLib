@@ -167,7 +167,7 @@ public class V2Activity extends AppCompatActivity {
                 break;
         }
         //自定义下载路径
-        builder.setDownloadAPKPath(Environment.getExternalStorageDirectory() + "/ALLEN/AllenVersionPath2/");
+        builder.setDownloadAPKPath(getExternalFilesDir("AllenVersionPath2").getAbsolutePath() + "/");
         String address = etAddress.getText().toString();
         if (address != null && !"".equals(address))
             builder.setDownloadAPKPath(address);
