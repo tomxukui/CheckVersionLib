@@ -5,20 +5,19 @@ package com.allenliu.versionchecklib.v2.builder;
  */
 
 public class NotificationBuilder {
+
     private int icon;
     private String contentTitle;
     private String ticker;
     private String contentText;
     private boolean isRingtone;
 
-    public static NotificationBuilder create(){
+    public static NotificationBuilder create() {
         return new NotificationBuilder();
     }
 
     private NotificationBuilder() {
-
-//        icon = R.mipmap.ic_launcher;
-        isRingtone = true;
+        isRingtone = false;
     }
 
     public int getIcon() {
@@ -65,4 +64,5 @@ public class NotificationBuilder {
         isRingtone = ringtone;
         return this;
     }
+
 }
