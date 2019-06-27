@@ -3,12 +3,12 @@ package com.allenliu.versionchecklib.v2.builder;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 import com.allenliu.versionchecklib.callback.APKDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.utils.FileHelper;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomInstallListener;
@@ -17,13 +17,8 @@ import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.allenliu.versionchecklib.v2.net.RequestVersionManager;
 import com.allenliu.versionchecklib.v2.ui.VersionService;
 
-import org.greenrobot.eventbus.EventBus;
-
-/**
- * Created by allenliu on 2018/1/12.
- */
-
 public class DownloadBuilder {
+
     private RequestVersionBuilder requestVersionBuilder;
     private boolean isSilentDownload;
     private String downloadAPKPath;
@@ -46,28 +41,22 @@ public class DownloadBuilder {
     private Integer newestVersionCode;
     private String apkName;
 
-
-    public DownloadBuilder() {
-        throw new RuntimeException("can not be instantiated from outside");
-    }
-
-    private void initialize() {
-        isSilentDownload = false;
-        downloadAPKPath = FileHelper.getDownloadApkCachePath();
-        isForceRedownload = false;
-        isShowDownloadingDialog = true;
-        isShowNotification = true;
-        isDirectDownload = false;
-        isShowDownloadFailDialog = true;
-        notificationBuilder = NotificationBuilder.create();
-    }
-
     public DownloadBuilder(RequestVersionBuilder requestVersionBuilder, UIData versionBundle) {
         this.requestVersionBuilder = requestVersionBuilder;
         this.versionBundle = versionBundle;
         initialize();
     }
 
+    private void initialize() {
+        isSilentDownload = false;
+        downloadAPKPath = FileHelper.getDownloadApkCachePath();
+        isForceRedownload = true;
+        isShowDownloadingDialog = true;
+        isShowNotification = true;
+        isDirectDownload = false;
+        isShowDownloadFailDialog = true;
+        notificationBuilder = NotificationBuilder.create();
+    }
 
     public ForceUpdateListener getForceUpdateListener() {
         return forceUpdateListener;
@@ -116,7 +105,6 @@ public class DownloadBuilder {
         this.customInstallListener = customDownloadInstallListener;
         return this;
     }
-
 
     public DownloadBuilder setSilentDownload(boolean silentDownload) {
         isSilentDownload = silentDownload;
@@ -167,7 +155,6 @@ public class DownloadBuilder {
         return this;
     }
 
-
     public boolean isSilentDownload() {
         return isSilentDownload;
     }
@@ -199,7 +186,6 @@ public class DownloadBuilder {
     public APKDownloadListener getApkDownloadListener() {
         return apkDownloadListener;
     }
-
 
     public CustomDownloadFailedListener getCustomDownloadFailedListener() {
         return customDownloadFailedListener;
@@ -247,38 +233,42 @@ public class DownloadBuilder {
         return this;
     }
 
-    public void executeMission(Context context) {
+    public void executeMission() {
+        Context context = AllenVersionChecker.getInstance().getContext();
+
         if (apkName == null) {
-            apkName = context.getApplicationContext().getPackageName();
+            apkName = context.getPackageName();
         }
-        if(notificationBuilder.getIcon()==0){
-            final PackageManager pm=context.getPackageManager();
+
+        if (notificationBuilder.getIcon() == 0) {
+            final PackageManager pm = context.getPackageManager();
             final ApplicationInfo applicationInfo;
             try {
                 applicationInfo = pm.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-                final int appIconResId=applicationInfo.icon;
+
+                final int appIconResId = applicationInfo.icon;
                 notificationBuilder.setIcon(appIconResId);
+
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        if(checkWhetherNeedRequestVersion()){
-            RequestVersionManager.getInstance().requestVersion(this,context);
-        }else{
-          download(context);
-        }
-        context=null;
 
+        if (checkWhetherNeedRequestVersion()) {
+            RequestVersionManager.getInstance().requestVersion(this);
+
+        } else {
+            download();
+        }
     }
-    public void download(Context context){
+
+    public void download() {
         VersionService.builder = this;
-        VersionService.enqueueWork(context.getApplicationContext());
+        VersionService.enqueueWork(AllenVersionChecker.getInstance().getContext());
     }
-    private   boolean checkWhetherNeedRequestVersion() {
-        if (getRequestVersionBuilder() != null)
-            return true;
-        else
-            return false;
+
+    private boolean checkWhetherNeedRequestVersion() {
+        return getRequestVersionBuilder() != null;
     }
 
 }

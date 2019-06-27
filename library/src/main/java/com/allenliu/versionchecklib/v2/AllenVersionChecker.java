@@ -34,6 +34,10 @@ public class AllenVersionChecker {
         mContext = context;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     /**
      * 请求更新接口
      */

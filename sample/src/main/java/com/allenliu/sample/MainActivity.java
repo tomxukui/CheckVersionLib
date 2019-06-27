@@ -13,7 +13,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
     }
 
     private void initView() {
@@ -126,12 +124,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setShowDownloadFailDialog(false);
         }
 
-        builder.setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel() {
-                Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_SHORT).show();
-            }
-        });
+        builder.setOnCancelListener(() -> Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_SHORT).show());
 
         //更新界面选择
         switch (radioGroup.getCheckedRadioButtonId()) {
@@ -164,22 +157,17 @@ public class MainActivity extends AppCompatActivity {
         //自定义下载路径
         builder.setDownloadAPKPath(getExternalFilesDir("AllenVersionPath2").getAbsolutePath() + "/");
         String address = etAddress.getText().toString();
-        if (address != null && !"".equals(address))
+        if (address != null && !"".equals(address)) {
             builder.setDownloadAPKPath(address);
-//        builder.setShowNotification(false);
-
-//        builder.setApkName("HAHA");
-//builder.setNewestVersionCode(10);
+        }
         builder.setOnCancelListener(() -> {
             Toast.makeText(MainActivity.this, "Cancel Hanlde", Toast.LENGTH_SHORT).show();
         });
-        builder.executeMission(this);
+        builder.executeMission();
     }
 
     /**
      * 务必用库传回来的context 实例化你的dialog
-     *
-     * @return
      */
     private CustomDownloadFailedListener createCustomDownloadFailedDialog() {
         return (context, versionBundle) -> {
