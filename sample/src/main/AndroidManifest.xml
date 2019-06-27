@@ -17,20 +17,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".v1.V1Activity" />
-
-        <service
-            android:name=".v1.DemoService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity
-            android:name=".v1.CustomVersionDialogActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
-        <activity android:name=".v2.V2Activity" />
-
     </application>
 
 </manifest>
