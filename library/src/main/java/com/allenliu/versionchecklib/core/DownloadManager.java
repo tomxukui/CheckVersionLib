@@ -19,6 +19,7 @@ import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.core.http.FileCallBack;
 import com.allenliu.versionchecklib.utils.AppUtils;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 
 import java.io.File;
 
@@ -42,30 +43,32 @@ public class DownloadManager {
             return;
         }
 
-        String downloadPath = versionParams.getDownloadAPKPath() + AllenChecker.getGlobalContext().getString(R.string.versionchecklib_download_apkname, AllenChecker.getGlobalContext().getPackageName());
+        final Context context = AllenVersionChecker.getInstance().getContext();
+        File downloadFile = new File(versionParams.getDownloadAPKPath(), context.getString(R.string.versionchecklib_download_apkname, context.getPackageName()));
+        String downloadPath = downloadFile.getAbsolutePath();
         //静默下载也判断本地是否有缓存
         if (versionParams.isSilentDownload()) {
             if (!versionParams.isForceRedownload()) {
                 //判断本地文件是否存在
-                if (checkAPKIsExists(AllenChecker.getGlobalContext(), downloadPath)) {
+                if (checkAPKIsExists(context, downloadPath)) {
                     if (listener != null)
                         listener.onCheckerDownloadSuccess(new File(downloadPath));
                     return;
                 }
-                silentDownloadAPK(AllenChecker.getGlobalContext(), url, versionParams, listener);
+                silentDownloadAPK(context, url, versionParams, listener);
 
             } else {
-                silentDownloadAPK(AllenChecker.getGlobalContext(), url, versionParams, listener);
+                silentDownloadAPK(context, url, versionParams, listener);
             }
             return;
         }
 
         if (!versionParams.isForceRedownload()) {
             //判断本地文件是否存在
-            if (checkAPKIsExists(AllenChecker.getGlobalContext(), downloadPath)) {
+            if (checkAPKIsExists(context, downloadPath)) {
                 if (listener != null)
                     listener.onCheckerDownloadSuccess(new File(downloadPath));
-                AppUtils.installApk(AllenChecker.getGlobalContext(), new File(downloadPath));
+                AppUtils.installApk(context, new File(downloadPath));
                 return;
 
             }
@@ -76,14 +79,14 @@ public class DownloadManager {
         NotificationCompat.Builder builder = null;
         NotificationManager manager = null;
         if (versionParams.isShowNotification()) {
-            manager = (NotificationManager) AllenChecker.getGlobalContext().getSystemService(NOTIFICATION_SERVICE);
-            builder = createNotification(AllenChecker.getGlobalContext());
+            manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            builder = createNotification(context);
             manager.notify(0, builder.build());
         }
         final NotificationCompat.Builder finalBuilder = builder;
         final NotificationManager finalManager = manager;
         Request request = new Request.Builder().url(url).build();
-        AllenHttp.getHttpClient().newCall(request).enqueue(new FileCallBack(versionParams.getDownloadAPKPath(), AllenChecker.getGlobalContext().getString(R.string.versionchecklib_download_apkname, AllenChecker.getGlobalContext().getPackageName())) {
+        AllenHttp.getHttpClient().newCall(request).enqueue(new FileCallBack(versionParams.getDownloadAPKPath(), context.getString(R.string.versionchecklib_download_apkname, context.getPackageName())) {
             @Override
             public void onSuccess(File file, Call call, Response response) {
                 listener.onCheckerDownloadSuccess(file);
@@ -93,7 +96,7 @@ public class DownloadManager {
 
                     Uri uri;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        uri = VersionFileProvider.getUriForFile(AllenChecker.getGlobalContext(), AllenChecker.getGlobalContext().getPackageName() + ".versionProvider", file);
+                        uri = VersionFileProvider.getUriForFile(context, context.getPackageName() + ".versionProvider", file);
                         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                     } else {
@@ -102,15 +105,15 @@ public class DownloadManager {
 
                     //设置intent的类型
                     i.setDataAndType(uri, "application/vnd.android.package-archive");
-                    PendingIntent pendingIntent = PendingIntent.getActivity(AllenChecker.getGlobalContext(), 0, i, 0);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
                     finalBuilder.setContentIntent(pendingIntent);
-                    finalBuilder.setContentText(AllenChecker.getGlobalContext().getString(R.string.versionchecklib_download_finish));
+                    finalBuilder.setContentText(context.getString(R.string.versionchecklib_download_finish));
                     finalBuilder.setProgress(100, 100, false);
                     finalManager.cancelAll();
                     finalManager.notify(0, finalBuilder.build());
                 }
 
-                AppUtils.installApk(AllenChecker.getGlobalContext(), file);
+                AppUtils.installApk(context, file);
             }
 
             @Override
@@ -122,7 +125,7 @@ public class DownloadManager {
                     lastProgress = currentProgress;
                     if (versionParams.isShowNotification() && !isDownloadSuccess) {
                         finalBuilder.setContentIntent(null);
-                        finalBuilder.setContentText(String.format(AllenChecker.getGlobalContext().getString(R.string.versionchecklib_download_progress), lastProgress));
+                        finalBuilder.setContentText(String.format(context.getString(R.string.versionchecklib_download_progress), lastProgress));
                         finalBuilder.setProgress(100, lastProgress, false);
                         finalManager.notify(0, finalBuilder.build());
                     }
@@ -132,13 +135,13 @@ public class DownloadManager {
             @Override
             public void onDownloadFailed() {
                 if (versionParams.isShowNotification()) {
-                    Intent intent = new Intent(AllenChecker.getGlobalContext(), versionParams.getCustomDownloadActivityClass());
+                    Intent intent = new Intent(context, versionParams.getCustomDownloadActivityClass());
                     intent.putExtra("isRetry", true);
                     intent.putExtra(AVersionService.VERSION_PARAMS_KEY, versionParams);
                     intent.putExtra("downloadUrl", url);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(AllenChecker.getGlobalContext(), 0, intent, FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT);
                     finalBuilder.setContentIntent(pendingIntent);
-                    finalBuilder.setContentText(AllenChecker.getGlobalContext().getString(R.string.versionchecklib_download_fail));
+                    finalBuilder.setContentText(context.getString(R.string.versionchecklib_download_fail));
                     finalBuilder.setProgress(100, 0, false);
                     finalManager.notify(0, finalBuilder.build());
                 }

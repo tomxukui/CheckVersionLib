@@ -187,9 +187,7 @@ public class VersionDialogActivity extends AllenBaseActivity implements Download
         dismissAllDialog();
         versionParams = intent.getParcelableExtra(AVersionService.VERSION_PARAMS_KEY);
         downloadUrl = intent.getStringExtra("downloadUrl");
-//        paramBundle = intent.getBundleExtra(AVersionService.VERSION_PARAMS_EXTRA_KEY);
         requestPermissionAndDownloadFile();
-
     }
 
     public void setApkDownloadListener(APKDownloadListener apkDownloadListener) {
@@ -207,8 +205,8 @@ public class VersionDialogActivity extends AllenBaseActivity implements Download
 
     public void dealAPK() {
         if (versionParams.isSilentDownload()) {
-            String downloadPath = versionParams.getDownloadAPKPath() + getString(R.string.versionchecklib_download_apkname, getPackageName());
-            AppUtils.installApk(VersionDialogActivity.this, new File(downloadPath));
+            File downloadFile = new File(versionParams.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, getPackageName()));
+            AppUtils.installApk(VersionDialogActivity.this, downloadFile);
             finish();
         } else {
             if (versionParams.isShowDownloadingDialog())
@@ -217,7 +215,6 @@ public class VersionDialogActivity extends AllenBaseActivity implements Download
 
         }
     }
-//    int lastProgress = 0;
 
     protected void downloadFile() {
         //提前让loadingDialog实例化
@@ -225,7 +222,6 @@ public class VersionDialogActivity extends AllenBaseActivity implements Download
             showLoadingDialog(0);
         DownloadManager.downloadAPK(downloadUrl, versionParams, this);
     }
-
 
     protected void requestPermissionAndDownloadFile() {
         // Here, thisActivity is the current activity
