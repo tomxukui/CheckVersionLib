@@ -16,19 +16,9 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".core.VersionDialogActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
-        <activity
             android:name=".core.PermissionDialogActivity"
             android:launchMode="singleTask"
             android:theme="@style/versionCheckLibvtransparentTheme" />
-
-        <service
-            android:name=".core.MyService"
-            android:enabled="true"
-            android:exported="true" />
 
         <service
             android:name=".v2.ui.VersionService"

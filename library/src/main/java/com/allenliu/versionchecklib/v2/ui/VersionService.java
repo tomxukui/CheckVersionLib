@@ -11,7 +11,6 @@ import android.support.annotation.WorkerThread;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
-import com.allenliu.versionchecklib.core.DownloadManager;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.utils.ALog;
@@ -180,7 +179,7 @@ public class VersionService extends Service {
     private void startDownloadApk() {
         //判断是否缓存并且是否强制重新下载
         final String downloadPath = getDownloadFilePath();
-        if (DownloadManager.checkAPKIsExists(getApplicationContext(), downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
+        if (DownloadMangerV2.checkAPKIsExists(getApplicationContext(), downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
             ALog.e("using cache");
             install();
             return;
