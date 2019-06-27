@@ -1,8 +1,8 @@
 package com.allenliu.versionchecklib.v2;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.allenliu.versionchecklib.core.http.AllenHttp;
@@ -17,11 +17,9 @@ import com.allenliu.versionchecklib.v2.ui.VersionService;
 
 public class AllenVersionChecker {
 
-//    public AllenVersionChecker() {
-//        throw new RuntimeException("AllenVersionChecker can not be instantiated from outside");
-//    }
-    private AllenVersionChecker(){
+    private Context mContext;
 
+    private AllenVersionChecker() {
     }
 
     public static AllenVersionChecker getInstance() {
@@ -32,27 +30,32 @@ public class AllenVersionChecker {
         public static final AllenVersionChecker allenVersionChecker = new AllenVersionChecker();
     }
 
-    public void cancelAllMission(Context context) {
-        AllenHttp.getHttpClient().dispatcher().cancelAll();
-        Intent intent = new Intent(context, VersionService.class);
-        VersionService.builder=null;
-        context.getApplicationContext().stopService(intent);
+    public void init(Application context) {
+        mContext = context;
     }
 
     /**
-     * @param versionBundle developer should return version bundle ,to use when showing UI page,could be null
-     * @return download builder for download setting
+     * 请求更新接口
+     */
+    public RequestVersionBuilder requestVersion() {
+        return new RequestVersionBuilder();
+    }
+
+    /**
+     * 只下载请求
      */
     public DownloadBuilder downloadOnly(@Nullable UIData versionBundle) {
         return new DownloadBuilder(null, versionBundle);
     }
 
     /**
-     * use request version function
-     * @return requestVersionBuilder
+     * 取消所有请求
      */
-    public RequestVersionBuilder requestVersion() {
-        return new RequestVersionBuilder();
+    public void cancelAllMission(Context context) {
+        AllenHttp.getHttpClient().dispatcher().cancelAll();
+        Intent intent = new Intent(context, VersionService.class);
+        VersionService.builder = null;
+        context.getApplicationContext().stopService(intent);
     }
 
 }
