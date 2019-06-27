@@ -39,19 +39,17 @@
 
             <RadioButton
                 android:id="@+id/btn2"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自定义界面1" />
 
             <RadioButton
                 android:id="@+id/btn3"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自定义界面2" />
-        </RadioGroup>
 
+        </RadioGroup>
 
         <TextView
             android:layout_width="wrap_content"

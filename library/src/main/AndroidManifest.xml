@@ -20,18 +20,6 @@
             android:launchMode="singleTask"
             android:theme="@style/versionCheckLibvtransparentTheme" />
 
-        <provider
-            android:name=".core.VersionFileProvider"
-            android:authorities="${applicationId}.versionProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/versionchecklib_file_paths" />
-
-        </provider>
-
         <activity
             android:name=".core.PermissionDialogActivity"
             android:launchMode="singleTask"
@@ -61,6 +49,18 @@
             android:name=".v2.ui.DownloadFailedActivity"
             android:launchMode="singleTask"
             android:theme="@style/versionCheckLibvtransparentTheme" />
+
+        <provider
+            android:name=".core.VersionFileProvider"
+            android:authorities="${applicationId}.versionProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/versionchecklib_file_paths" />
+
+        </provider>
 
     </application>
 

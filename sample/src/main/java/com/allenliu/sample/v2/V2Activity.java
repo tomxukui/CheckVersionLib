@@ -2,7 +2,6 @@ package com.allenliu.sample.v2;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
