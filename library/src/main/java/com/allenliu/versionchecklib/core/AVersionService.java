@@ -15,6 +15,7 @@ import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.core.http.HttpRequestMethod;
 import com.allenliu.versionchecklib.utils.ALog;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,11 +62,17 @@ public abstract class AVersionService extends Service implements DownloadListene
     private void verfiyAndDeleteAPK() {
         //判断versioncode与当前版本不一样的apk是否存在，存在删除安装包
         try {
-            String downloadPath = versionParams.getDownloadAPKPath() + getApplicationContext().getString(R.string.versionchecklib_download_apkname, getApplicationContext().getPackageName());
+            Context context = AllenVersionChecker.getInstance().getContext();
+
+            File file = new File(versionParams.getDownloadAPKPath(), context.getString(R.string.versionchecklib_download_apkname, context.getPackageName()));
+
+            String downloadPath = file.getAbsolutePath();
+
             if (!DownloadManager.checkAPKIsExists(getApplicationContext(), downloadPath)) {
                 ALog.e("删除本地apk");
                 new File(downloadPath).delete();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,7 +223,7 @@ public abstract class AVersionService extends Service implements DownloadListene
 
 
                 boolean result = intent.getBooleanExtra("result", false);
-                if (result){
+                if (result) {
                     silentDownload();
 
                 }

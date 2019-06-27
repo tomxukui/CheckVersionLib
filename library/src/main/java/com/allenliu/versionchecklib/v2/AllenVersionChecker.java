@@ -27,7 +27,7 @@ public class AllenVersionChecker {
     }
 
     private static class AllenVersionCheckerHolder {
-        public static final AllenVersionChecker allenVersionChecker = new AllenVersionChecker();
+        static final AllenVersionChecker allenVersionChecker = new AllenVersionChecker();
     }
 
     public void init(Application context) {

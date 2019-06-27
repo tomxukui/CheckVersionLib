@@ -1,7 +1,6 @@
 package com.allenliu.versionchecklib.v2.ui;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.core.DownloadManager;
@@ -11,16 +10,11 @@ import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 
 import java.io.File;
 
-/**
- * Created by allenliu on 2018/1/18.
- */
-
 public class BuilderHelper {
-    private DownloadBuilder builder;
-    private Context context;
 
-    public BuilderHelper(Context context, DownloadBuilder builder) {
-        this.context = context;
+    private DownloadBuilder builder;
+
+    public BuilderHelper(DownloadBuilder builder) {
         this.builder = builder;
     }
 
@@ -30,11 +24,15 @@ public class BuilderHelper {
     public void checkAndDeleteAPK() {
         //判断versioncode与当前版本不一样的apk是否存在，存在删除安装包
         try {
-            String downloadPath = builder.getDownloadAPKPath() + context.getString(R.string.versionchecklib_download_apkname, context.getPackageName());
-            if (!DownloadManager.checkAPKIsExists(context, downloadPath)) {
+            Context context = AllenVersionChecker.getInstance().getContext();
+
+            File file = new File(builder.getDownloadAPKPath(), context.getString(R.string.versionchecklib_download_apkname, context.getPackageName()));
+
+            if (!DownloadManager.checkAPKIsExists(context, file.getAbsolutePath())) {
                 ALog.e("删除本地apk");
-                new File(downloadPath).delete();
+                file.delete();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,4 +44,5 @@ public class BuilderHelper {
             AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
+
 }

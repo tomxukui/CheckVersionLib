@@ -1,34 +1,24 @@
 package com.allenliu.versionchecklib.v2.ui;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.DownloadManager;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
-import com.allenliu.versionchecklib.core.http.HttpRequestMethod;
 import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.v2.builder.UIData;
-import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
 import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
 import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
@@ -38,13 +28,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -54,8 +39,8 @@ import okhttp3.Response;
  * helper methods.
  */
 public class VersionService extends Service {
+
     public static DownloadBuilder builder;
-//    private static DownloadBuilder tempBuilder;
 
     private BuilderHelper builderHelper;
     private NotificationHelper notificationHelper;
@@ -69,7 +54,6 @@ public class VersionService extends Service {
         }
         ALog.e("version service create");
         init();
-//        builder = tempBuilder;
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -77,14 +61,15 @@ public class VersionService extends Service {
     public void onDestroy() {
         super.onDestroy();
         ALog.e("version service destroy");
-//        builder = null;
         builderHelper = null;
-        if (notificationHelper != null)
+        if (notificationHelper != null) {
             notificationHelper.onDestroy();
+        }
         notificationHelper = null;
         isServiceAlive = false;
-        if (executors != null)
+        if (executors != null) {
             executors.shutdown();
+        }
         stopForeground(true);
         AllenHttp.getHttpClient().dispatcher().cancelAll();
         if (EventBus.getDefault().isRegistered(this)) {
@@ -100,26 +85,24 @@ public class VersionService extends Service {
 
     public static void enqueueWork(final Context context) {
         //清除之前的任务，如果有
-//        AllenVersionChecker.getInstance().cancelAllMission(context);
         Intent intent = new Intent(context, VersionService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent);
+
         } else {
             context.startService(intent);
         }
     }
 
-
     protected void onHandleWork() {
         downloadAPK();
-
     }
-
 
     private void downloadAPK() {
         if (builder != null && builder.getVersionBundle() != null) {
             if (builder.isDirectDownload()) {
                 AllenEventBusUtil.sendEventBus(AllenEventType.START_DOWNLOAD_APK);
+
             } else {
                 if (builder.isSilentDownload()) {
                     requestPermissionAndDownload();
@@ -127,11 +110,11 @@ public class VersionService extends Service {
                     showVersionDialog();
                 }
             }
+
         } else {
             AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
-
 
     /**
      * 开启UI展示界面
@@ -188,7 +171,9 @@ public class VersionService extends Service {
     }
 
     private String getDownloadFilePath() {
-        return builder.getDownloadAPKPath() + getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName());
+        File file = new File(builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
+
+        return file.getAbsolutePath();
     }
 
     @WorkerThread
@@ -266,7 +251,6 @@ public class VersionService extends Service {
         });
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveEvent(CommonEvent commonEvent) {
         switch (commonEvent.getEventType()) {
@@ -288,22 +272,13 @@ public class VersionService extends Service {
 
     }
 
-
-//    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-//    public synchronized void onReceiveDownloadBuilder(DownloadBuilder downloadBuilder) {
-//        builder = downloadBuilder;
-//        init();
-//        EventBus.getDefault().removeStickyEvent(downloadBuilder);
-//    }
-
     private void init() {
-        //https://issuetracker.google.com/issues/76112072
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
 
         if (builder != null) {
             isServiceAlive = true;
-            builderHelper = new BuilderHelper(getApplicationContext(), builder);
+            builderHelper = new BuilderHelper(builder);
             notificationHelper = new NotificationHelper(getApplicationContext(), builder);
 
             startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
@@ -319,6 +294,5 @@ public class VersionService extends Service {
             AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
-
 
 }
