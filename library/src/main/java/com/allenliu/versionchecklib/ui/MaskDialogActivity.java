@@ -73,6 +73,10 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     }
 
     private void handleIntent(Intent intent) {
+        if (isFinishing()) {
+            return;
+        }
+
         String dialogType = intent.getStringExtra(EXTRA_DIALOG_TYPE);
         if (dialogType == null) {
             dialogType = "";
@@ -268,34 +272,6 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             finish();
         }
     }
-
-//    /**
-//     * 取消下载
-//     */
-//    private void cancelDownloading(boolean isDownloadCompleted) {
-//        if (!isDownloadCompleted) {
-//            AllenHttp.getHttpClient().dispatcher().cancelAll();
-//            callbackOnCancel();
-//            checkForceUpdate();
-//        }
-//        finish();
-//    }
-//
-//    /**
-//     * 回调取消
-//     */
-//    protected void callbackOnCancel() {
-//        if (VersionService.builder != null && VersionService.builder.getOnCancelListener() != null) {
-//            VersionService.builder.getOnCancelListener().onCancel();
-//        }
-//    }
-//
-//    protected void checkForceUpdate() {
-////        if (VersionService.builder != null && VersionService.builder.getForceUpdateListener() != null) {
-////            VersionService.builder.getForceUpdateListener().onShouldForceUpdate();
-////            finish();
-////        }
-//    }
 
     public static class Builder {
 
