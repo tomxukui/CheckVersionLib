@@ -9,7 +9,7 @@ import com.allenliu.versionchecklib.http.AllenHttp;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;
-import com.allenliu.versionchecklib.v2.ui.VersionService;
+import com.allenliu.versionchecklib.service.VersionService;
 
 /**
  * Created by allenliu on 2018/1/12.

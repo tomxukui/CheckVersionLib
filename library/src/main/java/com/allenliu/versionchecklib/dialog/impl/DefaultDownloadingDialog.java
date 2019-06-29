@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.v2.ui.VersionService;
+import com.allenliu.versionchecklib.service.VersionService;
 
 public class DefaultDownloadingDialog extends Dialog implements DownloadingDialog {
 

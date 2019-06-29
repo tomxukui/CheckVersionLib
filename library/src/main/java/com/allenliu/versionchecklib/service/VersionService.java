@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.ui;
+package com.allenliu.versionchecklib.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -19,6 +19,8 @@ import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
+import com.allenliu.versionchecklib.v2.ui.BuilderHelper;
+import com.allenliu.versionchecklib.v2.ui.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
