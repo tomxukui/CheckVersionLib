@@ -1,17 +1,17 @@
 package com.allenliu.versionchecklib.v2.ui;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.allenliu.versionchecklib.core.http.AllenHttp;
-import com.allenliu.versionchecklib.dialog.DefaultDownloadingDialog;
+import com.allenliu.versionchecklib.dialog.DownloadingDialog;
+import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
 import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 
 public class DownloadingActivity extends AllenBaseActivity {
 
-    private Dialog mDownloadingDialog;
+    private DownloadingDialog mDownloadingDialog;
 
     private int currentProgress = 0;
     protected boolean isDestroy = false;
@@ -60,16 +60,11 @@ public class DownloadingActivity extends AllenBaseActivity {
 
     @Override
     public void showDefaultDialog() {
-        mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).setProgress(currentProgress).create();
-        mDownloadingDialog.show();
+
     }
 
     @Override
     public void showCustomDialog() {
-        if (getVersionBuilder() != null) {
-            mDownloadingDialog = getVersionBuilder().getCustomDownloadingDialogListener().getCustomDownloadingDialog(this, currentProgress, getVersionBuilder().getVersionBundle());
-            mDownloadingDialog.show();
-        }
     }
 
     @Override
@@ -103,13 +98,8 @@ public class DownloadingActivity extends AllenBaseActivity {
 
     private void updateProgress() {
         if (!isDestroy) {
-            if (mDownloadingDialog instanceof DefaultDownloadingDialog) {
-                ((DefaultDownloadingDialog) mDownloadingDialog).showProgress(currentProgress);
-
-            } else {
-                if (getVersionBuilder() != null && getVersionBuilder().getCustomDownloadingDialogListener() != null) {
-                    getVersionBuilder().getCustomDownloadingDialogListener().updateUI(mDownloadingDialog, currentProgress, getVersionBuilder().getVersionBundle());
-                }
+            if (mDownloadingDialog != null) {
+                mDownloadingDialog.showProgress(currentProgress);
             }
         }
     }
@@ -117,20 +107,23 @@ public class DownloadingActivity extends AllenBaseActivity {
     private void showLoadingDialog() {
         if (!isDestroy) {
             if (getVersionBuilder() != null && getVersionBuilder().getCustomDownloadingDialogListener() != null) {
-                showCustomDialog();
+                mDownloadingDialog = getVersionBuilder().getCustomDownloadingDialogListener().getCustomDownloadingDialog(this, currentProgress, getVersionBuilder().getVersionBundle());
 
             } else {
-                showDefaultDialog();
+                mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).create();
             }
 
-            mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            if (mDownloadingDialog != null) {
+                mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    cancelDownloading(false);
-                }
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        cancelDownloading(false);
+                    }
 
-            });
+                });
+                mDownloadingDialog.show();
+            }
         }
     }
 

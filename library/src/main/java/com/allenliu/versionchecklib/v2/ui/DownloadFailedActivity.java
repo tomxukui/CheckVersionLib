@@ -3,12 +3,10 @@ package com.allenliu.versionchecklib.v2.ui;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
@@ -70,10 +68,8 @@ public class DownloadFailedActivity extends AllenBaseActivity implements DialogI
         AllenEventBusUtil.sendEventBus(AllenEventType.CLOSE_DOWNLOADING_ACTIVITY);
 
         if (getVersionBuilder()!=null&&getVersionBuilder().getCustomDownloadFailedListener() != null) {
-            ALog.e("show customization failed dialog");
             showCustomDialog();
         } else {
-            ALog.e("show default failed dialog");
             showDefaultDialog();
         }
         downloadFailedDialog.setOnCancelListener(this);
@@ -81,8 +77,6 @@ public class DownloadFailedActivity extends AllenBaseActivity implements DialogI
 
     @Override
     public void onCancel(DialogInterface dialogInterface) {
-        ALog.e("on cancel" +
-                "");
         cancelHandler();
         checkForceUpdate();
         AllenVersionChecker.getInstance().cancelAllMission();

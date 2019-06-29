@@ -26,6 +26,11 @@
             android:priority="1000" />
 
         <activity
+            android:name=".ui.MaskDialogActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/versionCheckLibvtransparentTheme" />
+
+        <activity
             android:name=".v2.ui.UIActivity"
             android:launchMode="singleTask"
             android:theme="@style/versionCheckLibvtransparentTheme" />

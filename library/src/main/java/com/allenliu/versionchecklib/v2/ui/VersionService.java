@@ -12,6 +12,7 @@ import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
+import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -72,7 +73,6 @@ public class VersionService extends Service {
     }
 
     public static void enqueueWork(final Context context) {
-        //清除之前的任务，如果有
         Intent intent = new Intent(context, VersionService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent);
@@ -110,16 +110,22 @@ public class VersionService extends Service {
      */
     private void showVersionDialog() {
         if (builder != null) {
-            Intent intent = new Intent(this, UIActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new MaskDialogActivity.Builder(this)
+                    .setVersionType()
+                    .create()
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
         }
     }
 
     private void showDownloadingDialog() {
         if (builder != null && builder.isShowDownloadingDialog()) {
-            Intent intent = new Intent(this, DownloadingActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new MaskDialogActivity.Builder(this)
+                    .setDownloadingType()
+                    .create()
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
         }
     }

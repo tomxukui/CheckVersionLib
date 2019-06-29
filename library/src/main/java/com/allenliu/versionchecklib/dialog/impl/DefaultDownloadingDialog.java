@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.dialog;
+package com.allenliu.versionchecklib.dialog.impl;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,18 +7,17 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.widget.TextView;
 
 import com.allenliu.versionchecklib.R;
+import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.utils.ResouceUtil;
 import com.allenliu.versionchecklib.v2.ui.VersionService;
 
-public class DefaultDownloadingDialog extends Dialog {
+public class DefaultDownloadingDialog extends Dialog implements DownloadingDialog {
 
     private ContentLoadingProgressBar bar_progress;
     private TextView tv_progress;
 
-    private int mCurrentProgress;
-
     public DefaultDownloadingDialog(@NonNull Context context) {
-        super(context);
+        super(context, R.style.versionCheckLib_BaseDialog);
         setContentView(R.layout.dialog_default_downloading);
 
         initView();
@@ -38,34 +37,20 @@ public class DefaultDownloadingDialog extends Dialog {
         } else {
             setCancelable(true);
         }
-
-        setProgressView();
     }
 
-    private void setProgressView() {
-        if (bar_progress != null) {
-            bar_progress.setProgress(mCurrentProgress);
-        }
-        if (tv_progress != null) {
-            tv_progress.setText(String.format(ResouceUtil.getString(R.string.versionchecklib_progress), mCurrentProgress));
-        }
-    }
-
-    private void setProgress(int progress) {
-        mCurrentProgress = progress;
-    }
-
+    @Override
     public void showProgress(int progress) {
         if (!isShowing()) {
             show();
         }
 
-        setProgress(progress);
-        setProgressView();
-    }
-
-    public int getCurrentProgress() {
-        return mCurrentProgress;
+        if (bar_progress != null) {
+            bar_progress.setProgress(progress);
+        }
+        if (tv_progress != null) {
+            tv_progress.setText(String.format(ResouceUtil.getString(R.string.versionchecklib_progress), progress));
+        }
     }
 
     public static class Builder {
@@ -74,11 +59,6 @@ public class DefaultDownloadingDialog extends Dialog {
 
         public Builder(Context context) {
             mDialog = new DefaultDownloadingDialog(context);
-        }
-
-        public Builder setProgress(int progress) {
-            mDialog.setProgress(progress);
-            return this;
         }
 
         public DefaultDownloadingDialog create() {

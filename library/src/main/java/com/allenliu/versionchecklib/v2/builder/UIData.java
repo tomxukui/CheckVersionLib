@@ -7,7 +7,11 @@ import android.os.Bundle;
  */
 
 public class UIData {
-    private final String TITLE = "title", CONTENT = "content", DOWNLOAD_URL = "download_url";
+
+    private final String TITLE = "title";
+    private final String CONTENT = "content";
+    private final String DOWNLOAD_URL = "download_url";
+    private final String FORCE = "force";
 
     private Bundle versionBundle;
 
@@ -15,20 +19,11 @@ public class UIData {
         return new UIData();
     }
 
-    public String getDownloadUrl() {
-        return versionBundle.getString(DOWNLOAD_URL);
-    }
-
-    public UIData setDownloadUrl(String downloadUrl) {
-        versionBundle.putString(DOWNLOAD_URL, downloadUrl);
-        return this;
-    }
-
-
     private UIData() {
         versionBundle = new Bundle();
-        versionBundle.putString(TITLE, "by `UIData.setTitle()` to set your update title");
-        versionBundle.putString(CONTENT, "by `UIData.setContent()` to set your update content ");
+        versionBundle.putString(TITLE, "更新提示");
+        versionBundle.putString(CONTENT, "检测到新版本");
+        versionBundle.putBoolean(FORCE, false);
     }
 
     public UIData setTitle(String title) {
@@ -41,6 +36,16 @@ public class UIData {
         return this;
     }
 
+    public UIData setDownloadUrl(String downloadUrl) {
+        versionBundle.putString(DOWNLOAD_URL, downloadUrl);
+        return this;
+    }
+
+    public UIData force(boolean force) {
+        versionBundle.putBoolean(FORCE, force);
+        return this;
+    }
+
     public String getTitle() {
         return versionBundle.getString(TITLE);
     }
@@ -49,7 +54,16 @@ public class UIData {
         return versionBundle.getString(CONTENT);
     }
 
+    public String getDownloadUrl() {
+        return versionBundle.getString(DOWNLOAD_URL);
+    }
+
+    public boolean getForce() {
+        return versionBundle.getBoolean(FORCE);
+    }
+
     public Bundle getVersionBundle() {
         return versionBundle;
     }
+
 }

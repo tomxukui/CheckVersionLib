@@ -1,16 +1,12 @@
 package com.allenliu.sample;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -191,22 +187,7 @@ public class MainActivity extends AppCompatActivity {
      * 务必用库传回来的context 实例化你的dialog
      */
     private CustomDownloadingDialogListener createCustomDownloadingDialog() {
-        return new CustomDownloadingDialogListener() {
-
-            @Override
-            public Dialog getCustomDownloadingDialog(Context context, int progress, UIData versionBundle) {
-                return new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_layout);
-            }
-
-            @Override
-            public void updateUI(Dialog dialog, int progress, UIData versionBundle) {
-                TextView tvProgress = dialog.findViewById(R.id.tv_progress);
-                ProgressBar progressBar = dialog.findViewById(R.id.pb);
-                progressBar.setProgress(progress);
-                tvProgress.setText(getString(R.string.versionchecklib_progress, progress));
-            }
-
-        };
+        return (context, progress, versionBundle) -> new CustomDownloadingDialog(context);
     }
 
     /**
@@ -217,20 +198,24 @@ public class MainActivity extends AppCompatActivity {
      */
     private CustomVersionDialogListener createCustomDialogOne() {
         return (context, versionBundle) -> {
-            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_one_layout);
-            TextView textView = baseDialog.findViewById(R.id.tv_msg);
-            textView.setText(versionBundle.getContent());
-            return baseDialog;
+//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_one_layout);
+//            TextView textView = baseDialog.findViewById(R.id.tv_msg);
+//            textView.setText(versionBundle.getContent());
+//            return baseDialog;
+
+            return null;
         };
     }
 
     private CustomVersionDialogListener createCustomDialogTwo() {
         return (context, versionBundle) -> {
-            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_two_layout);
-            TextView textView = baseDialog.findViewById(R.id.tv_msg);
-            textView.setText(versionBundle.getContent());
-            baseDialog.setCanceledOnTouchOutside(true);
-            return baseDialog;
+//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_two_layout);
+//            TextView textView = baseDialog.findViewById(R.id.tv_msg);
+//            textView.setText(versionBundle.getContent());
+//            baseDialog.setCanceledOnTouchOutside(true);
+//            return baseDialog;
+
+            return null;
         };
     }
 

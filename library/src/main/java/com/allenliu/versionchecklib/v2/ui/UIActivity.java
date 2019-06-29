@@ -13,7 +13,6 @@ import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
-import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 
 import java.io.File;
 
@@ -25,20 +24,6 @@ public class UIActivity extends AllenBaseActivity implements DialogInterface.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showVersionDialog();
-    }
-
-    @Override
-    public void receiveEvent(CommonEvent commonEvent) {
-        switch (commonEvent.getEventType()) {
-
-            case AllenEventType.SHOW_VERSION_DIALOG:
-                showVersionDialog();
-                break;
-
-            default:
-                break;
-
-        }
     }
 
     @Override
@@ -86,9 +71,9 @@ public class UIActivity extends AllenBaseActivity implements DialogInterface.OnC
     @Override
     public void showCustomDialog() {
         if (getVersionBuilder() != null) {
-            versionDialog = getVersionBuilder()
-                    .getCustomVersionDialogListener()
-                    .getCustomVersionDialog(this, getVersionBuilder().getVersionBundle());
+//            versionDialog = getVersionBuilder()
+//                    .getCustomVersionDialogListener()
+//                    .getCustomVersionDialog(this, getVersionBuilder().getVersionBundle());
 
             versionDialog.show();
 
