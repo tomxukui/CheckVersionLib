@@ -1,10 +1,9 @@
-package com.allenliu.versionchecklib.core;
+package com.allenliu.versionchecklib.utils;
 
 import android.support.v4.content.FileProvider;
 
 /**
  * Created by Allen Liu on 2017/2/28.
  */
-
 public class VersionFileProvider extends FileProvider {
 }

@@ -15,7 +15,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.core.VersionFileProvider;
+import com.allenliu.versionchecklib.utils.VersionFileProvider;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;

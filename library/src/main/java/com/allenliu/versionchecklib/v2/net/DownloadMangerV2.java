@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.allenliu.versionchecklib.callback.DownloadListener;
-import com.allenliu.versionchecklib.core.http.AllenHttp;
-import com.allenliu.versionchecklib.core.http.FileCallBack;
+import com.allenliu.versionchecklib.http.AllenHttp;
+import com.allenliu.versionchecklib.http.FileCallBack;
 
 import java.io.File;
 import java.io.FileOutputStream;

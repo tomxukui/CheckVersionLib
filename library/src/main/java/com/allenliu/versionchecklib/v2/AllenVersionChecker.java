@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import com.allenliu.versionchecklib.core.http.AllenHttp;
+import com.allenliu.versionchecklib.http.AllenHttp;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;

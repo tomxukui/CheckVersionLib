@@ -1,11 +1,10 @@
 package com.allenliu.versionchecklib.v2.net;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.allenliu.versionchecklib.core.http.AllenHttp;
-import com.allenliu.versionchecklib.core.http.HttpRequestMethod;
+import com.allenliu.versionchecklib.http.AllenHttp;
+import com.allenliu.versionchecklib.http.HttpRequestMethod;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.StringRes;
 
-import com.allenliu.versionchecklib.core.VersionFileProvider;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 
 import java.io.File;

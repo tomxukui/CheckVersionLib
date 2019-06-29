@@ -26,7 +26,7 @@
             android:theme="@style/versionCheckLibvtransparentTheme" />
 
         <provider
-            android:name=".core.VersionFileProvider"
+            android:name=".utils.VersionFileProvider"
             android:authorities="${applicationId}.versionProvider"
             android:exported="false"
             android:grantUriPermissions="true">

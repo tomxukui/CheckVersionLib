@@ -11,7 +11,7 @@ import android.support.annotation.WorkerThread;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
-import com.allenliu.versionchecklib.core.http.AllenHttp;
+import com.allenliu.versionchecklib.http.AllenHttp;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;

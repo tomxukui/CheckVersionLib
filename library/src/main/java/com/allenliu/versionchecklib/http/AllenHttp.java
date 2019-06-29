@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.core.http;
+package com.allenliu.versionchecklib.http;
 
 import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
 
@@ -24,29 +24,29 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-/**
- * Created by allenliu on 2017/8/31.
- */
-
 public class AllenHttp {
+
     private static OkHttpClient client;
 
     public static OkHttpClient getHttpClient() {
         if (client == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(createSSLSocketFactory());
-            builder.connectTimeout(15,TimeUnit.SECONDS);
             builder.hostnameVerifier(new TrustAllHostnameVerifier());
-            client=builder.build();
+            builder.connectTimeout(15, TimeUnit.SECONDS);
+            client = builder.build();
         }
+
         return client;
     }
 
     private static class TrustAllHostnameVerifier implements HostnameVerifier {
+
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
+
     }
 
     private static SSLSocketFactory createSSLSocketFactory() {
@@ -55,15 +55,17 @@ public class AllenHttp {
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(null, new TrustManager[]{new TrustAllCerts()}, new SecureRandom());
-
             ssfFactory = sc.getSocketFactory();
+
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return ssfFactory;
     }
 
     private static class TrustAllCerts implements X509TrustManager {
+
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
@@ -76,41 +78,42 @@ public class AllenHttp {
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];
         }
+
     }
 
     private static String assembleUrl(String url, HttpParams params) {
         StringBuffer urlBuilder = new StringBuffer(url);
         if (params != null) {
             urlBuilder.append("?");
+
             for (Map.Entry<String, Object> stringObjectEntry : params.entrySet()) {
                 String key = stringObjectEntry.getKey();
                 String value = stringObjectEntry.getValue() + "";
                 urlBuilder.append(key).append("=").append(value).append("&");
             }
+
             url = urlBuilder.substring(0, urlBuilder.length() - 1);
         }
         return url;
     }
 
     private static String getRequestParamsJson(HttpParams params) {
-        String json;
         JSONObject jsonObject = new JSONObject();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             try {
                 jsonObject.put(entry.getKey(), entry.getValue());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
-        json = jsonObject.toString();
-        return json;
+        return jsonObject.toString();
     }
 
     /**********************************V2.0 Using RequestBuilder ************************************************************************/
 
     private static <T extends Request.Builder> T assembleHeader(T builder, RequestVersionBuilder versionParams) {
-        com.allenliu.versionchecklib.core.http.HttpHeaders headers = versionParams.getHttpHeaders();
+        HttpHeaders headers = versionParams.getHttpHeaders();
         if (headers != null) {
             for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
                 String key = stringStringEntry.getKey();
@@ -120,6 +123,7 @@ public class AllenHttp {
         }
         return builder;
     }
+
     public static Request.Builder get(RequestVersionBuilder versionParams) {
         Request.Builder builder = new Request.Builder();
         builder = assembleHeader(builder, versionParams);

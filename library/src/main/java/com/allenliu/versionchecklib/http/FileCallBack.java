@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.core.http;
+package com.allenliu.versionchecklib.http;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +17,7 @@ import okhttp3.Response;
  */
 
 public abstract class FileCallBack implements Callback {
+
     private String path;
     private String name;
     private Handler handler;
@@ -29,14 +30,14 @@ public abstract class FileCallBack implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-
         handler.post(new Runnable() {
+
             @Override
             public void run() {
                 onDownloadFailed();
             }
-        });
 
+        });
     }
 
     @Override
@@ -53,8 +54,6 @@ public abstract class FileCallBack implements Callback {
 
         try {
             is = response.body().byteStream();
-            long total = response.body().contentLength();
-
 
             final File file = new File(path, name);
             if (file.exists()) {
@@ -62,57 +61,72 @@ public abstract class FileCallBack implements Callback {
             } else {
                 file.createNewFile();
             }
+
             fos = new FileOutputStream(file);
             long sum = 0;
             while ((len = is.read(buf)) != -1) {
-                total = response.body().contentLength();
-//                ALog.e("file total size:"+total);
+                long total = response.body().contentLength();
+
                 fos.write(buf, 0, len);
                 sum += len;
+
                 final int progress = (int) (((double) sum / total) * 100);
-                // 下载中
+
                 handler.post(new Runnable() {
+
                     @Override
                     public void run() {
                         onDownloading(progress);
                     }
+
                 });
 
             }
+
             fos.flush();
+
             handler.post(new Runnable() {
+
                 @Override
                 public void run() {
                     onSuccess(file, call, response);
 
                 }
+
             });
 
         } catch (Exception e) {
             e.printStackTrace();
+
             handler.post(new Runnable() {
+
                 @Override
                 public void run() {
                     onDownloadFailed();
 
                 }
+
             });
+
         } finally {
             try {
-                if (is != null)
+                if (is != null) {
                     is.close();
-                if (fos != null)
+                }
+                if (fos != null) {
                     fos.close();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
     public abstract void onSuccess(File file, Call call, Response response);
 
     public abstract void onDownloading(int progress);
 
     public abstract void onDownloadFailed();
+
 }

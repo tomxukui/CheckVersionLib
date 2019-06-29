@@ -1,9 +1,9 @@
 package com.allenliu.versionchecklib.v2.builder;
 
 import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
-import com.allenliu.versionchecklib.core.http.HttpHeaders;
-import com.allenliu.versionchecklib.core.http.HttpParams;
-import com.allenliu.versionchecklib.core.http.HttpRequestMethod;
+import com.allenliu.versionchecklib.http.HttpHeaders;
+import com.allenliu.versionchecklib.http.HttpParams;
+import com.allenliu.versionchecklib.http.HttpRequestMethod;
 
 /**
  * Created by allenliu on 2018/1/12.
@@ -13,7 +13,7 @@ public class RequestVersionBuilder {
     private HttpRequestMethod requestMethod;
     private HttpParams requestParams;
     private String requestUrl;
-    private com.allenliu.versionchecklib.core.http.HttpHeaders httpHeaders;
+    private HttpHeaders httpHeaders;
     private RequestVersionListener requestVersionListener;
 
     public RequestVersionBuilder() {
