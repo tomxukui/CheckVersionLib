@@ -311,6 +311,11 @@ public class VersionService extends Service {
             }
             break;
 
+            case UpgradeEvent.CANCEL_RETRY_DOWNLOAD: {//用户取消重试
+                showVersionDialog();
+            }
+            break;
+
             default:
                 break;
 

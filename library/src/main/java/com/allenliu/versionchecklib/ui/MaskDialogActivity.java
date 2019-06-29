@@ -232,7 +232,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CANCEL_DOWNLOADING));
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CANCEL_RETRY_DOWNLOAD));
                 }
 
             });
