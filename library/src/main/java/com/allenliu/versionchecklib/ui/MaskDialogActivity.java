@@ -101,11 +101,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             }
             break;
 
-            default: {
-                dismissVersionDialog();
-                dismissDownloadingDialog();
-                dismissDownloadFailedDialog();
-            }
+            default:
             break;
 
         }

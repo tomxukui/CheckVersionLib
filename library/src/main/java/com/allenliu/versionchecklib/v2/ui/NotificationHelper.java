@@ -15,9 +15,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.VersionFileProvider;
+import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.ALog;
+import com.allenliu.versionchecklib.utils.ResouceUtil;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
 
@@ -107,11 +108,13 @@ public class NotificationHelper {
         isDownloadSuccess = false;
         isFailed = true;
         if (versionBuilder.isShowNotification()) {
-            Intent intent = new Intent(context, PermissionDialogActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new MaskDialogActivity.Builder(context)
+                    .create()
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT);
             notificationBuilder.setContentIntent(pendingIntent);
-            notificationBuilder.setContentText(context.getString(R.string.versionchecklib_download_fail));
+            notificationBuilder.setContentText(ResouceUtil.getString(R.string.upgrade_download_fail_retry));
             notificationBuilder.setProgress(100, 0, false);
             manager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }

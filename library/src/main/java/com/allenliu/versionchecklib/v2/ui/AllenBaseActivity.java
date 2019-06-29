@@ -12,11 +12,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class AllenBaseActivity extends AppCompatActivity {
 
@@ -100,10 +97,6 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
         if (getVersionBuilder() != null && getVersionBuilder().getOnCancelListener() != null) {
             getVersionBuilder().getOnCancelListener().onCancel();
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveEvent(CommonEvent commonEvent) {
     }
 
     public abstract void showDefaultDialog();

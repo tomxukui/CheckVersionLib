@@ -15,11 +15,6 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
 
-        <activity
-            android:name=".core.PermissionDialogActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
         <service
             android:name=".v2.ui.VersionService"
             android:exported="false"

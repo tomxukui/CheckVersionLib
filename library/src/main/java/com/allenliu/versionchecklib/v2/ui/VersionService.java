@@ -15,11 +15,9 @@ import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
-import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
 
 import org.greenrobot.eventbus.EventBus;
@@ -237,7 +235,6 @@ public class VersionService extends Service {
                 }
 
                 if (!builder.isSilentDownload()) {
-                    AllenEventBusUtil.sendEventBus(AllenEventType.CLOSE_DOWNLOADING_ACTIVITY);
                     if (builder.isShowDownloadFailDialog()) {
                         showDownloadFailedDialog();
                     }
