@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.allenliu.versionchecklib.R;
@@ -16,6 +17,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
     private ContentLoadingProgressBar bar_progress;
     private TextView tv_status;
     private TextView tv_progress;
+    private TextView tv_install;
 
     public DefaultDownloadingDialog(@NonNull Context context) {
         super(context, R.style.versionCheckLib_BaseDialog);
@@ -29,6 +31,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
         bar_progress = findViewById(R.id.bar_progress);
         tv_status = findViewById(R.id.tv_status);
         tv_progress = findViewById(R.id.tv_progress);
+        tv_install = findViewById(R.id.tv_install);
     }
 
     private void setView() {
@@ -39,6 +42,15 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
         } else {
             setCancelable(true);
         }
+
+        tv_install.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+
+        });
     }
 
     @Override
@@ -55,6 +67,9 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
         }
         if (tv_progress != null) {
             tv_progress.setText(String.format(ResouceUtil.getString(R.string.versionchecklib_progress), progress));
+        }
+        if (tv_install != null) {
+            tv_install.setVisibility(progress < 100 ? View.GONE : View.VISIBLE);
         }
     }
 
