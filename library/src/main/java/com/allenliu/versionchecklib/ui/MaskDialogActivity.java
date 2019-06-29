@@ -102,7 +102,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             break;
 
             default:
-            break;
+                break;
 
         }
     }
@@ -227,7 +227,6 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             } else {
                 mDownloadFailedDialog = new DefaultDownloadFailedDialog.Builder(this).create();
             }
-            mDownloadFailedDialog.setOnDismissListener(this);
             mDownloadFailedDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
