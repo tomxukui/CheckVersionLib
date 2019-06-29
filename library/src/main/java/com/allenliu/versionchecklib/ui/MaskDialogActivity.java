@@ -58,6 +58,12 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
         dismissDownloadingDialog();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadingProgressEvent(DownloadingProgressEvent event) {
         if (mDownloadingDialog != null && mDownloadingDialog.isShowing()) {
