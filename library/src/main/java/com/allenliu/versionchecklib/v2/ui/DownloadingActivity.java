@@ -73,6 +73,7 @@ public class DownloadingActivity extends AllenBaseActivity implements DialogInte
         downloadingDialog = new AlertDialog.Builder(this).setTitle("").setView(loadingView).create();
         if (getVersionBuilder().getForceUpdateListener() != null) {
             downloadingDialog.setCancelable(false);
+
         } else {
             downloadingDialog.setCancelable(true);
         }
@@ -115,8 +116,9 @@ public class DownloadingActivity extends AllenBaseActivity implements DialogInte
     protected void onResume() {
         super.onResume();
         isDestroy = false;
-        if (downloadingDialog != null && !downloadingDialog.isShowing())
+        if (downloadingDialog != null && !downloadingDialog.isShowing()) {
             downloadingDialog.show();
+        }
     }
 
     private void destroyWithOutDismiss() {
