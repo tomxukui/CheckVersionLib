@@ -189,15 +189,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 自定义下载中对话框，下载中会连续回调此方法 updateUI
      * 务必用库传回来的context 实例化你的dialog
-     *
-     * @return
      */
     private CustomDownloadingDialogListener createCustomDownloadingDialog() {
         return new CustomDownloadingDialogListener() {
+
             @Override
             public Dialog getCustomDownloadingDialog(Context context, int progress, UIData versionBundle) {
-                BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_layout);
-                return baseDialog;
+                return new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_layout);
             }
 
             @Override
@@ -207,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setProgress(progress);
                 tvProgress.setText(getString(R.string.versionchecklib_progress, progress));
             }
+
         };
     }
 
