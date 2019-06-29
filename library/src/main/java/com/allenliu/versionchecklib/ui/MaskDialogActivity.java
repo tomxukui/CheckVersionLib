@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
+import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadFailedDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.ui.VersionService;
@@ -27,9 +30,11 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     private static final String EXTRA_DIALOG_TYPE = "EXTRA_TYPE";
     private static final String TYPE_VERSION = "TYPE_VERSION";
     private static final String TYPE_DOWNLOADING = "TYPE_DOWNLOADING";
+    private static final String TYPE_DOWNLOAD_FAILED = "TYPE_DOWNLOAD_FAILED";
 
     private VersionDialog mVersionDialog;
     private DownloadingDialog mDownloadingDialog;
+    private DownloadFailedDialog mDownloadFailedDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,18 +83,28 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             case TYPE_VERSION: {
                 showVersionDialog();
                 dismissDownloadingDialog();
+                dismissDownloadFailedDialog();
             }
             break;
 
             case TYPE_DOWNLOADING: {
                 dismissVersionDialog();
                 showDownloadingDialog();
+                dismissDownloadFailedDialog();
+            }
+            break;
+
+            case TYPE_DOWNLOAD_FAILED: {
+                dismissVersionDialog();
+                dismissDownloadingDialog();
+                showDownloadFailedDialog();
             }
             break;
 
             default: {
                 dismissVersionDialog();
                 dismissDownloadingDialog();
+                dismissDownloadFailedDialog();
             }
             break;
 
@@ -202,9 +217,60 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
         }
     }
 
+    /**
+     * 显示下载失败对话框
+     */
+    private void showDownloadFailedDialog() {
+        if (mDownloadFailedDialog == null) {
+            UIData data = VersionService.builder.getVersionBundle();
+            CustomDownloadFailedListener customDownloadFailedListener = VersionService.builder.getCustomDownloadFailedListener();
+
+            if (customDownloadFailedListener != null) {
+                mDownloadFailedDialog = customDownloadFailedListener.getCustomDownloadFailed(this, data);
+
+            } else {
+                mDownloadFailedDialog = new DefaultDownloadFailedDialog.Builder(this).create();
+            }
+            mDownloadFailedDialog.setOnDismissListener(this);
+            mDownloadFailedDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CANCEL_DOWNLOADING));
+                }
+
+            });
+            mDownloadFailedDialog.setOnConfirmListener(new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.RETRY_DOWNLOAD));
+                }
+
+            });
+        }
+
+        if (!mDownloadFailedDialog.isShowing()) {
+            mDownloadFailedDialog.show();
+        }
+    }
+
+    /**
+     * 隐藏下载失败对话框
+     */
+    private void dismissDownloadFailedDialog() {
+        if (mDownloadFailedDialog != null) {
+            if (mDownloadFailedDialog.isShowing()) {
+                mDownloadFailedDialog.dismiss();
+            }
+
+            mDownloadFailedDialog = null;
+        }
+    }
+
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if ((mVersionDialog == null || !mVersionDialog.isShowing()) && (mDownloadingDialog == null || !mDownloadingDialog.isShowing())) {
+        if ((mVersionDialog == null || !mVersionDialog.isShowing()) && (mDownloadingDialog == null || !mDownloadingDialog.isShowing()) && (mDownloadFailedDialog == null || !mDownloadFailedDialog.isShowing())) {
             finish();
         }
     }
@@ -256,6 +322,10 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
         public Builder setDownloadingType() {
             return setDialogType(TYPE_DOWNLOADING);
+        }
+
+        public Builder setDownloadFailedType() {
+            return setDialogType(TYPE_DOWNLOAD_FAILED);
         }
 
         public Intent create() {

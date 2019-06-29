@@ -139,8 +139,11 @@ public class VersionService extends Service {
 
     private void showDownloadFailedDialog() {
         if (builder != null) {
-            Intent intent = new Intent(this, DownloadFailedActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new MaskDialogActivity.Builder(this)
+                    .setDownloadFailedType()
+                    .create()
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
         }
     }
@@ -279,6 +282,11 @@ public class VersionService extends Service {
 
             case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
                 AllenVersionChecker.getInstance().cancelAllMission();
+            }
+            break;
+
+            case UpgradeEvent.RETRY_DOWNLOAD: {//重新下载
+                startDownloadApk();
             }
             break;
 

@@ -10,12 +10,12 @@ public interface DownloadingDialog {
 
     boolean isShowing();
 
-    void showProgress(int progress);
-
-    void setOnInstallListener(DialogInterface.OnClickListener listener);
+    void setOnCancelListener(DialogInterface.OnCancelListener listener);
 
     void setOnDismissListener(DialogInterface.OnDismissListener listener);
 
-    void setOnCancelListener(DialogInterface.OnCancelListener listener);
+    void showProgress(int progress);
+
+    void setOnInstallListener(DialogInterface.OnClickListener listener);
 
 }

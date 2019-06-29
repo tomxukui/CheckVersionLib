@@ -167,8 +167,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private CustomDownloadFailedListener createCustomDownloadFailedDialog() {
         return (context, versionBundle) -> {
-            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_failed_dialog);
-            return baseDialog;
+//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_failed_dialog);
+//            return baseDialog;
+            return null;
         };
     }
 

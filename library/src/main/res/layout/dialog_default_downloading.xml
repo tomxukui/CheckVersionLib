@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:padding="10dp"
-            android:text="取消"
+            android:text="@string/upgrade_cancel"
             android:textColor="@color/upgrade_textColor_third"
             android:textSize="15sp" />
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="安装"
+            android:text="@string/upgrade_install"
             android:textColor="@color/upgrade_dialog_textColor_install"
             android:textSize="15sp"
             android:visibility="gone" />

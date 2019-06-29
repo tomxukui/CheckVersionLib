@@ -79,7 +79,7 @@
             android:layout_weight="1.0"
             android:background="@color/upgrade_dialog_textBackground_confirm"
             android:gravity="center"
-            android:text="立即更新"
+            android:text="@string/upgrade_upgrade"
             android:textColor="@color/upgrade_dialog_textColor_confirm"
             android:textSize="14sp" />
 

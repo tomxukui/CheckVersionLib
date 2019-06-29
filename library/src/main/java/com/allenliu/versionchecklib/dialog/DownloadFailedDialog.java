@@ -2,7 +2,7 @@ package com.allenliu.versionchecklib.dialog;
 
 import android.content.DialogInterface;
 
-public interface VersionDialog {
+public interface DownloadFailedDialog {
 
     void show();
 

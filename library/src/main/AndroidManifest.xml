@@ -30,21 +30,6 @@
             android:launchMode="singleTask"
             android:theme="@style/versionCheckLibvtransparentTheme" />
 
-        <activity
-            android:name=".v2.ui.UIActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
-        <activity
-            android:name=".v2.ui.DownloadingActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
-        <activity
-            android:name=".v2.ui.DownloadFailedActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/versionCheckLibvtransparentTheme" />
-
         <provider
             android:name=".core.VersionFileProvider"
             android:authorities="${applicationId}.versionProvider"

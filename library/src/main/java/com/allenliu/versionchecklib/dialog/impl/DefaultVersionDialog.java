@@ -52,7 +52,7 @@ public class DefaultVersionDialog extends Dialog implements VersionDialog {
         tv_message.setText(mMessage);
         tv_message.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-        tv_cancel.setText(mForce ? "关闭" : "下次再说");
+        tv_cancel.setText(mForce ? R.string.upgrade_cancel : R.string.upgrade_ignore);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
 
             @Override
