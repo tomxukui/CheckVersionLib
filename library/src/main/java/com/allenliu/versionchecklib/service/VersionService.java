@@ -18,7 +18,6 @@ import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
 import com.allenliu.versionchecklib.v2.ui.BuilderHelper;
 import com.allenliu.versionchecklib.v2.ui.NotificationHelper;
 
@@ -206,7 +205,7 @@ public class VersionService extends Service {
     private void startDownloadApk() {
         //判断是否缓存并且是否强制重新下载
         final String downloadPath = getDownloadFile().getAbsolutePath();
-        if (DownloadMangerV2.checkAPKIsExists(getApplicationContext(), downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
+        if (UpgradeUtil.checkApkExist(downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
             install();
             return;
         }
@@ -222,7 +221,7 @@ public class VersionService extends Service {
         }
 
         mIsDownloadComplete = false;
-        DownloadMangerV2.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
+        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
 
             @Override
             public void onCheckerStartDownload() {
