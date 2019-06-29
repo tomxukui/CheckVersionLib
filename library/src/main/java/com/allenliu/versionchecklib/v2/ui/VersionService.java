@@ -32,11 +32,11 @@ public class VersionService extends Service {
 
     public static DownloadBuilder builder;
 
+    private ExecutorService mExecutorService;
     private BuilderHelper builderHelper;
     private NotificationHelper notificationHelper;
-    private boolean isServiceAlive = false;
 
-    private ExecutorService mExecutorService;
+    private boolean isServiceAlive = false;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -76,8 +76,9 @@ public class VersionService extends Service {
      * 初始化
      */
     private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
+        }
 
         if (builder != null) {
             isServiceAlive = true;
