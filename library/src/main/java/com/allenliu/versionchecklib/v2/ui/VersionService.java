@@ -35,7 +35,8 @@ public class VersionService extends Service {
     private BuilderHelper builderHelper;
     private NotificationHelper notificationHelper;
     private boolean isServiceAlive = false;
-    private ExecutorService executors;
+
+    private ExecutorService mExecutorService;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -55,8 +56,8 @@ public class VersionService extends Service {
         }
         notificationHelper = null;
         isServiceAlive = false;
-        if (executors != null) {
-            executors.shutdown();
+        if (mExecutorService != null) {
+            mExecutorService.shutdown();
         }
         stopForeground(true);
         AllenHttp.getHttpClient().dispatcher().cancelAll();
@@ -71,33 +72,29 @@ public class VersionService extends Service {
         return null;
     }
 
-    public static void enqueueWork(final Context context) {
-        Intent intent = new Intent(context, VersionService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
+    /**
+     * 初始化
+     */
+    private void init() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
 
-        } else {
-            context.startService(intent);
-        }
-    }
+        if (builder != null) {
+            isServiceAlive = true;
+            builderHelper = new BuilderHelper(builder);
+            notificationHelper = new NotificationHelper(getApplicationContext(), builder);
 
-    protected void onHandleWork() {
-        downloadAPK();
-    }
+            startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
 
-    private void downloadAPK() {
-        if (builder != null && builder.getVersionBundle() != null) {
-            if (builder.isDirectDownload()) {
-                startDownloadApk();
+            mExecutorService = Executors.newSingleThreadExecutor();
+            mExecutorService.submit(new Runnable() {
 
-            } else {
-                if (builder.isSilentDownload()) {
-                    startDownloadApk();
-
-                } else {
-                    showVersionDialog();
+                @Override
+                public void run() {
+                    downloadAPK();
                 }
-            }
+
+            });
 
         } else {
             AllenVersionChecker.getInstance().cancelAllMission();
@@ -153,8 +150,43 @@ public class VersionService extends Service {
         }
     }
 
+    /**
+     * 下载apk
+     */
+    private void downloadAPK() {
+        if (builder != null && builder.getVersionBundle() != null) {
+            if (builder.isDirectDownload()) {
+                startDownloadApk();
+
+            } else {
+                if (builder.isSilentDownload()) {
+                    startDownloadApk();
+
+                } else {
+                    showVersionDialog();
+                }
+            }
+
+        } else {
+            AllenVersionChecker.getInstance().cancelAllMission();
+        }
+    }
+
+    /**
+     * 安装apk
+     */
     private void install() {
         AppUtils.installApk(getApplicationContext(), getDownloadFile(), builder.getCustomInstallListener());
+    }
+
+    public static void enqueueWork(final Context context) {
+        Intent intent = new Intent(context, VersionService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+
+        } else {
+            context.startService(intent);
+        }
     }
 
 //    private void install() {
@@ -265,22 +297,8 @@ public class VersionService extends Service {
             }
             break;
 
-            case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
-                OnCancelListener listener = builder.getOnCancelListener();
-
-                if (listener != null) {
-                    listener.onCancel();
-                }
-            }
-            break;
-
             case UpgradeEvent.DOWNLOAD_COMPLETE: {//下载已完成
                 install();
-            }
-            break;
-
-            case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
-                AllenVersionChecker.getInstance().cancelAllMission();
             }
             break;
 
@@ -289,34 +307,22 @@ public class VersionService extends Service {
             }
             break;
 
+            case UpgradeEvent.CANCEL_UPGRADE: //用户取消更新
+            case UpgradeEvent.CANCEL_DOWNLOADING://用户取消下载
+            {
+                builderHelper.checkForceUpdate();
+                AllenVersionChecker.getInstance().cancelAllMission();
+
+                OnCancelListener listener = builder.getOnCancelListener();
+                if (listener != null) {
+                    listener.onCancel();
+                }
+            }
+            break;
+
             default:
                 break;
 
-        }
-    }
-
-    private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
-
-        if (builder != null) {
-            isServiceAlive = true;
-            builderHelper = new BuilderHelper(builder);
-            notificationHelper = new NotificationHelper(getApplicationContext(), builder);
-
-            startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
-            executors = Executors.newSingleThreadExecutor();
-            executors.submit(new Runnable() {
-
-                @Override
-                public void run() {
-                    onHandleWork();
-                }
-
-            });
-
-        } else {
-            AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
 

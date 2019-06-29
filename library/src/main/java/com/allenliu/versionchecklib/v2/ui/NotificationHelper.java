@@ -27,19 +27,20 @@ import java.io.File;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-/**
- * Created by allenliu on 2018/1/19.
- */
-
 public class NotificationHelper {
+
+    public static final int NOTIFICATION_ID = 1;
+
+    private static final String CHANNEL_ID = "version_service_id";
+
     private DownloadBuilder versionBuilder;
     private Context context;
     NotificationCompat.Builder notificationBuilder = null;
     NotificationManager manager = null;
-    private boolean isDownloadSuccess = false, isFailed = false;
-    private int currentProgress = 0;
+    private boolean isDownloadSuccess = false;
+    private boolean isFailed = false;
+    private int currentProgress;
     private String contentText;
-    public static final int NOTIFICATION_ID = 1;
 
     public NotificationHelper(Context context, DownloadBuilder builder) {
         this.context = context;
@@ -82,8 +83,9 @@ public class NotificationHelper {
      */
     public void showDownloadCompleteNotifcation(File file) {
         isDownloadSuccess = true;
-        if (!versionBuilder.isShowNotification())
+        if (!versionBuilder.isShowNotification()) {
             return;
+        }
         Intent i = new Intent(Intent.ACTION_VIEW);
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -161,41 +163,40 @@ public class NotificationHelper {
     }
 
     public void onDestroy() {
-        if (manager != null)
+        if (manager != null) {
             manager.cancel(NOTIFICATION_ID);
+        }
     }
 
-    private static final String channelid = "version_service_id";
-
     public Notification getServiceNotification() {
-
-        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(context, channelid)
+        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(context.getString(R.string.versionchecklib_version_service_runing))
                 .setSmallIcon(versionBuilder.getNotificationBuilder().getIcon())
                 .setAutoCancel(false);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(channelid, "version_service_name", NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "version_service_name", NotificationManager.IMPORTANCE_LOW);
             notificationChannel.enableLights(false);
-//            notificationChannel.setLightColor(getColor(R.color.versionchecklib_theme_color));
             notificationChannel.enableVibration(false);
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (manager != null) {
                 manager.createNotificationChannel(notificationChannel);
             }
-
         }
-        return notifcationBuilder.build();
 
+        return notifcationBuilder.build();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static Notification createSimpleNotification(Context context) {
-        NotificationChannel channel = new NotificationChannel(channelid,
-                "MyApp", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "MyApp", NotificationManager.IMPORTANCE_DEFAULT);
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-        return new NotificationCompat.Builder(context, channelid)
+
+        return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("")
-                .setContentText("").build();
+                .setContentText("")
+                .build();
     }
+
 }

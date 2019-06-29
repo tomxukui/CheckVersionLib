@@ -3,7 +3,6 @@ package com.allenliu.versionchecklib.v2.ui;
 import android.content.Context;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
@@ -29,7 +28,6 @@ public class BuilderHelper {
             File file = new File(builder.getDownloadAPKPath(), context.getString(R.string.versionchecklib_download_apkname, context.getPackageName()));
 
             if (!DownloadMangerV2.checkAPKIsExists(context, file.getAbsolutePath())) {
-                ALog.e("删除本地apk");
                 file.delete();
             }
 
@@ -41,7 +39,6 @@ public class BuilderHelper {
     public void checkForceUpdate() {
         if (builder.getForceUpdateListener() != null) {
             builder.getForceUpdateListener().onShouldForceUpdate();
-            AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
 
