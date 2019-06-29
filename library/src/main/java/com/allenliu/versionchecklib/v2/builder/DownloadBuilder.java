@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.allenliu.versionchecklib.callback.APKDownloadListener;
+import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -28,7 +28,7 @@ public class DownloadBuilder {
     private boolean isShowDownloadFailDialog;
     private boolean isDirectDownload;
     private NotificationBuilder notificationBuilder;
-    private APKDownloadListener apkDownloadListener;
+    private ApkDownloadListener apkDownloadListener;
 
     private CustomDownloadFailedListener customDownloadFailedListener;
     private CustomDownloadingDialogListener customDownloadingDialogListener;
@@ -143,7 +143,7 @@ public class DownloadBuilder {
         return this;
     }
 
-    public DownloadBuilder setApkDownloadListener(APKDownloadListener apkDownloadListener) {
+    public DownloadBuilder setApkDownloadListener(ApkDownloadListener apkDownloadListener) {
         this.apkDownloadListener = apkDownloadListener;
         return this;
     }
@@ -176,7 +176,7 @@ public class DownloadBuilder {
         return isShowDownloadFailDialog;
     }
 
-    public APKDownloadListener getApkDownloadListener() {
+    public ApkDownloadListener getApkDownloadListener() {
         return apkDownloadListener;
     }
 
