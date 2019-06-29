@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.allenliu.versionchecklib.callback.APKDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
-import com.allenliu.versionchecklib.utils.FileHelper;
+import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
@@ -47,7 +47,7 @@ public class DownloadBuilder {
 
     private void initialize() {
         isSilentDownload = false;
-        downloadAPKPath = FileHelper.getDownloadApkCachePath();
+        downloadAPKPath = UpgradeUtil.getDownloadDir();
         isForceRedownload = true;
         isShowDownloadingDialog = true;
         isShowNotification = true;

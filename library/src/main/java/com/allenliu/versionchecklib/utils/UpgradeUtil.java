@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.StringRes;
 
 import com.allenliu.versionchecklib.core.VersionFileProvider;
@@ -39,6 +40,34 @@ public class UpgradeUtil {
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
         context.startActivity(intent);
+    }
+
+    /**
+     * 获取下载的文件目录
+     */
+    public static String getDownloadDir() {
+        Context context = AllenVersionChecker.getInstance().getContext();
+
+        File file;
+        if (checkSDCard()) {
+            file = context.getExternalFilesDir("apks");
+
+        } else {
+            file = new File(context.getFilesDir(), "apks");
+        }
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        return file.getAbsolutePath();
+    }
+
+    /**
+     * 判断是否存在sdcard
+     */
+    public static boolean checkSDCard() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
 }

@@ -1,10 +1,7 @@
 package com.allenliu.versionchecklib.core.http;
 
-
 import android.os.Handler;
 import android.os.Looper;
-
-import com.allenliu.versionchecklib.utils.ALog;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -17,7 +17,6 @@ import android.support.v4.app.NotificationCompat;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.core.VersionFileProvider;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
-import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
@@ -90,7 +89,6 @@ public class NotificationHelper {
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = VersionFileProvider.getUriForFile(context, context.getPackageName() + ".versionProvider", file);
-            ALog.e(context.getPackageName() + "");
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
             uri = Uri.fromFile(file);

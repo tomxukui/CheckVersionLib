@@ -1,6 +1,5 @@
 package com.allenliu.versionchecklib.core.http;
 
-import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
 
 import org.json.JSONException;
@@ -90,7 +89,6 @@ public class AllenHttp {
             }
             url = urlBuilder.substring(0, urlBuilder.length() - 1);
         }
-        ALog.e("url:" + url);
         return url;
     }
 
@@ -106,7 +104,6 @@ public class AllenHttp {
         }
 
         json = jsonObject.toString();
-        ALog.e("json:" + json);
         return json;
     }
 
@@ -115,11 +112,9 @@ public class AllenHttp {
     private static <T extends Request.Builder> T assembleHeader(T builder, RequestVersionBuilder versionParams) {
         com.allenliu.versionchecklib.core.http.HttpHeaders headers = versionParams.getHttpHeaders();
         if (headers != null) {
-            ALog.e("header:");
             for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
                 String key = stringStringEntry.getKey();
                 String value = stringStringEntry.getValue();
-                ALog.e(key + "=" + value + "\n");
                 builder.addHeader(key, value);
             }
         }
@@ -156,7 +151,6 @@ public class AllenHttp {
         HttpParams params = versionParams.getRequestParams();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             builder.add(entry.getKey(), entry.getValue() + "");
-            ALog.e("params key:" + entry.getKey() + "-----value:" + entry.getValue());
         }
         return builder.build();
     }
