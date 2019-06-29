@@ -10,4 +10,8 @@
     <string name="versionchecklib_progress">%d/100</string>
     <string name="versionchecklib_download_apkname">%s.apk</string>
     <string name="versionchecklib_version_service_runing">更新服务正在运行</string>
+
+    <string name="upgrade_downloading">正在下载中...</string>
+    <string name="upgrade_download_complete">下载完成</string>
+
 </resources>

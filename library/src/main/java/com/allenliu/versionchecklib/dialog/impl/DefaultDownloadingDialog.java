@@ -14,6 +14,7 @@ import com.allenliu.versionchecklib.v2.ui.VersionService;
 public class DefaultDownloadingDialog extends Dialog implements DownloadingDialog {
 
     private ContentLoadingProgressBar bar_progress;
+    private TextView tv_status;
     private TextView tv_progress;
 
     public DefaultDownloadingDialog(@NonNull Context context) {
@@ -26,6 +27,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
     private void initView() {
         bar_progress = findViewById(R.id.bar_progress);
+        tv_status = findViewById(R.id.tv_status);
         tv_progress = findViewById(R.id.tv_progress);
     }
 
@@ -47,6 +49,9 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
         if (bar_progress != null) {
             bar_progress.setProgress(progress);
+        }
+        if (tv_status != null) {
+            tv_status.setText(progress < 100 ? R.string.upgrade_downloading : R.string.upgrade_download_complete);
         }
         if (tv_progress != null) {
             tv_progress.setText(String.format(ResouceUtil.getString(R.string.versionchecklib_progress), progress));
