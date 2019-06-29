@@ -77,7 +77,6 @@ public class DownloadingActivity extends AllenBaseActivity implements DialogInte
         } else {
             downloadingDialog.setCancelable(true);
         }
-
         downloadingDialog.setCanceledOnTouchOutside(false);
         ProgressBar pb = loadingView.findViewById(R.id.pb);
         TextView tvProgress = loadingView.findViewById(R.id.tv_progress);
