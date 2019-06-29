@@ -12,38 +12,29 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.UIData;
-import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
 import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-/**
- * Created by allenliu on 2018/1/18.
- */
-
 public abstract class AllenBaseActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
         setTransparent(this);
-    }
-
-    @Override
-    protected void onStop() {
-
-        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
+        }
     }
 
     /**
@@ -56,6 +47,7 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         } else {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -65,7 +57,8 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
      * 设置根布局参数
      */
     private void setRootView(Activity activity) {
-        ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
+        ViewGroup parent = activity.findViewById(android.R.id.content);
+
         for (int i = 0, count = parent.getChildCount(); i < count; i++) {
             View childView = parent.getChildAt(i);
             if (childView instanceof ViewGroup) {
@@ -79,6 +72,7 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
+
         transparentStatusBar(activity);
         setRootView(activity);
     }
@@ -88,11 +82,11 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
     }
 
     protected DownloadBuilder getVersionBuilder() {
-        if (VersionService.builder == null)
+        if (VersionService.builder == null) {
             finish();
+        }
+
         return VersionService.builder;
-
-
     }
 
     protected void checkForceUpdate() {
@@ -105,7 +99,6 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
     protected void cancelHandler() {
         if (getVersionBuilder() != null && getVersionBuilder().getOnCancelListener() != null) {
             getVersionBuilder().getOnCancelListener().onCancel();
-
         }
     }
 
@@ -122,4 +115,5 @@ public abstract class AllenBaseActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(0, 0);
     }
+
 }

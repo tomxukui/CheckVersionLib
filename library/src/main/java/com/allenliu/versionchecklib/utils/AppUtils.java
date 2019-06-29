@@ -24,15 +24,16 @@ public final class AppUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = VersionFileProvider.getUriForFile(context, context.getPackageName() + ".versionProvider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
         } else {
             uri = Uri.fromFile(file);
         }
 
         if (listener != null) {
             listener.install(context, uri);
+
         } else {
-            intent.setDataAndType(uri,
-                    "application/vnd.android.package-archive");
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
             context.startActivity(intent);
             AllenVersionChecker.getInstance().cancelAllMission();
         }

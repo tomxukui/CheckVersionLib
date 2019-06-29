@@ -1,6 +1,5 @@
 package com.allenliu.versionchecklib.v2.ui;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
-import com.allenliu.versionchecklib.utils.ALog;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -30,13 +28,6 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
 public class VersionService extends Service {
 
     public static DownloadBuilder builder;
@@ -51,7 +42,6 @@ public class VersionService extends Service {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        ALog.e("version service create");
         init();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -59,7 +49,6 @@ public class VersionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ALog.e("version service destroy");
         builderHelper = null;
         if (notificationHelper != null) {
             notificationHelper.onDestroy();
@@ -105,6 +94,7 @@ public class VersionService extends Service {
             } else {
                 if (builder.isSilentDownload()) {
                     requestPermissionAndDownload();
+
                 } else {
                     showVersionDialog();
                 }
@@ -160,9 +150,11 @@ public class VersionService extends Service {
 
     private void install() {
         AllenEventBusUtil.sendEventBus(AllenEventType.DOWNLOAD_COMPLETE);
+
         final String downloadPath = getDownloadFilePath();
         if (builder.isSilentDownload()) {
             showVersionDialog();
+
         } else {
             AppUtils.installApk(getApplicationContext(), new File(downloadPath), builder.getCustomInstallListener());
             builderHelper.checkForceUpdate();
@@ -180,10 +172,10 @@ public class VersionService extends Service {
         //判断是否缓存并且是否强制重新下载
         final String downloadPath = getDownloadFilePath();
         if (DownloadMangerV2.checkAPKIsExists(getApplicationContext(), downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
-            ALog.e("using cache");
             install();
             return;
         }
+
         builderHelper.checkAndDeleteAPK();
         String downloadUrl = builder.getDownloadUrl();
         if (downloadUrl == null && builder.getVersionBundle() != null) {
@@ -193,7 +185,6 @@ public class VersionService extends Service {
             AllenVersionChecker.getInstance().cancelAllMission();
             throw new RuntimeException("you must set a download url for download function using");
         }
-        ALog.e("downloadPath:" + downloadPath);
 
         DownloadMangerV2.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
             @Override
@@ -203,29 +194,34 @@ public class VersionService extends Service {
                         notificationHelper.updateNotification(progress);
                         updateDownloadingDialogProgress(progress);
                     }
-                    if (builder.getApkDownloadListener() != null)
+                    if (builder.getApkDownloadListener() != null) {
                         builder.getApkDownloadListener().onDownloading(progress);
+                    }
                 }
             }
 
             @Override
             public void onCheckerDownloadSuccess(File file) {
                 if (isServiceAlive) {
-                    if (!builder.isSilentDownload())
+                    if (!builder.isSilentDownload()) {
                         notificationHelper.showDownloadCompleteNotifcation(file);
-                    if (builder.getApkDownloadListener() != null)
+                    }
+                    if (builder.getApkDownloadListener() != null) {
                         builder.getApkDownloadListener().onDownloadSuccess(file);
+                    }
+
                     install();
                 }
             }
 
             @Override
             public void onCheckerDownloadFail() {
-
-                if (!isServiceAlive)
+                if (!isServiceAlive) {
                     return;
-                if (builder.getApkDownloadListener() != null)
+                }
+                if (builder.getApkDownloadListener() != null) {
                     builder.getApkDownloadListener().onDownloadFail();
+                }
 
                 if (!builder.isSilentDownload()) {
                     AllenEventBusUtil.sendEventBus(AllenEventType.CLOSE_DOWNLOADING_ACTIVITY);
@@ -233,15 +229,14 @@ public class VersionService extends Service {
                         showDownloadFailedDialog();
                     }
                     notificationHelper.showDownloadFailedNotification();
+
                 } else {
                     AllenVersionChecker.getInstance().cancelAllMission();
                 }
-
             }
 
             @Override
             public void onCheckerStartDownload() {
-                ALog.e("start download apk");
                 if (!builder.isSilentDownload()) {
                     notificationHelper.showNotification();
                     showDownloadingDialog();
@@ -253,22 +248,29 @@ public class VersionService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveEvent(CommonEvent commonEvent) {
         switch (commonEvent.getEventType()) {
-            case AllenEventType.START_DOWNLOAD_APK:
+
+            case AllenEventType.START_DOWNLOAD_APK: {
                 requestPermissionAndDownload();
-                break;
-            case AllenEventType.REQUEST_PERMISSION:
+            }
+            break;
+
+            case AllenEventType.REQUEST_PERMISSION: {
                 boolean permissionResult = (boolean) commonEvent.getData();
-                if (permissionResult)
+                if (permissionResult) {
                     startDownloadApk();
-                else {
+
+                } else {
                     if (builderHelper != null) {
                         builderHelper.checkForceUpdate();
                     }
-
                 }
-                break;
-        }
+            }
+            break;
 
+            default:
+                break;
+
+        }
     }
 
     private void init() {
