@@ -88,7 +88,7 @@ public class VersionService extends Service {
         if (builder != null) {
             mIsServiceAlive = true;
             builderHelper = new BuilderHelper(builder);
-            notificationHelper = new NotificationHelper(getApplicationContext(), builder);
+            notificationHelper = new NotificationHelper(builder);
 
             startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
 

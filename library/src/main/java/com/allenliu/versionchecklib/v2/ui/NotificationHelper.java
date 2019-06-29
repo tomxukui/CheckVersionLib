@@ -18,6 +18,7 @@ import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.utils.VersionFileProvider;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
 
@@ -33,7 +34,6 @@ public class NotificationHelper {
     private static final String CHANNEL_ID = "version_service_id";
 
     private DownloadBuilder versionBuilder;
-    private Context context;
     NotificationCompat.Builder notificationBuilder = null;
     NotificationManager manager = null;
     private boolean isDownloadSuccess = false;
@@ -41,8 +41,10 @@ public class NotificationHelper {
     private int currentProgress;
     private String contentText;
 
-    public NotificationHelper(Context context, DownloadBuilder builder) {
-        this.context = context;
+    private Context mContext;
+
+    public NotificationHelper(DownloadBuilder builder) {
+        mContext = AllenVersionChecker.getInstance().getContext();
         this.versionBuilder = builder;
         currentProgress = 0;
     }
@@ -71,7 +73,7 @@ public class NotificationHelper {
         isDownloadSuccess = false;
         isFailed = false;
         if (versionBuilder.isShowNotification()) {
-            manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             notificationBuilder = createNotification();
             manager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
@@ -88,7 +90,7 @@ public class NotificationHelper {
         Intent i = new Intent(Intent.ACTION_VIEW);
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = VersionFileProvider.getUriForFile(context, context.getPackageName() + ".versionProvider", file);
+            uri = VersionFileProvider.getUriForFile(mContext, mContext.getPackageName() + ".versionProvider", file);
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
             uri = Uri.fromFile(file);
@@ -96,9 +98,9 @@ public class NotificationHelper {
         //设置intent的类型
         i.setDataAndType(uri,
                 "application/vnd.android.package-archive");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i, 0);
         notificationBuilder.setContentIntent(pendingIntent);
-        notificationBuilder.setContentText(context.getString(R.string.versionchecklib_download_finish));
+        notificationBuilder.setContentText(mContext.getString(R.string.versionchecklib_download_finish));
         notificationBuilder.setProgress(100, 100, false);
         manager.cancelAll();
         manager.notify(NOTIFICATION_ID, notificationBuilder.build());
@@ -108,11 +110,11 @@ public class NotificationHelper {
         isDownloadSuccess = false;
         isFailed = true;
         if (versionBuilder.isShowNotification()) {
-            Intent intent = new MaskDialogActivity.Builder(context)
+            Intent intent = new MaskDialogActivity.Builder(mContext)
                     .create()
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, FLAG_UPDATE_CURRENT);
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
             notificationBuilder.setProgress(100, 0, false);
@@ -129,31 +131,31 @@ public class NotificationHelper {
             notificationChannel.enableLights(false);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(false);
-            NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             manager.createNotificationChannel(notificationChannel);
         }
-        builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+        builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
         builder.setAutoCancel(true);
         builder.setSmallIcon(versionBuilder.getNotificationBuilder().getIcon());
         //set content title
-        String contentTitle = context.getString(R.string.app_name);
+        String contentTitle = mContext.getString(R.string.app_name);
         if (libNotificationBuilder.getContentTitle() != null)
             contentTitle = libNotificationBuilder.getContentTitle();
         builder.setContentTitle(contentTitle);
         //set ticker
-        String ticker = context.getString(R.string.versionchecklib_downloading);
+        String ticker = mContext.getString(R.string.versionchecklib_downloading);
         if (libNotificationBuilder.getTicker() != null)
             ticker = libNotificationBuilder.getTicker();
         builder.setTicker(ticker);
         //set content text
-        contentText = context.getString(R.string.versionchecklib_download_progress);
+        contentText = mContext.getString(R.string.versionchecklib_download_progress);
         if (libNotificationBuilder.getContentText() != null)
             contentText = libNotificationBuilder.getContentText();
         builder.setContentText(String.format(contentText, 0));
 
         if (libNotificationBuilder.isRingtone()) {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(context, notification);
+            Ringtone r = RingtoneManager.getRingtone(mContext, notification);
             r.play();
         }
 
@@ -167,9 +169,9 @@ public class NotificationHelper {
     }
 
     public Notification getServiceNotification() {
-        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(context.getString(R.string.versionchecklib_version_service_runing))
+        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
+                .setContentTitle(mContext.getString(R.string.app_name))
+                .setContentText(mContext.getString(R.string.versionchecklib_version_service_runing))
                 .setSmallIcon(versionBuilder.getNotificationBuilder().getIcon())
                 .setAutoCancel(false);
 
@@ -177,7 +179,7 @@ public class NotificationHelper {
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "version_service_name", NotificationManager.IMPORTANCE_LOW);
             notificationChannel.enableLights(false);
             notificationChannel.enableVibration(false);
-            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
             if (manager != null) {
                 manager.createNotificationChannel(notificationChannel);
             }
