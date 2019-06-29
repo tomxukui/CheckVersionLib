@@ -44,6 +44,7 @@ public class VersionService extends Service {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
         init();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -51,6 +52,10 @@ public class VersionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+
         builderHelper = null;
         if (notificationHelper != null) {
             notificationHelper.onDestroy();
@@ -62,9 +67,6 @@ public class VersionService extends Service {
         }
         stopForeground(true);
         AllenHttp.getHttpClient().dispatcher().cancelAll();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 
     @Nullable
