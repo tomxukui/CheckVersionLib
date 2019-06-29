@@ -11,7 +11,6 @@ import android.support.annotation.WorkerThread;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
-import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
@@ -21,7 +20,6 @@ import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.eventbus.AllenEventType;
-import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
 
 import org.greenrobot.eventbus.EventBus;
@@ -92,11 +90,11 @@ public class VersionService extends Service {
     private void downloadAPK() {
         if (builder != null && builder.getVersionBundle() != null) {
             if (builder.isDirectDownload()) {
-                AllenEventBusUtil.sendEventBus(AllenEventType.START_DOWNLOAD_APK);
+                startDownloadApk();
 
             } else {
                 if (builder.isSilentDownload()) {
-                    requestPermissionAndDownload();
+                    startDownloadApk();
 
                 } else {
                     showVersionDialog();
@@ -153,14 +151,6 @@ public class VersionService extends Service {
                     .create()
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            startActivity(intent);
-        }
-    }
-
-    private void requestPermissionAndDownload() {
-        if (builder != null) {
-            Intent intent = new Intent(this, PermissionDialogActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
@@ -308,34 +298,6 @@ public class VersionService extends Service {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveEvent(CommonEvent commonEvent) {
-        switch (commonEvent.getEventType()) {
-
-            case AllenEventType.START_DOWNLOAD_APK: {
-                requestPermissionAndDownload();
-            }
-            break;
-
-            case AllenEventType.REQUEST_PERMISSION: {
-                boolean permissionResult = (boolean) commonEvent.getData();
-                if (permissionResult) {
-                    startDownloadApk();
-
-                } else {
-                    if (builderHelper != null) {
-                        builderHelper.checkForceUpdate();
-                    }
-                }
-            }
-            break;
-
-            default:
-                break;
-
-        }
-    }
-
     private void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
@@ -348,10 +310,12 @@ public class VersionService extends Service {
             startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
             executors = Executors.newSingleThreadExecutor();
             executors.submit(new Runnable() {
+
                 @Override
                 public void run() {
                     onHandleWork();
                 }
+
             });
 
         } else {
