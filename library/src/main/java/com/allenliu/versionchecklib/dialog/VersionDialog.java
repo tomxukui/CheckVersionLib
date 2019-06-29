@@ -10,8 +10,9 @@ public interface VersionDialog {
 
     boolean isShowing();
 
+    void setOnDismissListener(DialogInterface.OnDismissListener listener);
+
     void setOnConfirmListener(DialogInterface.OnClickListener listener);
 
     void setOnCancelListener(DialogInterface.OnCancelListener listener);
-
 }

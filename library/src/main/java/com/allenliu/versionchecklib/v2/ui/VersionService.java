@@ -13,6 +13,7 @@ import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
+import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
@@ -190,6 +191,7 @@ public class VersionService extends Service {
         }
 
         DownloadMangerV2.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
+
             @Override
             public void onCheckerDownloading(int progress) {
                 if (isServiceAlive && builder != null) {
@@ -245,7 +247,28 @@ public class VersionService extends Service {
                     showDownloadingDialog();
                 }
             }
+
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUpgradeEvent(UpgradeEvent event) {
+        switch (event.type) {
+
+            case UpgradeEvent.CONFIRM_UPGRADE: {//用户同意更新
+                startDownloadApk();
+            }
+            break;
+
+            case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
+
+            }
+            break;
+
+            default:
+                break;
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

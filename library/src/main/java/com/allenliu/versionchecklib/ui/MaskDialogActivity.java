@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
+import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
@@ -22,7 +22,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MaskDialogActivity extends AppCompatActivity {
+import static com.allenliu.versionchecklib.event.UpgradeEvent.CANCEL_DOWNLOADING;
+import static com.allenliu.versionchecklib.event.UpgradeEvent.CANCEL_UPGRADE;
+import static com.allenliu.versionchecklib.event.UpgradeEvent.CONFIRM_UPGRADE;
+
+public class MaskDialogActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
     private static final String EXTRA_DIALOG_TYPE = "EXTRA_TYPE";
     private static final String TYPE_VERSION = "TYPE_VERSION";
@@ -108,10 +112,12 @@ public class MaskDialogActivity extends AppCompatActivity {
                         .force(data.getForce())
                         .create();
             }
+            mVersionDialog.setOnDismissListener(this);
             mVersionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
+                    EventBus.getDefault().post(new UpgradeEvent(CANCEL_UPGRADE));
                 }
 
             });
@@ -119,6 +125,7 @@ public class MaskDialogActivity extends AppCompatActivity {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    EventBus.getDefault().post(new UpgradeEvent(CONFIRM_UPGRADE));
                 }
 
             });
@@ -156,12 +163,12 @@ public class MaskDialogActivity extends AppCompatActivity {
             } else {
                 mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).create();
             }
-
+            mDownloadingDialog.setOnDismissListener(this);
             mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    cancelDownloading(false);
+                    EventBus.getDefault().post(new UpgradeEvent(CANCEL_DOWNLOADING));
                 }
 
             });
@@ -185,33 +192,40 @@ public class MaskDialogActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 取消下载
-     */
-    private void cancelDownloading(boolean isDownloadCompleted) {
-        if (!isDownloadCompleted) {
-            AllenHttp.getHttpClient().dispatcher().cancelAll();
-            callbackOnCancel();
-            checkForceUpdate();
-        }
-        finish();
-    }
-
-    /**
-     * 回调取消
-     */
-    protected void callbackOnCancel() {
-        if (VersionService.builder != null && VersionService.builder.getOnCancelListener() != null) {
-            VersionService.builder.getOnCancelListener().onCancel();
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if ((mVersionDialog == null || !mVersionDialog.isShowing()) && (mDownloadingDialog == null || !mDownloadingDialog.isShowing())) {
+            finish();
         }
     }
 
-    protected void checkForceUpdate() {
-//        if (VersionService.builder != null && VersionService.builder.getForceUpdateListener() != null) {
-//            VersionService.builder.getForceUpdateListener().onShouldForceUpdate();
-//            finish();
+//    /**
+//     * 取消下载
+//     */
+//    private void cancelDownloading(boolean isDownloadCompleted) {
+//        if (!isDownloadCompleted) {
+//            AllenHttp.getHttpClient().dispatcher().cancelAll();
+//            callbackOnCancel();
+//            checkForceUpdate();
 //        }
-    }
+//        finish();
+//    }
+//
+//    /**
+//     * 回调取消
+//     */
+//    protected void callbackOnCancel() {
+//        if (VersionService.builder != null && VersionService.builder.getOnCancelListener() != null) {
+//            VersionService.builder.getOnCancelListener().onCancel();
+//        }
+//    }
+//
+//    protected void checkForceUpdate() {
+////        if (VersionService.builder != null && VersionService.builder.getForceUpdateListener() != null) {
+////            VersionService.builder.getForceUpdateListener().onShouldForceUpdate();
+////            finish();
+////        }
+//    }
 
     public static class Builder {
 
