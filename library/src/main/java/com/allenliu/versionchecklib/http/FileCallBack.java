@@ -1,7 +1,6 @@
 package com.allenliu.versionchecklib.http;
 
 import android.os.Handler;
-import android.os.Looper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,25 +11,22 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/**
- * Created by allenliu on 2017/8/31.
- */
-
 public abstract class FileCallBack implements Callback {
 
-    private String path;
-    private String name;
-    private Handler handler;
+    private String mPath;
+    private String mName;
 
-    public FileCallBack(String path, String name) {
-        this.path = path;
-        this.name = name;
-        handler = new Handler(Looper.getMainLooper());
+    private Handler mHandler;
+
+    public FileCallBack(Handler handler, String path, String name) {
+        mHandler = handler;
+        mPath = path;
+        mName = name;
     }
 
     @Override
     public void onFailure(Call call, IOException e) {
-        handler.post(new Runnable() {
+        mHandler.post(new Runnable() {
 
             @Override
             public void run() {
@@ -47,7 +43,7 @@ public abstract class FileCallBack implements Callback {
         int len = 0;
         FileOutputStream fos = null;
         // 储存下载文件的目录
-        File pathFile = new File(path);
+        File pathFile = new File(mPath);
         if (!pathFile.exists()) {
             pathFile.mkdirs();
         }
@@ -55,9 +51,10 @@ public abstract class FileCallBack implements Callback {
         try {
             is = response.body().byteStream();
 
-            final File file = new File(path, name);
+            final File file = new File(mPath, mName);
             if (file.exists()) {
                 file.delete();
+
             } else {
                 file.createNewFile();
             }
@@ -66,13 +63,11 @@ public abstract class FileCallBack implements Callback {
             long sum = 0;
             while ((len = is.read(buf)) != -1) {
                 long total = response.body().contentLength();
-
                 fos.write(buf, 0, len);
                 sum += len;
-
                 final int progress = (int) (((double) sum / total) * 100);
 
-                handler.post(new Runnable() {
+                mHandler.post(new Runnable() {
 
                     @Override
                     public void run() {
@@ -80,17 +75,15 @@ public abstract class FileCallBack implements Callback {
                     }
 
                 });
-
             }
 
             fos.flush();
 
-            handler.post(new Runnable() {
+            mHandler.post(new Runnable() {
 
                 @Override
                 public void run() {
                     onSuccess(file, call, response);
-
                 }
 
             });
@@ -98,12 +91,11 @@ public abstract class FileCallBack implements Callback {
         } catch (Exception e) {
             e.printStackTrace();
 
-            handler.post(new Runnable() {
+            mHandler.post(new Runnable() {
 
                 @Override
                 public void run() {
                     onDownloadFailed();
-
                 }
 
             });
@@ -121,6 +113,10 @@ public abstract class FileCallBack implements Callback {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Handler getHandle() {
+        return mHandler;
     }
 
     public abstract void onSuccess(File file, Call call, Response response);
