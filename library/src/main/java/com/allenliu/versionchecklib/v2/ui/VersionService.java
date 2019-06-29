@@ -295,7 +295,9 @@ public class VersionService extends Service {
             }
             break;
 
-            case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
+            case UpgradeEvent.CANCEL_UPGRADE://用户取消更新
+            case UpgradeEvent.CANCEL_DOWNLOADING: //用户取消下载
+            {
                 builderHelper.checkForceUpdate();
                 AllenVersionChecker.getInstance().cancelAllMission();
 
@@ -303,11 +305,6 @@ public class VersionService extends Service {
                 if (listener != null) {
                     listener.onCancel();
                 }
-            }
-            break;
-
-            case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
-                AllenHttp.getHttpClient().dispatcher().cancelAll();
             }
             break;
 
