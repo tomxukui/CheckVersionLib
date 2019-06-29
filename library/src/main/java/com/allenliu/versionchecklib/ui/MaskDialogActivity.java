@@ -176,7 +176,6 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             } else {
                 mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).create();
             }
-            mDownloadingDialog.setOnDismissListener(this);
             mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override

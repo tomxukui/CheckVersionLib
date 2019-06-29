@@ -36,7 +36,8 @@ public class VersionService extends Service {
     private BuilderHelper builderHelper;
     private NotificationHelper notificationHelper;
 
-    private boolean isServiceAlive = false;
+    private boolean mIsServiceAlive = false;//服务是否存在
+    private boolean mIsDownloadComplete = false;//下载是否已完成
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -55,7 +56,7 @@ public class VersionService extends Service {
             notificationHelper.onDestroy();
         }
         notificationHelper = null;
-        isServiceAlive = false;
+        mIsServiceAlive = false;
         if (mExecutorService != null) {
             mExecutorService.shutdown();
         }
@@ -81,7 +82,7 @@ public class VersionService extends Service {
         }
 
         if (builder != null) {
-            isServiceAlive = true;
+            mIsServiceAlive = true;
             builderHelper = new BuilderHelper(builder);
             notificationHelper = new NotificationHelper(getApplicationContext(), builder);
 
@@ -216,11 +217,20 @@ public class VersionService extends Service {
             throw new RuntimeException("you must set a download url for download function using");
         }
 
+        mIsDownloadComplete = false;
         DownloadMangerV2.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
 
             @Override
+            public void onCheckerStartDownload() {
+                if (!builder.isSilentDownload()) {
+                    notificationHelper.showNotification();
+                    showDownloadingDialog();
+                }
+            }
+
+            @Override
             public void onCheckerDownloading(int progress) {
-                if (isServiceAlive && builder != null) {
+                if (mIsServiceAlive && builder != null) {
                     if (!builder.isSilentDownload()) {
                         notificationHelper.updateNotification(progress);
                         updateDownloadingDialogProgress(progress);
@@ -233,7 +243,9 @@ public class VersionService extends Service {
 
             @Override
             public void onCheckerDownloadSuccess(File file) {
-                if (isServiceAlive) {
+                mIsDownloadComplete = true;
+
+                if (mIsServiceAlive) {
                     if (!builder.isSilentDownload()) {
                         notificationHelper.showDownloadCompleteNotifcation(file);
                     }
@@ -247,7 +259,7 @@ public class VersionService extends Service {
 
             @Override
             public void onCheckerDownloadFail() {
-                if (!isServiceAlive) {
+                if (!mIsServiceAlive) {
                     return;
                 }
                 if (builder.getApkDownloadListener() != null) {
@@ -262,14 +274,6 @@ public class VersionService extends Service {
 
                 } else {
                     AllenVersionChecker.getInstance().cancelAllMission();
-                }
-            }
-
-            @Override
-            public void onCheckerStartDownload() {
-                if (!builder.isSilentDownload()) {
-                    notificationHelper.showNotification();
-                    showDownloadingDialog();
                 }
             }
 
@@ -295,15 +299,25 @@ public class VersionService extends Service {
             }
             break;
 
-            case UpgradeEvent.CANCEL_UPGRADE://用户取消更新
-            case UpgradeEvent.CANCEL_DOWNLOADING: //用户取消下载
-            {
+            case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
                 builderHelper.checkForceUpdate();
                 AllenVersionChecker.getInstance().cancelAllMission();
 
                 OnCancelListener listener = builder.getOnCancelListener();
                 if (listener != null) {
                     listener.onCancel();
+                }
+            }
+            break;
+
+            case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
+                AllenHttp.getHttpClient().dispatcher().cancelAll();
+
+                if (mIsDownloadComplete) {
+                    showVersionDialog();
+
+                } else {
+                    showDownloadFailedDialog();
                 }
             }
             break;
