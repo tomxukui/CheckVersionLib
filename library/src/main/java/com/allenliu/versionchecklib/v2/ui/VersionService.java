@@ -190,19 +190,6 @@ public class VersionService extends Service {
         }
     }
 
-//    private void install() {
-//        AllenEventBusUtil.sendEventBus(AllenEventType.DOWNLOAD_COMPLETE);
-//
-//        final String downloadPath = getDownloadFilePath();
-//        if (builder.isSilentDownload()) {
-//            showVersionDialog();
-//
-//        } else {
-//            AppUtils.installApk(getApplicationContext(), new File(downloadPath), builder.getCustomInstallListener());
-//            builderHelper.checkForceUpdate();
-//        }
-//    }
-
     /**
      * 获取下载的apk文件
      */
