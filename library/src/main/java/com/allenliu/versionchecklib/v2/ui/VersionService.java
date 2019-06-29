@@ -308,8 +308,6 @@ public class VersionService extends Service {
 
             case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
                 AllenHttp.getHttpClient().dispatcher().cancelAll();
-
-                showVersionDialog();
             }
             break;
 
