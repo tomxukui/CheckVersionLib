@@ -15,7 +15,7 @@ import com.allenliu.versionchecklib.core.http.AllenHttp;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
-import com.allenliu.versionchecklib.utils.AppUtils;
+import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.net.DownloadMangerV2;
@@ -177,7 +177,7 @@ public class VersionService extends Service {
      * 安装apk
      */
     private void install() {
-        AppUtils.installApk(getApplicationContext(), getDownloadFile(), builder.getCustomInstallListener());
+        UpgradeUtil.installApk(getDownloadFile());
     }
 
     public static void enqueueWork(final Context context) {

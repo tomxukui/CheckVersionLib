@@ -18,7 +18,7 @@ import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.core.VersionFileProvider;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.ALog;
-import com.allenliu.versionchecklib.utils.ResouceUtil;
+import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
 
@@ -116,7 +116,7 @@ public class NotificationHelper {
 
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT);
             notificationBuilder.setContentIntent(pendingIntent);
-            notificationBuilder.setContentText(ResouceUtil.getString(R.string.upgrade_download_fail_retry));
+            notificationBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
             notificationBuilder.setProgress(100, 0, false);
             manager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }

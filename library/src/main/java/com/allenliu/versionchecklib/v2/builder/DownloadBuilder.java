@@ -11,7 +11,6 @@ import com.allenliu.versionchecklib.utils.FileHelper;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.v2.callback.CustomInstallListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.allenliu.versionchecklib.v2.net.RequestVersionManager;
@@ -34,7 +33,6 @@ public class DownloadBuilder {
     private CustomDownloadFailedListener customDownloadFailedListener;
     private CustomDownloadingDialogListener customDownloadingDialogListener;
     private CustomVersionDialogListener customVersionDialogListener;
-    private CustomInstallListener customInstallListener;
     private OnCancelListener onCancelListener;
     private ForceUpdateListener forceUpdateListener;
     private UIData versionBundle;
@@ -98,11 +96,6 @@ public class DownloadBuilder {
 
     public DownloadBuilder setCustomVersionDialogListener(CustomVersionDialogListener customVersionDialogListener) {
         this.customVersionDialogListener = customVersionDialogListener;
-        return this;
-    }
-
-    public DownloadBuilder setCustomDownloadInstallListener(CustomInstallListener customDownloadInstallListener) {
-        this.customInstallListener = customDownloadInstallListener;
         return this;
     }
 
@@ -197,10 +190,6 @@ public class DownloadBuilder {
 
     public CustomDownloadingDialogListener getCustomDownloadingDialogListener() {
         return customDownloadingDialogListener;
-    }
-
-    public CustomInstallListener getCustomInstallListener() {
-        return customInstallListener;
     }
 
     public CustomVersionDialogListener getCustomVersionDialogListener() {
