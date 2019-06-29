@@ -109,7 +109,7 @@ public class VersionService extends Service {
     }
 
     /**
-     * 开启UI展示界面
+     * 显示版本对话框
      */
     private void showVersionDialog() {
         if (builder != null) {
@@ -122,6 +122,9 @@ public class VersionService extends Service {
         }
     }
 
+    /**
+     * 显示下载对话框
+     */
     private void showDownloadingDialog() {
         if (builder != null && builder.isShowDownloadingDialog()) {
             Intent intent = new MaskDialogActivity.Builder(this)
@@ -133,10 +136,16 @@ public class VersionService extends Service {
         }
     }
 
+    /**
+     * 更新下载进度
+     */
     private void updateDownloadingDialogProgress(int progress) {
         EventBus.getDefault().post(new DownloadingProgressEvent(progress));
     }
 
+    /**
+     * 显示下载失败对话框
+     */
     private void showDownloadFailedDialog() {
         if (builder != null) {
             Intent intent = new MaskDialogActivity.Builder(this)
@@ -173,6 +182,9 @@ public class VersionService extends Service {
 //        }
 //    }
 
+    /**
+     * 获取下载的apk文件
+     */
     private File getDownloadFile() {
         return new File(builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
     }
