@@ -12,6 +12,7 @@ import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.core.PermissionDialogActivity;
 import com.allenliu.versionchecklib.core.http.AllenHttp;
+import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.AllenEventBusUtil;
 import com.allenliu.versionchecklib.utils.AppUtils;
@@ -131,11 +132,7 @@ public class VersionService extends Service {
     }
 
     private void updateDownloadingDialogProgress(int progress) {
-        CommonEvent commonEvent = new CommonEvent();
-        commonEvent.setEventType(AllenEventType.UPDATE_DOWNLOADING_PROGRESS);
-        commonEvent.setData(progress);
-        commonEvent.setSuccessful(true);
-        EventBus.getDefault().post(commonEvent);
+        EventBus.getDefault().post(new DownloadingProgressEvent(progress));
     }
 
     private void showDownloadFailedDialog() {

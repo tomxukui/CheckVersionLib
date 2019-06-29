@@ -12,8 +12,10 @@ import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
+import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.v2.builder.UIData;
-import com.allenliu.versionchecklib.v2.eventbus.CommonEvent;
+import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
+import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.ui.VersionService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,10 +49,16 @@ public class MaskDialogActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+
+        dismissVersionDialog();
+        dismissDownloadingDialog();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveEvent(CommonEvent commonEvent) {
+    public void onDownloadingProgressEvent(DownloadingProgressEvent event) {
+        if (mDownloadingDialog != null && mDownloadingDialog.isShowing()) {
+            mDownloadingDialog.showProgress(event.progress);
+        }
     }
 
     private void handleIntent(Intent intent) {
@@ -88,11 +96,10 @@ public class MaskDialogActivity extends AppCompatActivity {
     private void showVersionDialog() {
         if (mVersionDialog == null) {
             UIData data = VersionService.builder.getVersionBundle();
+            CustomVersionDialogListener customVersionDialogListener = VersionService.builder.getCustomVersionDialogListener();
 
-            if (VersionService.builder != null && VersionService.builder.getCustomVersionDialogListener() != null) {
-                mVersionDialog = VersionService.builder
-                        .getCustomVersionDialogListener()
-                        .getCustomVersionDialog(this, VersionService.builder.getVersionBundle());
+            if (customVersionDialogListener != null) {
+                mVersionDialog = customVersionDialogListener.getCustomVersionDialog(this, data);
 
             } else {
                 mVersionDialog = new DefaultVersionDialog.Builder(this)
@@ -140,8 +147,11 @@ public class MaskDialogActivity extends AppCompatActivity {
      */
     private void showDownloadingDialog() {
         if (mDownloadingDialog == null) {
-            if (VersionService.builder != null && VersionService.builder.getCustomDownloadingDialogListener() != null) {
-                mDownloadingDialog = VersionService.builder.getCustomDownloadingDialogListener().getCustomDownloadingDialog(this, 0, VersionService.builder.getVersionBundle());
+            UIData data = VersionService.builder.getVersionBundle();
+            CustomDownloadingDialogListener customDownloadingDialogListener = VersionService.builder.getCustomDownloadingDialogListener();
+
+            if (customDownloadingDialogListener != null) {
+                mDownloadingDialog = customDownloadingDialogListener.getCustomDownloadingDialog(this, 0, data);
 
             } else {
                 mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).create();
