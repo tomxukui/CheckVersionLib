@@ -154,28 +154,30 @@ public class VersionService extends Service {
     }
 
     private void install() {
-        AllenEventBusUtil.sendEventBus(AllenEventType.DOWNLOAD_COMPLETE);
-
-        final String downloadPath = getDownloadFilePath();
-        if (builder.isSilentDownload()) {
-            showVersionDialog();
-
-        } else {
-            AppUtils.installApk(getApplicationContext(), new File(downloadPath), builder.getCustomInstallListener());
-            builderHelper.checkForceUpdate();
-        }
+        AppUtils.installApk(getApplicationContext(), getDownloadFile(), builder.getCustomInstallListener());
     }
 
-    private String getDownloadFilePath() {
-        File file = new File(builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
+//    private void install() {
+//        AllenEventBusUtil.sendEventBus(AllenEventType.DOWNLOAD_COMPLETE);
+//
+//        final String downloadPath = getDownloadFilePath();
+//        if (builder.isSilentDownload()) {
+//            showVersionDialog();
+//
+//        } else {
+//            AppUtils.installApk(getApplicationContext(), new File(downloadPath), builder.getCustomInstallListener());
+//            builderHelper.checkForceUpdate();
+//        }
+//    }
 
-        return file.getAbsolutePath();
+    private File getDownloadFile() {
+        return new File(builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
     }
 
     @WorkerThread
     private void startDownloadApk() {
         //判断是否缓存并且是否强制重新下载
-        final String downloadPath = getDownloadFilePath();
+        final String downloadPath = getDownloadFile().getAbsolutePath();
         if (DownloadMangerV2.checkAPKIsExists(getApplicationContext(), downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
             install();
             return;
@@ -267,6 +269,16 @@ public class VersionService extends Service {
                 if (listener != null) {
                     listener.onCancel();
                 }
+            }
+            break;
+
+            case UpgradeEvent.DOWNLOAD_COMPLETE: {//下载已完成
+                install();
+            }
+            break;
+
+            case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
+                AllenVersionChecker.getInstance().cancelAllMission();
             }
             break;
 

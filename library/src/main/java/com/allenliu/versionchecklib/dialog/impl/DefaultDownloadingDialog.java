@@ -17,7 +17,10 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
     private ContentLoadingProgressBar bar_progress;
     private TextView tv_status;
     private TextView tv_progress;
+    private TextView tv_cancel;
     private TextView tv_install;
+
+    private OnClickListener mOnInstallListener;
 
     public DefaultDownloadingDialog(@NonNull Context context) {
         super(context, R.style.versionCheckLib_BaseDialog);
@@ -31,6 +34,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
         bar_progress = findViewById(R.id.bar_progress);
         tv_status = findViewById(R.id.tv_status);
         tv_progress = findViewById(R.id.tv_progress);
+        tv_cancel = findViewById(R.id.tv_cancel);
         tv_install = findViewById(R.id.tv_install);
     }
 
@@ -43,11 +47,22 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
             setCancelable(true);
         }
 
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                cancel();
+            }
+
+        });
+
         tv_install.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
+                if (mOnInstallListener != null) {
+                    mOnInstallListener.onClick(DefaultDownloadingDialog.this, tv_install.getId());
+                }
             }
 
         });
@@ -71,6 +86,11 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
         if (tv_install != null) {
             tv_install.setVisibility(progress < 100 ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setOnInstallListener(OnClickListener listener) {
+        mOnInstallListener = listener;
     }
 
     public static class Builder {

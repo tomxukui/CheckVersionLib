@@ -12,6 +12,8 @@ public interface DownloadingDialog {
 
     void showProgress(int progress);
 
+    void setOnInstallListener(DialogInterface.OnClickListener listener);
+
     void setOnDismissListener(DialogInterface.OnDismissListener listener);
 
     void setOnCancelListener(DialogInterface.OnCancelListener listener);

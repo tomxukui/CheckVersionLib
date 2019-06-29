@@ -34,4 +34,8 @@ public class CustomDownloadingDialog extends Dialog implements DownloadingDialog
         tv_progress.setText(String.format("%d/100", progress));
     }
 
+    @Override
+    public void setOnInstallListener(OnClickListener listener) {
+    }
+
 }

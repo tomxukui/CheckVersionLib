@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.allenliu.versionchecklib.core.VersionFileProvider;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.callback.CustomInstallListener;
 
 import java.io.File;
@@ -35,7 +34,6 @@ public final class AppUtils {
         } else {
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             context.startActivity(intent);
-            AllenVersionChecker.getInstance().cancelAllMission();
         }
     }
 

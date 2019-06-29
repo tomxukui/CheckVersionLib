@@ -22,10 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import static com.allenliu.versionchecklib.event.UpgradeEvent.CANCEL_DOWNLOADING;
-import static com.allenliu.versionchecklib.event.UpgradeEvent.CANCEL_UPGRADE;
-import static com.allenliu.versionchecklib.event.UpgradeEvent.CONFIRM_UPGRADE;
-
 public class MaskDialogActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
     private static final String EXTRA_DIALOG_TYPE = "EXTRA_TYPE";
@@ -123,7 +119,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    EventBus.getDefault().post(new UpgradeEvent(CANCEL_UPGRADE));
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CANCEL_UPGRADE));
                 }
 
             });
@@ -131,7 +127,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    EventBus.getDefault().post(new UpgradeEvent(CONFIRM_UPGRADE));
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CONFIRM_UPGRADE));
                 }
 
             });
@@ -174,7 +170,15 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    EventBus.getDefault().post(new UpgradeEvent(CANCEL_DOWNLOADING));
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CANCEL_DOWNLOADING));
+                }
+
+            });
+            mDownloadingDialog.setOnInstallListener(new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.DOWNLOAD_COMPLETE));
                 }
 
             });
