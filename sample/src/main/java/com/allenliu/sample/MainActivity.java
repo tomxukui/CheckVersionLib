@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -28,19 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup rg_version;
     private RadioGroup rg_downloading;
     private RadioGroup rg_download_failed;
-
-    private EditText etAddress;
-    private CheckBox forceUpdateCheckBox;
-    private CheckBox silentDownloadCheckBox;
-    private CheckBox silentDownloadCheckBoxAndInstall;
-
-    private CheckBox forceDownloadCheckBox;
-    private CheckBox onlyDownloadCheckBox;
-    private CheckBox showNotificationCheckBox;
-    private CheckBox showDownloadingCheckBox;
-    private CheckBox customNotificationCheckBox;
-    private CheckBox showDownloadFailedCheckBox;
-    private DownloadBuilder builder;
+    private CheckBox cb_silent_upgrade;
+    private CheckBox cb_force_redownload;
+    private CheckBox cb_force;
+    private CheckBox cb_only_download;
+    private CheckBox cb_show_Notification;
+    private CheckBox cb_custom_Notification;
+    private EditText et_apkDir;
+    private Button btn_send;
+    private Button btn_cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,38 +49,35 @@ public class MainActivity extends AppCompatActivity {
         rg_version = findViewById(R.id.rg_version);
         rg_downloading = findViewById(R.id.rg_downloading);
         rg_download_failed = findViewById(R.id.rg_download_failed);
+        cb_silent_upgrade = findViewById(R.id.cb_silent_upgrade);
+        cb_force_redownload = findViewById(R.id.cb_force_redownload);
+        cb_force = findViewById(R.id.cb_force);
+        cb_only_download = findViewById(R.id.cb_only_download);
+        cb_show_Notification = findViewById(R.id.cb_show_Notification);
+        cb_custom_Notification = findViewById(R.id.cb_custom_Notification);
+        et_apkDir = findViewById(R.id.et_apkDir);
+        btn_send = findViewById(R.id.btn_send);
+        btn_cancel = findViewById(R.id.btn_cancel);
 
-        etAddress = findViewById(R.id.etAddress);
-
-        silentDownloadCheckBox = findViewById(R.id.checkbox2);
-        forceUpdateCheckBox = findViewById(R.id.checkbox);
-        forceDownloadCheckBox = findViewById(R.id.checkbox3);
-        onlyDownloadCheckBox = findViewById(R.id.checkbox4);
-        showNotificationCheckBox = findViewById(R.id.checkbox5);
-        showDownloadingCheckBox = findViewById(R.id.checkbox6);
-        customNotificationCheckBox = findViewById(R.id.checkbox7);
-        showDownloadFailedCheckBox = findViewById(R.id.checkbox8);
-        silentDownloadCheckBoxAndInstall = findViewById(R.id.checkbox20);
-    }
-
-    public void v2Click(View view) {
-        switch (view.getId()) {
-            case R.id.sendbtn:
-                sendRequest();
-                break;
-            case R.id.cancelBtn:
-                UpgradeClient.getInstance().cancelAllMission();
-                break;
-        }
+        btn_send.setOnClickListener(v -> sendRequest());
+        btn_cancel.setOnClickListener(v -> UpgradeClient.getInstance().cancelAllMission());
     }
 
     private void sendRequest() {
-        if (onlyDownloadCheckBox.isChecked()) {
-            builder = UpgradeClient
+        UpgradeInfo data = new UpgradeInfo();
+        data.setTitle("更新提示");
+        data.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
+        data.setContent(getString(R.string.updatecontent));
+        data.setForce(cb_force.isChecked());
+
+        DownloadBuilder downloadBuilder;
+        if (cb_only_download.isChecked()) {
+            downloadBuilder = UpgradeClient
                     .getInstance()
-                    .downloadOnly(createUpgradeInfo());
+                    .downloadOnly(data);
+
         } else {
-            builder = UpgradeClient
+            downloadBuilder = UpgradeClient
                     .getInstance()
                     .requestVersion()
                     .setRequestUrl("https://www.baidu.com")
@@ -93,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public UpgradeInfo onRequestVersionSuccess(String result) {
                             Toast.makeText(MainActivity.this, "request successful", Toast.LENGTH_SHORT).show();
-                            return createUpgradeInfo();
+                            return data;
                         }
 
                         @Override
@@ -103,27 +96,28 @@ public class MainActivity extends AppCompatActivity {
 
                     });
         }
-        if (silentDownloadCheckBox.isChecked())
-            builder.setSilentDownload(true);
-        if (forceDownloadCheckBox.isChecked())
-            builder.setForceRedownload(true);
-        if (!showNotificationCheckBox.isChecked())
-            builder.setShowNotification(false);
-        if (customNotificationCheckBox.isChecked())
-            builder.setNotificationBuilder(createCustomNotification());
-        if (silentDownloadCheckBoxAndInstall.isChecked()) {
-            builder.setShowNotification(false);
+
+        downloadBuilder.setSilentDownload(cb_silent_upgrade.isChecked());
+        downloadBuilder.setShowNotification(cb_show_Notification.isChecked());
+        downloadBuilder.setForceRedownload(cb_force_redownload.isChecked());
+
+        String address = et_apkDir.getText().toString();
+        if (!TextUtils.isEmpty(address)) {
+            downloadBuilder.setApkDir(address);
         }
 
-        builder.setOnCancelListener(info -> {
-            Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_SHORT).show();
+        if (cb_custom_Notification.isChecked()) {
+            NotificationBuilder notificationBuilder = NotificationBuilder.create()
+                    .setRingtone(true)
+                    .setIcon(R.mipmap.dialog4)
+                    .setTicker("custom_ticker")
+                    .setContentTitle("custom title")
+                    .setContentText(getString(R.string.custom_content_text));
 
-            if (info.isForce()) {
-                finish();
-            }
-        });
+            downloadBuilder.setNotificationBuilder(notificationBuilder);
+        }
 
-        builder.setOnCustomDialogListener(new OnCustomDialogListener() {
+        downloadBuilder.setOnCustomDialogListener(new OnCustomDialogListener() {
 
             //更新界面选择
             @Override
@@ -163,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
             public DownloadFailedDialog getDownloadFailedDialog(Context context, UpgradeInfo upgradeInfo) {
                 switch (rg_download_failed.getCheckedRadioButtonId()) {
 
-                    case R.id.btn_default_download_failed:
+                    case R.id.rb_default_download_failed:
                         return null;
 
-                    case R.id.btn_custom_download_failed:
+                    case R.id.rb_custom_download_failed:
                         return new CustomDownloadFailedDialog(context, upgradeInfo);
 
                     default:
@@ -177,43 +171,15 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        //自定义下载路径
-        builder.setApkDir(getExternalFilesDir("AllenVersionPath2").getAbsolutePath());
-        String address = etAddress.getText().toString();
-        if (!TextUtils.isEmpty(address)) {
-            builder.setApkDir(address);
-        }
-        builder.setOnCancelListener(info -> {
-            Toast.makeText(MainActivity.this, "Cancel Hanlde", Toast.LENGTH_SHORT).show();
+        downloadBuilder.setOnCancelListener(info -> {
+            Toast.makeText(MainActivity.this, "已取消更新", Toast.LENGTH_SHORT).show();
 
             if (info.isForce()) {
                 finish();
             }
         });
-        builder.executeMission();
-    }
 
-    private NotificationBuilder createCustomNotification() {
-        return NotificationBuilder.create()
-                .setRingtone(true)
-                .setIcon(R.mipmap.dialog4)
-                .setTicker("custom_ticker")
-                .setContentTitle("custom title")
-                .setContentText(getString(R.string.custom_content_text));
-    }
-
-    /**
-     * @return
-     * @important 使用请求版本功能，可以在这里设置downloadUrl
-     * 这里可以构造UI需要显示的数据
-     * UIData 内部是一个Bundle
-     */
-    private UpgradeInfo createUpgradeInfo() {
-        UpgradeInfo data = new UpgradeInfo();
-        data.setTitle("更新提示");
-        data.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
-        data.setContent(getString(R.string.updatecontent));
-        return data;
+        downloadBuilder.executeMission();
     }
 
     @Override

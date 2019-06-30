@@ -85,14 +85,14 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn_default_download_failed"
+                android:id="@+id/rb_default_download_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="默认界面" />
 
             <RadioButton
-                android:id="@+id/btn_custom_download_failed"
+                android:id="@+id/rb_custom_download_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自定义界面" />
@@ -114,34 +114,23 @@
             android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/checkbox20"
+                android:id="@+id/cb_silent_upgrade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginTop="5dp"
                 android:checked="false"
-                android:text="静默下载+直接安装"
+                android:text="静默更新"
                 android:textColor="@android:color/black"
                 android:textSize="12sp" />
 
             <CheckBox
-                android:id="@+id/checkbox2"
+                android:id="@+id/cb_force_redownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginTop="5dp"
-                android:checked="false"
-                android:text="静默下载+下载完成弹升级框"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
-            <CheckBox
-                android:id="@+id/checkbox3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:checked="false"
+                android:checked="true"
                 android:text="强制重新下载apk（无论本地是否缓存）"
                 android:textColor="@android:color/black"
                 android:textSize="12sp" />
@@ -157,7 +146,7 @@
             android:textSize="12sp" />
 
         <CheckBox
-            android:id="@+id/checkbox"
+            android:id="@+id/cb_force"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -176,12 +165,12 @@
             android:textSize="12sp" />
 
         <CheckBox
-            android:id="@+id/checkbox4"
+            android:id="@+id/cb_only_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginTop="5dp"
-            android:checked="false"
+            android:checked="true"
             android:text="仅使用下载功能"
             android:textColor="@android:color/black"
             android:textSize="12sp" />
@@ -197,50 +186,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/checkbox5"
+                android:id="@+id/cb_show_Notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginTop="5dp"
                 android:checked="true"
-                android:text="显示下载通知栏"
+                android:text="显示通知栏"
                 android:textColor="@android:color/black"
                 android:textSize="12sp" />
 
             <CheckBox
-                android:id="@+id/checkbox6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:checked="true"
-                android:text="显示下载中对话框"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <CheckBox
-                android:id="@+id/checkbox8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:checked="true"
-                android:text="显示下载失败对话框"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
-            <CheckBox
-                android:id="@+id/checkbox7"
+                android:id="@+id/cb_custom_Notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -249,8 +209,8 @@
                 android:text="自定义通知栏"
                 android:textColor="@android:color/black"
                 android:textSize="12sp" />
-        </LinearLayout>
 
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -262,27 +222,24 @@
             android:textSize="12sp" />
 
         <EditText
-            android:id="@+id/etAddress"
+            android:id="@+id/et_apkDir"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="默认地址:/storage/emulated/0/AllenVersionPath/"
-            android:inputType="number"
+            android:hint="apk下载目录"
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/sendbtn"
+            android:id="@+id/btn_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:onClick="v2Click"
             android:text="发起请求" />
 
         <Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:onClick="v2Click"
             android:text="取消请求" />
 
     </LinearLayout>
