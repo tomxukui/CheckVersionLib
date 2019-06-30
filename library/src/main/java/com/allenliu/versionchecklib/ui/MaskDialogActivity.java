@@ -16,9 +16,9 @@ import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.builder.UIData;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
+import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
+import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.service.VersionService;
 
 import org.greenrobot.eventbus.EventBus;

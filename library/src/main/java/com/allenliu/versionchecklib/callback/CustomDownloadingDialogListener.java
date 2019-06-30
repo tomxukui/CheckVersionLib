@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.callback;
+package com.allenliu.versionchecklib.callback;
 
 import android.content.Context;
 

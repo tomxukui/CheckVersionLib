@@ -9,14 +9,14 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
 import com.allenliu.versionchecklib.builder.UIData;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
-import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
+import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
+import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.callback.RequestVersionListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity {
                 sendRequest();
                 break;
             case R.id.cancelBtn:
-                AllenVersionChecker.getInstance().cancelAllMission();
+                UpgradeClient.getInstance().cancelAllMission();
                 break;
         }
     }
 
     private void sendRequest() {
         if (onlyDownloadCheckBox.isChecked()) {
-            builder = AllenVersionChecker
+            builder = UpgradeClient
                     .getInstance()
                     .downloadOnly(crateUIData());
         } else {
-            builder = AllenVersionChecker
+            builder = UpgradeClient
                     .getInstance()
                     .requestVersion()
                     .setRequestUrl("https://www.baidu.com")
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AllenVersionChecker.getInstance().cancelAllMission();
+        UpgradeClient.getInstance().cancelAllMission();
     }
 
 }

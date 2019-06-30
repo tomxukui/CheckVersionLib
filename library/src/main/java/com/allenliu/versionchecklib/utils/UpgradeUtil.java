@@ -14,7 +14,7 @@ import android.support.annotation.StringRes;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.http.FileCallBack;
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 
 import java.io.File;
 
@@ -28,28 +28,28 @@ public class UpgradeUtil {
      * 获取包名
      */
     public static String getPackageName() {
-        return AllenVersionChecker.getInstance().getContext().getPackageName();
+        return UpgradeClient.getInstance().getContext().getPackageName();
     }
 
     /**
      * 获取资源文字
      */
     public static String getString(@StringRes int resId) {
-        return AllenVersionChecker.getInstance().getContext().getString(resId);
+        return UpgradeClient.getInstance().getContext().getString(resId);
     }
 
     /**
      * 获取资源文字
      */
     public static String getString(@StringRes int resId, Object... formatArgs) {
-        return AllenVersionChecker.getInstance().getContext().getString(resId, formatArgs);
+        return UpgradeClient.getInstance().getContext().getString(resId, formatArgs);
     }
 
     /**
      * 创建安装apk的Intent
      */
     public static Intent buildInstallApkIntent(File file) {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -71,7 +71,7 @@ public class UpgradeUtil {
      * 安装apk
      */
     public static void installApk(File file) {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
         Intent intent = buildInstallApkIntent(file);
         context.startActivity(intent);
     }
@@ -80,7 +80,7 @@ public class UpgradeUtil {
      * 获取下载的文件目录
      */
     public static String getDownloadDir() {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
 
         File file;
         if (checkSDCard()) {
@@ -186,7 +186,7 @@ public class UpgradeUtil {
      * @param newestVersionCode 开发者认为的最新的版本号
      */
     public static boolean checkApkExist(String apkPath, Integer newestVersionCode) {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
 
         File file = new File(apkPath);
         boolean result = false;

@@ -1,6 +1,6 @@
 package com.allenliu.versionchecklib.builder;
 
-import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.RequestVersionListener;
 import com.allenliu.versionchecklib.http.HttpHeaders;
 import com.allenliu.versionchecklib.http.HttpParams;
 import com.allenliu.versionchecklib.http.HttpRequestMethod;

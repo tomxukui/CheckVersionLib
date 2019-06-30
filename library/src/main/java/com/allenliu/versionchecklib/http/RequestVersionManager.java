@@ -3,11 +3,11 @@ package com.allenliu.versionchecklib.http;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
 import com.allenliu.versionchecklib.builder.UIData;
-import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.RequestVersionListener;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -94,7 +94,7 @@ public class RequestVersionManager {
                                 @Override
                                 public void run() {
                                     requestVersionListener.onRequestVersionFailure(response.message());
-                                    AllenVersionChecker.getInstance().cancelAllMission();
+                                    UpgradeClient.getInstance().cancelAllMission();
                                 }
                             });
                         }
@@ -105,7 +105,7 @@ public class RequestVersionManager {
                             public void run() {
 
                                 requestVersionListener.onRequestVersionFailure(e.getMessage());
-                                AllenVersionChecker.getInstance().cancelAllMission();
+                                UpgradeClient.getInstance().cancelAllMission();
                             }
                         });
 

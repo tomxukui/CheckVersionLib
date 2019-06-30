@@ -8,11 +8,11 @@ import android.support.annotation.NonNull;
 import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
-import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
+import com.allenliu.versionchecklib.UpgradeClient;
+import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
+import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
+import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.callback.ForceUpdateListener;
 import com.allenliu.versionchecklib.http.RequestVersionManager;
 import com.allenliu.versionchecklib.service.VersionService;
 
@@ -223,7 +223,7 @@ public class DownloadBuilder {
     }
 
     public void executeMission() {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
 
         if (apkName == null) {
             apkName = context.getPackageName();
@@ -253,7 +253,7 @@ public class DownloadBuilder {
 
     public void download() {
         VersionService.builder = this;
-        VersionService.enqueueWork(AllenVersionChecker.getInstance().getContext());
+        VersionService.enqueueWork(UpgradeClient.getInstance().getContext());
     }
 
     private boolean checkWhetherNeedRequestVersion() {

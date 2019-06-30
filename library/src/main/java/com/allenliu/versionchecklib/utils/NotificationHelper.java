@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
 
@@ -40,7 +40,7 @@ public class NotificationHelper {
     private Context mContext;
 
     public NotificationHelper(DownloadBuilder downloadBuilder) {
-        mContext = AllenVersionChecker.getInstance().getContext();
+        mContext = UpgradeClient.getInstance().getContext();
         mManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         mDownloadBuilder = downloadBuilder;
         mCurrentProgress = 0;
@@ -195,7 +195,7 @@ public class NotificationHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static Notification createSimpleNotification() {
-        Context context = AllenVersionChecker.getInstance().getContext();
+        Context context = UpgradeClient.getInstance().getContext();
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "MyApp", NotificationManager.IMPORTANCE_DEFAULT);
         manager.createNotificationChannel(channel);

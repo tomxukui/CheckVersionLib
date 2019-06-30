@@ -11,25 +11,24 @@ import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
 import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.service.VersionService;
 
-/**
- * Created by allenliu on 2018/1/12.
- */
-
-public class AllenVersionChecker {
+public class UpgradeClient {
 
     private Context mContext;
 
-    private AllenVersionChecker() {
+    private UpgradeClient() {
     }
 
-    public static AllenVersionChecker getInstance() {
-        return AllenVersionCheckerHolder.allenVersionChecker;
+    public static UpgradeClient getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
-    private static class AllenVersionCheckerHolder {
-        static final AllenVersionChecker allenVersionChecker = new AllenVersionChecker();
+    private static class SingletonHolder {
+        static final UpgradeClient INSTANCE = new UpgradeClient();
     }
 
+    /**
+     * 建议在application中调用
+     */
     public void init(Application context) {
         mContext = context;
     }

@@ -2,14 +2,14 @@ package com.allenliu.sample;
 
 import android.app.Application;
 
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 
 public class Mapp extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AllenVersionChecker.getInstance().init(this);
+        UpgradeClient.getInstance().init(this);
     }
 
 }

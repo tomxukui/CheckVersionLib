@@ -16,7 +16,7 @@ import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.utils.BuilderHelper;
 import com.allenliu.versionchecklib.utils.NotificationHelper;
@@ -102,7 +102,7 @@ public class VersionService extends Service {
             });
 
         } else {
-            AllenVersionChecker.getInstance().cancelAllMission();
+            UpgradeClient.getInstance().cancelAllMission();
         }
     }
 
@@ -173,7 +173,7 @@ public class VersionService extends Service {
             }
 
         } else {
-            AllenVersionChecker.getInstance().cancelAllMission();
+            UpgradeClient.getInstance().cancelAllMission();
         }
     }
 
@@ -216,7 +216,7 @@ public class VersionService extends Service {
             downloadUrl = builder.getVersionBundle().getDownloadUrl();
         }
         if (downloadUrl == null) {
-            AllenVersionChecker.getInstance().cancelAllMission();
+            UpgradeClient.getInstance().cancelAllMission();
             throw new RuntimeException("you must set a download url for download function using");
         }
 
@@ -276,7 +276,7 @@ public class VersionService extends Service {
                     notificationHelper.showDownloadFailedNotification();
 
                 } else {
-                    AllenVersionChecker.getInstance().cancelAllMission();
+                    UpgradeClient.getInstance().cancelAllMission();
                 }
             }
 
@@ -304,7 +304,7 @@ public class VersionService extends Service {
 
             case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
                 builderHelper.checkForceUpdate();
-                AllenVersionChecker.getInstance().cancelAllMission();
+                UpgradeClient.getInstance().cancelAllMission();
 
                 OnCancelListener listener = builder.getOnCancelListener();
                 if (listener != null) {
