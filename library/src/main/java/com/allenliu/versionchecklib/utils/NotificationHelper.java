@@ -50,10 +50,6 @@ public class NotificationHelper {
      * 显示通知栏
      */
     public void showNotification() {
-        if (!mDownloadBuilder.isShowNotification()) {
-            return;
-        }
-
         mBuilder = createNotification();
         mManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
@@ -62,10 +58,6 @@ public class NotificationHelper {
      * 更新下载进度的通知
      */
     public void updateNotification(int progress) {
-        if (!mDownloadBuilder.isShowNotification()) {
-            return;
-        }
-
         if ((progress - mCurrentProgress) > 5) {
             mBuilder.setContentIntent(null);
             NotificationBuilder libNotificationBuilder = mDownloadBuilder.getNotificationBuilder();
@@ -84,10 +76,6 @@ public class NotificationHelper {
      * 显示下载完成的通知
      */
     public void showDownloadCompleteNotifcation(File file) {
-        if (!mDownloadBuilder.isShowNotification()) {
-            return;
-        }
-
         Intent intent = UpgradeUtil.buildInstallApkIntent(file);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
 
@@ -103,10 +91,6 @@ public class NotificationHelper {
      * 显示下载失败的通知
      */
     public void showDownloadFailedNotification() {
-        if (!mDownloadBuilder.isShowNotification()) {
-            return;
-        }
-
         Intent intent = new MaskDialogActivity.Builder(mContext)
                 .setDownloadFailedType()
                 .create()

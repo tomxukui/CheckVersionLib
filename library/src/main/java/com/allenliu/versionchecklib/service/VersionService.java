@@ -90,9 +90,7 @@ public class VersionService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
         }
-
         mNotificationHelper = new NotificationHelper(mDownloadBuilder);
-
         startForeground(NotificationHelper.NOTIFICATION_ID, mNotificationHelper.getServiceNotification());
 
         mExecutorService = Executors.newSingleThreadExecutor();
@@ -192,7 +190,10 @@ public class VersionService extends Service {
                 }
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    mNotificationHelper.showNotification();
+                    if (mDownloadBuilder.isShowNotification()) {
+                        mNotificationHelper.showNotification();
+                    }
+
                     showDownloadingDialog();
                 }
             }
@@ -204,7 +205,10 @@ public class VersionService extends Service {
                 }
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    mNotificationHelper.updateNotification(progress);
+                    if (mDownloadBuilder.isShowNotification()) {
+                        mNotificationHelper.updateNotification(progress);
+                    }
+
                     updateDownloadingDialogProgress(progress);
                 }
 
@@ -222,7 +226,9 @@ public class VersionService extends Service {
                 mIsDownloadComplete = true;
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    mNotificationHelper.showDownloadCompleteNotifcation(file);
+                    if (mDownloadBuilder.isShowNotification()) {
+                        mNotificationHelper.showDownloadCompleteNotifcation(file);
+                    }
                 }
 
                 if (mDownloadBuilder.getOnDownloadListener() != null) {
@@ -243,8 +249,11 @@ public class VersionService extends Service {
                 }
 
                 if (!mDownloadBuilder.isSilentDownload()) {
+                    if (mDownloadBuilder.isShowNotification()) {
+                        mNotificationHelper.showDownloadFailedNotification();
+                    }
+
                     showDownloadFailedDialog();
-                    mNotificationHelper.showDownloadFailedNotification();
 
                 } else {
                     UpgradeClient.getInstance().cancelAllMission();
