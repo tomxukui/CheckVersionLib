@@ -21,6 +21,8 @@ import com.allenliu.versionchecklib.service.VersionService;
 public class DownloadBuilder {
 
     private RequestVersionBuilder mRequestVersionBuilder;
+    private NotificationBuilder mNotificationBuilder;
+
     private boolean isSilentDownload;
     private String downloadAPKPath;
     private boolean isForceRedownload;
@@ -29,7 +31,6 @@ public class DownloadBuilder {
     private boolean isShowNotification;
     private boolean isShowDownloadFailDialog;
     private boolean isDirectDownload;
-    private NotificationBuilder notificationBuilder;
     private ApkDownloadListener apkDownloadListener;
 
     private CustomDownloadFailedListener customDownloadFailedListener;
@@ -63,7 +64,7 @@ public class DownloadBuilder {
         isShowNotification = true;
         isDirectDownload = false;
         isShowDownloadFailDialog = true;
-        notificationBuilder = NotificationBuilder.create();
+        mNotificationBuilder = NotificationBuilder.create();
     }
 
     public ForceUpdateListener getForceUpdateListener() {
@@ -211,11 +212,11 @@ public class DownloadBuilder {
     }
 
     public NotificationBuilder getNotificationBuilder() {
-        return notificationBuilder;
+        return mNotificationBuilder;
     }
 
-    public DownloadBuilder setNotificationBuilder(NotificationBuilder notificationBuilder) {
-        this.notificationBuilder = notificationBuilder;
+    public DownloadBuilder setNotificationBuilder(@NonNull NotificationBuilder notificationBuilder) {
+        mNotificationBuilder = notificationBuilder;
         return this;
     }
 
@@ -239,14 +240,14 @@ public class DownloadBuilder {
             apkName = context.getPackageName();
         }
 
-        if (notificationBuilder.getIcon() == 0) {
+        if (mNotificationBuilder.getIcon() == 0) {
             final PackageManager pm = context.getPackageManager();
             final ApplicationInfo applicationInfo;
             try {
                 applicationInfo = pm.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
 
                 final int appIconResId = applicationInfo.icon;
-                notificationBuilder.setIcon(appIconResId);
+                mNotificationBuilder.setIcon(appIconResId);
 
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
