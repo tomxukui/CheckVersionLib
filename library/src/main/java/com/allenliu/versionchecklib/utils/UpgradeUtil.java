@@ -53,6 +53,7 @@ public class UpgradeUtil {
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = VersionFileProvider.getUriForFile(context, context.getPackageName() + ".versionProvider", file);
@@ -64,6 +65,15 @@ public class UpgradeUtil {
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
 
         return intent;
+    }
+
+    /**
+     * 安装apk
+     */
+    public static void installApk(File file) {
+        Context context = AllenVersionChecker.getInstance().getContext();
+        Intent intent = buildInstallApkIntent(file);
+        context.startActivity(intent);
     }
 
     /**

@@ -33,88 +33,98 @@ public class NotificationHelper {
     private static final String CHANNEL_ID = "version_service_id";
 
     private DownloadBuilder versionBuilder;
-    NotificationCompat.Builder notificationBuilder = null;
-    NotificationManager manager = null;
-    private boolean isDownloadSuccess = false;
-    private boolean isFailed = false;
-    private int currentProgress;
-    private String contentText;
+    private NotificationCompat.Builder notificationBuilder = null;
+    private NotificationManager manager = null;
+    private int mCurrentProgress;
 
     private Context mContext;
 
     public NotificationHelper(DownloadBuilder builder) {
         mContext = AllenVersionChecker.getInstance().getContext();
         this.versionBuilder = builder;
-        currentProgress = 0;
+        mCurrentProgress = 0;
     }
 
     /**
-     * update notification progress
-     *
-     * @param progress the progress of notification
-     */
-    public void updateNotification(int progress) {
-        if (versionBuilder.isShowNotification()) {
-            if ((progress - currentProgress) > 5 && !isDownloadSuccess && !isFailed) {
-                notificationBuilder.setContentIntent(null);
-                notificationBuilder.setContentText(String.format(contentText, progress));
-                notificationBuilder.setProgress(100, progress, false);
-                manager.notify(NOTIFICATION_ID, notificationBuilder.build());
-                currentProgress = progress;
-            }
-        }
-    }
-
-    /**
-     * show notification
+     * 显示通知栏
      */
     public void showNotification() {
-        isDownloadSuccess = false;
-        isFailed = false;
-        if (versionBuilder.isShowNotification()) {
-            manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-            notificationBuilder = createNotification();
+        if (!versionBuilder.isShowNotification()) {
+            return;
+        }
+
+        manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+        notificationBuilder = createNotification();
+        manager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    /**
+     * 更新下载进度的通知
+     */
+    public void updateNotification(int progress) {
+        if (!versionBuilder.isShowNotification()) {
+            return;
+        }
+
+        if ((progress - mCurrentProgress) > 5) {
+            notificationBuilder.setContentIntent(null);
+            NotificationBuilder libNotificationBuilder = versionBuilder.getNotificationBuilder();
+            String contentText = mContext.getString(R.string.versionchecklib_download_progress);
+            if (libNotificationBuilder.getContentText() != null) {
+                contentText = libNotificationBuilder.getContentText();
+            }
+            notificationBuilder.setContentText(String.format(contentText, progress));
+            notificationBuilder.setProgress(100, progress, false);
             manager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            mCurrentProgress = progress;
         }
     }
 
     /**
-     * show download success notification
+     * 显示下载完成的通知
      */
     public void showDownloadCompleteNotifcation(File file) {
-        isDownloadSuccess = true;
-
         if (!versionBuilder.isShowNotification()) {
             return;
         }
 
         Intent intent = UpgradeUtil.buildInstallApkIntent(file);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setContentText(mContext.getString(R.string.versionchecklib_download_finish));
         notificationBuilder.setProgress(100, 100, false);
+
         manager.cancelAll();
         manager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
+    /**
+     * 显示下载失败的通知
+     */
     public void showDownloadFailedNotification() {
-        isDownloadSuccess = false;
-        isFailed = true;
-        if (versionBuilder.isShowNotification()) {
-            Intent intent = new MaskDialogActivity.Builder(mContext)
-                    .create()
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, FLAG_UPDATE_CURRENT);
-            notificationBuilder.setContentIntent(pendingIntent);
-            notificationBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
-            notificationBuilder.setProgress(100, 0, false);
-            manager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        if (!versionBuilder.isShowNotification()) {
+            return;
         }
+
+        Intent intent = new MaskDialogActivity.Builder(mContext)
+                .setDownloadFailedType()
+                .create()
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, FLAG_UPDATE_CURRENT);
+
+        notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
+        notificationBuilder.setProgress(100, 0, false);
+
+        manager.cancelAll();
+        manager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
     private NotificationCompat.Builder createNotification() {
-        final String CHANNEL_ID = "0", CHANNEL_NAME = "ALLEN_NOTIFICATION";
+        final String CHANNEL_ID = "0";
+        final String CHANNEL_NAME = "ALLEN_NOTIFICATION";
+
         NotificationCompat.Builder builder = null;
         NotificationBuilder libNotificationBuilder = versionBuilder.getNotificationBuilder();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -125,23 +135,27 @@ public class NotificationHelper {
             NotificationManager manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             manager.createNotificationChannel(notificationChannel);
         }
+
         builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
         builder.setAutoCancel(true);
         builder.setSmallIcon(versionBuilder.getNotificationBuilder().getIcon());
-        //set content title
-        String contentTitle = mContext.getString(R.string.app_name);
-        if (libNotificationBuilder.getContentTitle() != null)
+        //设置标题
+        String contentTitle = UpgradeUtil.getString(R.string.app_name);
+        if (libNotificationBuilder.getContentTitle() != null) {
             contentTitle = libNotificationBuilder.getContentTitle();
+        }
         builder.setContentTitle(contentTitle);
-        //set ticker
-        String ticker = mContext.getString(R.string.versionchecklib_downloading);
-        if (libNotificationBuilder.getTicker() != null)
+        //设置ticker
+        String ticker = UpgradeUtil.getString(R.string.versionchecklib_downloading);
+        if (libNotificationBuilder.getTicker() != null) {
             ticker = libNotificationBuilder.getTicker();
+        }
         builder.setTicker(ticker);
-        //set content text
-        contentText = mContext.getString(R.string.versionchecklib_download_progress);
-        if (libNotificationBuilder.getContentText() != null)
+        //设置内容
+        String contentText = mContext.getString(R.string.versionchecklib_download_progress);
+        if (libNotificationBuilder.getContentText() != null) {
             contentText = libNotificationBuilder.getContentText();
+        }
         builder.setContentText(String.format(contentText, 0));
 
         if (libNotificationBuilder.isRingtone()) {
@@ -161,8 +175,8 @@ public class NotificationHelper {
 
     public Notification getServiceNotification() {
         NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setContentTitle(mContext.getString(R.string.app_name))
-                .setContentText(mContext.getString(R.string.versionchecklib_version_service_runing))
+                .setContentTitle(UpgradeUtil.getString(R.string.app_name))
+                .setContentText(UpgradeUtil.getString(R.string.versionchecklib_version_service_runing))
                 .setSmallIcon(versionBuilder.getNotificationBuilder().getIcon())
                 .setAutoCancel(false);
 

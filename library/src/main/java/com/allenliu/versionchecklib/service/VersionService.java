@@ -181,12 +181,7 @@ public class VersionService extends Service {
      * 安装apk
      */
     private void install() {
-        Context context = AllenVersionChecker.getInstance().getContext();
-
-        Intent intent = UpgradeUtil.buildInstallApkIntent(getDownloadFile())
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        context.startActivity(intent);
+        UpgradeUtil.installApk(getDownloadFile());
     }
 
     public static void enqueueWork(final Context context) {
