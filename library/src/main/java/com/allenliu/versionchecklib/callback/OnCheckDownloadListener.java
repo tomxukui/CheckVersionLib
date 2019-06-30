@@ -2,7 +2,7 @@ package com.allenliu.versionchecklib.callback;
 
 import java.io.File;
 
-public interface DownloadListener {
+public interface OnCheckDownloadListener {
 
     void onCheckerStartDownload();
 

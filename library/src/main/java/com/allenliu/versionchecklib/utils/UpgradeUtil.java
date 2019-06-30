@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.StringRes;
 
-import com.allenliu.versionchecklib.callback.DownloadListener;
+import com.allenliu.versionchecklib.callback.OnCheckDownloadListener;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.http.FileCallBack;
 import com.allenliu.versionchecklib.UpgradeClient;
@@ -107,7 +107,7 @@ public class UpgradeUtil {
     /**
      * 下载apk
      */
-    public static void download(final String url, final String downloadApkPath, final String fileName, final DownloadListener listener) {
+    public static void download(final String url, final String downloadApkPath, final String fileName, final OnCheckDownloadListener listener) {
         if (url != null && !url.isEmpty()) {
             Handler handler = new Handler(Looper.getMainLooper());
 

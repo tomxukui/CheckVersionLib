@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.callback.DownloadListener;
+import com.allenliu.versionchecklib.callback.OnCheckDownloadListener;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
@@ -210,7 +210,7 @@ public class VersionService extends Service {
         }
 
         mIsDownloadComplete = false;
-        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
+        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new OnCheckDownloadListener() {
 
             @Override
             public void onCheckerStartDownload() {
