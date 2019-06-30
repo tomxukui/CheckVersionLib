@@ -30,7 +30,7 @@ public class VersionService extends Service {
 
     private static DownloadBuilder mDownloadBuilder;
     private ExecutorService mExecutorService;
-    private NotificationHelper notificationHelper;
+    private NotificationHelper mNotificationHelper;
 
     private boolean mIsServiceAlive = false;//服务是否存在
     private boolean mIsDownloadComplete = false;//下载是否已完成
@@ -58,11 +58,12 @@ public class VersionService extends Service {
         stopForeground(true);
         HttpClient.getHttpClient().dispatcher().cancelAll();
 
-        if (notificationHelper != null) {
-            notificationHelper.onDestroy();
-        }
         if (mExecutorService != null) {
             mExecutorService.shutdown();
+        }
+        if (mNotificationHelper != null) {
+            mNotificationHelper.onDestroy();
+            mNotificationHelper = null;
         }
         if (mDownloadBuilder != null) {
             mDownloadBuilder = null;
@@ -90,9 +91,9 @@ public class VersionService extends Service {
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
         }
 
-        notificationHelper = new NotificationHelper(mDownloadBuilder);
+        mNotificationHelper = new NotificationHelper(mDownloadBuilder);
 
-        startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
+        startForeground(NotificationHelper.NOTIFICATION_ID, mNotificationHelper.getServiceNotification());
 
         mExecutorService = Executors.newSingleThreadExecutor();
         mExecutorService.submit(new Runnable() {
@@ -191,7 +192,7 @@ public class VersionService extends Service {
                 }
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    notificationHelper.showNotification();
+                    mNotificationHelper.showNotification();
                     showDownloadingDialog();
                 }
             }
@@ -203,7 +204,7 @@ public class VersionService extends Service {
                 }
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    notificationHelper.updateNotification(progress);
+                    mNotificationHelper.updateNotification(progress);
                     updateDownloadingDialogProgress(progress);
                 }
 
@@ -221,7 +222,7 @@ public class VersionService extends Service {
                 mIsDownloadComplete = true;
 
                 if (!mDownloadBuilder.isSilentDownload()) {
-                    notificationHelper.showDownloadCompleteNotifcation(file);
+                    mNotificationHelper.showDownloadCompleteNotifcation(file);
                 }
 
                 if (mDownloadBuilder.getOnDownloadListener() != null) {
@@ -243,7 +244,7 @@ public class VersionService extends Service {
 
                 if (!mDownloadBuilder.isSilentDownload()) {
                     showDownloadFailedDialog();
-                    notificationHelper.showDownloadFailedNotification();
+                    mNotificationHelper.showDownloadFailedNotification();
 
                 } else {
                     UpgradeClient.getInstance().cancelAllMission();
