@@ -49,6 +49,8 @@ public class VersionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mIsServiceAlive = false;
+
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -57,11 +59,10 @@ public class VersionService extends Service {
             notificationHelper.onDestroy();
         }
 
-        notificationHelper = null;
-        mIsServiceAlive = false;
         if (mExecutorService != null) {
             mExecutorService.shutdown();
         }
+
         stopForeground(true);
         HttpClient.getHttpClient().dispatcher().cancelAll();
     }
@@ -182,6 +183,10 @@ public class VersionService extends Service {
 
             @Override
             public void onCheckerStartDownload() {
+                if (!mIsServiceAlive) {
+                    return;
+                }
+
                 if (!builder.isSilentDownload()) {
                     notificationHelper.showNotification();
                     showDownloadingDialog();
@@ -206,11 +211,11 @@ public class VersionService extends Service {
 
             @Override
             public void onCheckerDownloadSuccess(File file) {
-                mIsDownloadComplete = true;
-
                 if (!mIsServiceAlive) {
                     return;
                 }
+
+                mIsDownloadComplete = true;
 
                 if (!builder.isSilentDownload()) {
                     notificationHelper.showDownloadCompleteNotifcation(file);
@@ -228,13 +233,13 @@ public class VersionService extends Service {
                 if (!mIsServiceAlive) {
                     return;
                 }
+
                 if (builder.getOnDownloadListener() != null) {
                     builder.getOnDownloadListener().onDownloadFail();
                 }
 
                 if (!builder.isSilentDownload()) {
                     showDownloadFailedDialog();
-
                     notificationHelper.showDownloadFailedNotification();
 
                 } else {
