@@ -1,4 +1,4 @@
-package com.allenliu.sample;
+package com.xukui.upgrade.sample.ui;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +10,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.allenliu.sample.dialog.CustomDownloadFailedDialog;
-import com.allenliu.sample.dialog.CustomDownloadingDialog;
-import com.allenliu.sample.dialog.CustomVersionDialog;
+import com.xukui.upgrade.sample.R;
+import com.xukui.upgrade.sample.dialog.CustomDownloadFailedDialog;
+import com.xukui.upgrade.sample.dialog.CustomDownloadingDialog;
+import com.xukui.upgrade.sample.dialog.CustomVersionDialog;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     .setIcon(R.mipmap.dialog4)
                     .setTicker("custom_ticker")
                     .setContentTitle("custom title")
-                    .setContentText(getString(R.string.custom_content_text));
+                    .setContentText("自定义通知栏进度:%d%%/100%%");
 
             downloadBuilder.setNotificationBuilder(notificationBuilder);
         }

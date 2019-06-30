@@ -1,4 +1,4 @@
-package com.allenliu.sample.dialog;
+package com.xukui.upgrade.sample.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.allenliu.sample.R;
+import com.xukui.upgrade.sample.R;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
 

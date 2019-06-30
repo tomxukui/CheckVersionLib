@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@color/fooyo_azure"
+        android:background="#00aeef"
         android:orientation="vertical">
 
         <TextView
@@ -50,7 +50,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="重试"
-                android:textColor="@color/fooyo_tint_red"
+                android:textColor="#ef5d6a"
                 android:textSize="15sp" />
 
         </LinearLayout>

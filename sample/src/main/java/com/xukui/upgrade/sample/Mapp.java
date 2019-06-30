@@ -1,4 +1,4 @@
-package com.allenliu.sample;
+package com.xukui.upgrade.sample;
 
 import android.app.Application;
 
