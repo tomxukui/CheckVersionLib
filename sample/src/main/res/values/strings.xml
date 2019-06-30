@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Sample</string>
-    <string name="updatecontent">1.VersionCheckLib V2版震撼来袭\n2.链式编程，调用简单\n3.强大的自定义功能，一行代码轻松搞定\n4.欢迎Star和Issue\n5.github:<a href='http://github.com/alexliusheng'>http://github.com/alexliusheng</a></string>
+    <string name="updatecontent">
+        1.VersionCheckLib V2版震撼来袭\n
+        2.链式编程，调用简单\n
+        3.强大的自定义功能，一行代码轻松搞定\n
+        4.欢迎Star和Issue\n
+        5.github:http://github.com/alexliusheng\n
+        6.字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数字数\n
+        7.哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈\n
+        8.查看长度查看长度查看长度查看长度查看长度查看长度查看长度查看长度查看长度查看长度查看长度\n
+        9.长度够了长度够了长度够了长度够了长度够了长度够了长度够了长度够了长度够了长度够了长度够了长度够了
+    </string>
     <string name="custom_content_text">自定义通知栏进度:%d%%/100%%</string>
 </resources>
