@@ -227,8 +227,8 @@ public class VersionService extends Service {
                         notificationHelper.updateNotification(progress);
                         updateDownloadingDialogProgress(progress);
                     }
-                    if (builder.getApkDownloadListener() != null) {
-                        builder.getApkDownloadListener().onDownloading(progress);
+                    if (builder.getOnDownloadListener() != null) {
+                        builder.getOnDownloadListener().onDownloading(progress);
                     }
                 }
             }
@@ -241,8 +241,8 @@ public class VersionService extends Service {
                     if (!builder.isSilentDownload()) {
                         notificationHelper.showDownloadCompleteNotifcation(file);
                     }
-                    if (builder.getApkDownloadListener() != null) {
-                        builder.getApkDownloadListener().onDownloadSuccess(file);
+                    if (builder.getOnDownloadListener() != null) {
+                        builder.getOnDownloadListener().onDownloadSuccess(file);
                     }
 
                     install();
@@ -254,8 +254,8 @@ public class VersionService extends Service {
                 if (!mIsServiceAlive) {
                     return;
                 }
-                if (builder.getApkDownloadListener() != null) {
-                    builder.getApkDownloadListener().onDownloadFail();
+                if (builder.getOnDownloadListener() != null) {
+                    builder.getOnDownloadListener().onDownloadFail();
                 }
 
                 if (!builder.isSilentDownload()) {

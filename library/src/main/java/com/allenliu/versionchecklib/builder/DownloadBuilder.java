@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
-import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.callback.OnCustomDialogListener;
+import com.allenliu.versionchecklib.callback.OnDownloadListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.http.RequestVersionManager;
@@ -28,10 +28,11 @@ public class DownloadBuilder {
     private boolean isShowNotification;
     private boolean isShowDownloadFailDialog;
     private boolean isDirectDownload;
-    private ApkDownloadListener apkDownloadListener;
 
     private OnCustomDialogListener mOnCustomDialogListener;
     private OnCancelListener onCancelListener;
+    private OnDownloadListener mOnDownloadListener;
+
     private UpgradeInfo mUpgradeInfo;
     private Integer newestVersionCode;
     private String apkName;
@@ -60,6 +61,59 @@ public class DownloadBuilder {
         isShowDownloadFailDialog = true;
     }
 
+
+
+    /***********************************监听事件***************************************/
+
+    //自定义对话框的回调
+    public OnCustomDialogListener getOnCustomDialogListener() {
+        return mOnCustomDialogListener;
+    }
+
+    public DownloadBuilder setOnCustomDialogListener(@Nullable OnCustomDialogListener listener) {
+        mOnCustomDialogListener = listener;
+        return this;
+    }
+
+    //取消更新的回调
+    public OnCancelListener getOnCancelListener() {
+        return onCancelListener;
+    }
+
+    public DownloadBuilder setOnCancelListener(OnCancelListener cancelListener) {
+        this.onCancelListener = cancelListener;
+        return this;
+    }
+
+    //下载apk的回调
+    public OnDownloadListener getOnDownloadListener() {
+        return mOnDownloadListener;
+    }
+
+    public DownloadBuilder setOnDownloadListener(@Nullable OnDownloadListener listener) {
+        mOnDownloadListener = listener;
+        return this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public DownloadBuilder setApkName(String apkName) {
         this.apkName = apkName;
         return this;
@@ -74,19 +128,8 @@ public class DownloadBuilder {
         return mUpgradeInfo;
     }
 
-    public DownloadBuilder setOnCancelListener(OnCancelListener cancelListener) {
-        this.onCancelListener = cancelListener;
-        return this;
-    }
 
-    public OnCustomDialogListener getOnCustomDialogListener() {
-        return mOnCustomDialogListener;
-    }
 
-    public DownloadBuilder setOnCustomDialogListener(@Nullable OnCustomDialogListener listener) {
-        mOnCustomDialogListener = listener;
-        return this;
-    }
 
     public DownloadBuilder setSilentDownload(boolean silentDownload) {
         isSilentDownload = silentDownload;
@@ -132,11 +175,6 @@ public class DownloadBuilder {
         return this;
     }
 
-    public DownloadBuilder setApkDownloadListener(ApkDownloadListener apkDownloadListener) {
-        this.apkDownloadListener = apkDownloadListener;
-        return this;
-    }
-
     public boolean isSilentDownload() {
         return isSilentDownload;
     }
@@ -165,13 +203,7 @@ public class DownloadBuilder {
         return isShowDownloadFailDialog;
     }
 
-    public ApkDownloadListener getApkDownloadListener() {
-        return apkDownloadListener;
-    }
 
-    public OnCancelListener getOnCancelListener() {
-        return onCancelListener;
-    }
 
     public RequestVersionBuilder getRequestVersionBuilder() {
         return mRequestVersionBuilder;
