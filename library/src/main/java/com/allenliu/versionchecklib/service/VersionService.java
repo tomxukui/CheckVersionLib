@@ -184,16 +184,6 @@ public class VersionService extends Service {
         UpgradeUtil.installApk(getDownloadFile());
     }
 
-    public static void enqueueWork(final Context context) {
-        Intent intent = new Intent(context, VersionService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
-
-        } else {
-            context.startService(intent);
-        }
-    }
-
     /**
      * 获取下载的apk文件
      */
@@ -333,6 +323,18 @@ public class VersionService extends Service {
             default:
                 break;
 
+        }
+    }
+
+    public static void enqueueWork() {
+        Context context = UpgradeClient.getInstance().getContext();
+
+        Intent intent = new Intent(context, VersionService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+
+        } else {
+            context.startService(intent);
         }
     }
 

@@ -254,7 +254,7 @@ public class DownloadBuilder {
 
     public void download() {
         VersionService.builder = this;
-        VersionService.enqueueWork(UpgradeClient.getInstance().getContext());
+        VersionService.enqueueWork();
     }
 
     private boolean checkWhetherNeedRequestVersion() {
