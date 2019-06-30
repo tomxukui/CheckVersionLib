@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
-import com.allenliu.versionchecklib.bean.UpgradeInfo;
-import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
+import com.xukui.library.upgrade.bean.UpgradeInfo;
+import com.xukui.library.upgrade.dialog.DownloadFailedDialog;
 import com.xukui.upgrade.sample.R;
 
 public class CustomDownloadFailedDialog extends Dialog implements DownloadFailedDialog {

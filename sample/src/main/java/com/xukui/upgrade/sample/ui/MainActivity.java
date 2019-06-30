@@ -14,15 +14,15 @@ import com.xukui.upgrade.sample.R;
 import com.xukui.upgrade.sample.dialog.CustomDownloadFailedDialog;
 import com.xukui.upgrade.sample.dialog.CustomDownloadingDialog;
 import com.xukui.upgrade.sample.dialog.CustomVersionDialog;
-import com.allenliu.versionchecklib.UpgradeClient;
-import com.allenliu.versionchecklib.bean.UpgradeInfo;
-import com.allenliu.versionchecklib.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.builder.NotificationBuilder;
-import com.allenliu.versionchecklib.callback.OnCustomDialogListener;
-import com.allenliu.versionchecklib.callback.OnRequestVersionListener;
-import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
-import com.allenliu.versionchecklib.dialog.DownloadingDialog;
-import com.allenliu.versionchecklib.dialog.VersionDialog;
+import com.xukui.library.upgrade.UpgradeClient;
+import com.xukui.library.upgrade.bean.UpgradeInfo;
+import com.xukui.library.upgrade.builder.DownloadBuilder;
+import com.xukui.library.upgrade.builder.NotificationBuilder;
+import com.xukui.library.upgrade.callback.OnCustomDialogListener;
+import com.xukui.library.upgrade.callback.OnRequestVersionListener;
+import com.xukui.library.upgrade.dialog.DownloadFailedDialog;
+import com.xukui.library.upgrade.dialog.DownloadingDialog;
+import com.xukui.library.upgrade.dialog.VersionDialog;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xukui.upgrade.sample.R;
-import com.allenliu.versionchecklib.bean.UpgradeInfo;
-import com.allenliu.versionchecklib.dialog.VersionDialog;
+import com.xukui.library.upgrade.bean.UpgradeInfo;
+import com.xukui.library.upgrade.dialog.VersionDialog;
 
 public class CustomVersionDialog extends Dialog implements VersionDialog {
 

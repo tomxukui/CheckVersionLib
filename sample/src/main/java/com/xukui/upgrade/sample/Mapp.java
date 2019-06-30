@@ -2,7 +2,7 @@ package com.xukui.upgrade.sample;
 
 import android.app.Application;
 
-import com.allenliu.versionchecklib.UpgradeClient;
+import com.xukui.library.upgrade.UpgradeClient;
 
 public class Mapp extends Application {
 

@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.xukui.upgrade.sample.R;
-import com.allenliu.versionchecklib.bean.UpgradeInfo;
-import com.allenliu.versionchecklib.dialog.DownloadingDialog;
+import com.xukui.library.upgrade.bean.UpgradeInfo;
+import com.xukui.library.upgrade.dialog.DownloadingDialog;
 
 public class CustomDownloadingDialog extends Dialog implements DownloadingDialog {
 
