@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.view.View;
 import android.widget.Button;
 
 import com.allenliu.sample.R;
@@ -14,10 +15,10 @@ import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 public class CustomDownloadingDialog extends Dialog implements DownloadingDialog {
 
     private ContentLoadingProgressBar bar_progress;
+    private Button btn_cancel;
     private Button btn_install;
 
     private UpgradeInfo mUpgradeInfo;
-    private OnClickListener mOnInstallListener;
 
     public CustomDownloadingDialog(@NonNull Context context, UpgradeInfo upgradeInfo) {
         super(context, R.style.BaseDialog);
@@ -30,13 +31,10 @@ public class CustomDownloadingDialog extends Dialog implements DownloadingDialog
         setContentView(R.layout.dialog_custom_downloading);
 
         bar_progress = findViewById(R.id.bar_progress);
+        btn_cancel = findViewById(R.id.btn_cancel);
         btn_install = findViewById(R.id.btn_install);
 
-        btn_install.setOnClickListener(v -> {
-            if (mOnInstallListener != null) {
-                mOnInstallListener.onClick(CustomDownloadingDialog.this, btn_install.getId());
-            }
-        });
+        btn_cancel.setOnClickListener(v -> cancel());
     }
 
     @Override
@@ -45,8 +43,8 @@ public class CustomDownloadingDialog extends Dialog implements DownloadingDialog
     }
 
     @Override
-    public void setOnInstallListener(OnClickListener listener) {
-        mOnInstallListener = listener;
+    public void setOnInstallListener(View.OnClickListener listener) {
+        btn_install.setOnClickListener(listener);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.allenliu.versionchecklib.dialog;
 
 import android.content.DialogInterface;
+import android.view.View;
 
 public interface DownloadingDialog {
 
@@ -16,6 +17,6 @@ public interface DownloadingDialog {
 
     void showProgress(int progress);
 
-    void setOnInstallListener(DialogInterface.OnClickListener listener);
+    void setOnInstallListener(View.OnClickListener listener);
 
 }

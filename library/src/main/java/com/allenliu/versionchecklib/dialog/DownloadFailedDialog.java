@@ -1,6 +1,7 @@
 package com.allenliu.versionchecklib.dialog;
 
 import android.content.DialogInterface;
+import android.view.View;
 
 public interface DownloadFailedDialog {
 
@@ -14,6 +15,6 @@ public interface DownloadFailedDialog {
 
     void setOnDismissListener(DialogInterface.OnDismissListener listener);
 
-    void setOnConfirmListener(DialogInterface.OnClickListener listener);
+    void setOnConfirmListener(View.OnClickListener listener);
 
 }

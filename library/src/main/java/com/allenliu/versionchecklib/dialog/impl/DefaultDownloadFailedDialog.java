@@ -15,8 +15,6 @@ public class DefaultDownloadFailedDialog extends Dialog implements DownloadFaile
     private TextView tv_cancel;
     private TextView tv_confirm;
 
-    private OnClickListener mOnConfirmClickListener;
-
     public DefaultDownloadFailedDialog(@NonNull Context context) {
         super(context, R.style.versionCheckLib_BaseDialog);
     }
@@ -45,22 +43,11 @@ public class DefaultDownloadFailedDialog extends Dialog implements DownloadFaile
             }
 
         });
-
-        tv_confirm.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mOnConfirmClickListener != null) {
-                    mOnConfirmClickListener.onClick(DefaultDownloadFailedDialog.this, tv_confirm.getId());
-                }
-            }
-
-        });
     }
 
     @Override
-    public void setOnConfirmListener(OnClickListener listener) {
-        mOnConfirmClickListener = listener;
+    public void setOnConfirmListener(View.OnClickListener listener) {
+        tv_confirm.setOnClickListener(listener);
     }
 
     public static class Builder {

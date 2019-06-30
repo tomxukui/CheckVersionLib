@@ -19,8 +19,6 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
     private TextView tv_cancel;
     private TextView tv_install;
 
-    private OnClickListener mOnInstallListener;
-
     private boolean mForce;
 
     public DefaultDownloadingDialog(@NonNull Context context) {
@@ -51,17 +49,6 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
             }
 
         });
-
-        tv_install.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mOnInstallListener != null) {
-                    mOnInstallListener.onClick(DefaultDownloadingDialog.this, tv_install.getId());
-                }
-            }
-
-        });
     }
 
     private void setForce(boolean force) {
@@ -70,10 +57,6 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
     @Override
     public void showProgress(int progress) {
-        if (!isShowing()) {
-            show();
-        }
-
         if (bar_progress != null) {
             bar_progress.setProgress(progress);
         }
@@ -89,8 +72,8 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
     }
 
     @Override
-    public void setOnInstallListener(OnClickListener listener) {
-        mOnInstallListener = listener;
+    public void setOnInstallListener(View.OnClickListener listener) {
+        tv_install.setOnClickListener(listener);
     }
 
     public static class Builder {

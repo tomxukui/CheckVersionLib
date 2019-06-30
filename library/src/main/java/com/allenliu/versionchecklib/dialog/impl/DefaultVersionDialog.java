@@ -22,8 +22,6 @@ public class DefaultVersionDialog extends Dialog implements VersionDialog {
     private String mMessage;
     private boolean mForce;
 
-    private OnClickListener mConfirmClickListener;
-
     public DefaultVersionDialog(@NonNull Context context) {
         super(context, R.style.versionCheckLib_BaseDialog);
     }
@@ -61,17 +59,6 @@ public class DefaultVersionDialog extends Dialog implements VersionDialog {
             }
 
         });
-
-        tv_confirm.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mConfirmClickListener != null) {
-                    mConfirmClickListener.onClick(DefaultVersionDialog.this, tv_confirm.getId());
-                }
-            }
-
-        });
     }
 
     public void setTitle(String title) {
@@ -87,8 +74,8 @@ public class DefaultVersionDialog extends Dialog implements VersionDialog {
     }
 
     @Override
-    public void setOnConfirmListener(OnClickListener listener) {
-        mConfirmClickListener = listener;
+    public void setOnConfirmListener(View.OnClickListener listener) {
+        tv_confirm.setOnClickListener(listener);
     }
 
     public static class Builder {

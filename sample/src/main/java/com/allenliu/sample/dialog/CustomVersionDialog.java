@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ public class CustomVersionDialog extends Dialog implements VersionDialog {
     private Button btn_commit;
 
     private UpgradeInfo mUpgradeInfo;
-    private OnClickListener mOnConfirmListener;
 
     public CustomVersionDialog(@NonNull Context context, UpgradeInfo upgradeInfo) {
         super(context, R.style.BaseDialog);
@@ -36,16 +36,11 @@ public class CustomVersionDialog extends Dialog implements VersionDialog {
 
         tv_title.setText(mUpgradeInfo.getTitle());
         tv_msg.setText(mUpgradeInfo.getContent());
-        btn_commit.setOnClickListener(v -> {
-            if (mOnConfirmListener != null) {
-                mOnConfirmListener.onClick(CustomVersionDialog.this, btn_commit.getId());
-            }
-        });
     }
 
     @Override
-    public void setOnConfirmListener(OnClickListener listener) {
-        mOnConfirmListener = listener;
+    public void setOnConfirmListener(View.OnClickListener listener) {
+        btn_commit.setOnClickListener(listener);
     }
 
 }

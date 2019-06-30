@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
@@ -134,6 +135,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                         .force(data.isForce())
                         .create();
             }
+            mVersionDialog.show();
 
             mVersionDialog.setOnDismissListener(this);
             mVersionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -144,10 +146,10 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                 }
 
             });
-            mVersionDialog.setOnConfirmListener(new DialogInterface.OnClickListener() {
+            mVersionDialog.setOnConfirmListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.CONFIRM_UPGRADE));
                 }
 
@@ -187,6 +189,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                         .setForce(data.isForce())
                         .create();
             }
+            mDownloadingDialog.show();
 
             mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -196,10 +199,10 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                 }
 
             });
-            mDownloadingDialog.setOnInstallListener(new DialogInterface.OnClickListener() {
+            mDownloadingDialog.setOnInstallListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.DOWNLOAD_COMPLETE));
                 }
 
@@ -237,6 +240,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             if (mDownloadFailedDialog == null) {
                 mDownloadFailedDialog = new DefaultDownloadFailedDialog.Builder(this).create();
             }
+            mDownloadFailedDialog.show();
 
             mDownloadFailedDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -247,10 +251,10 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
             });
 
-            mDownloadFailedDialog.setOnConfirmListener(new DialogInterface.OnClickListener() {
+            mDownloadFailedDialog.setOnConfirmListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     EventBus.getDefault().post(new UpgradeEvent(UpgradeEvent.RETRY_DOWNLOAD));
                 }
 

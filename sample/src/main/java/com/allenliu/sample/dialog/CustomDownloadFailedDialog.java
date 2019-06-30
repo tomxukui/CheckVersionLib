@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.TextView;
 
 import com.allenliu.sample.R;
@@ -29,11 +30,13 @@ public class CustomDownloadFailedDialog extends Dialog implements DownloadFailed
 
         tv_cancel = findViewById(R.id.tv_cancel);
         tv_retry = findViewById(R.id.tv_retry);
+
+        tv_cancel.setOnClickListener(v -> cancel());
     }
 
     @Override
-    public void setOnConfirmListener(OnClickListener listener) {
-
+    public void setOnConfirmListener(View.OnClickListener listener) {
+        tv_retry.setOnClickListener(listener);
     }
 
 }
