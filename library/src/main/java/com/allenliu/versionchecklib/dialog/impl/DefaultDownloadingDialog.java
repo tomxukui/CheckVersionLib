@@ -57,6 +57,10 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
     @Override
     public void showProgress(int progress) {
+        if (!isShowing()) {
+            show();
+        }
+
         if (bar_progress != null) {
             bar_progress.setProgress(progress);
         }
