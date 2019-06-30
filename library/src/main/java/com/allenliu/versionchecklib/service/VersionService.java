@@ -28,8 +28,7 @@ import java.util.concurrent.Executors;
 
 public class VersionService extends Service {
 
-    public static DownloadBuilder builder;
-
+    private static DownloadBuilder mDownloadBuilder;
     private ExecutorService mExecutorService;
     private NotificationHelper notificationHelper;
 
@@ -49,11 +48,11 @@ public class VersionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mIsServiceAlive = false;
-
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+
+        mIsServiceAlive = false;
 
         if (notificationHelper != null) {
             notificationHelper.onDestroy();
@@ -77,17 +76,17 @@ public class VersionService extends Service {
      * 初始化
      */
     private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
-        }
-
-        if (builder == null) {
+        if (mDownloadBuilder == null) {
             UpgradeClient.getInstance().cancelAllMission();
             return;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
+        }
+
         mIsServiceAlive = true;
-        notificationHelper = new NotificationHelper(builder);
+        notificationHelper = new NotificationHelper(mDownloadBuilder);
 
         startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
 
@@ -149,7 +148,7 @@ public class VersionService extends Service {
      * 下载apk
      */
     private void downloadAPK() {
-        if (builder.isSilentDownload()) {
+        if (mDownloadBuilder.isSilentDownload()) {
             startDownloadApk();
 
         } else {
@@ -161,25 +160,25 @@ public class VersionService extends Service {
      * 安装apk
      */
     private void install() {
-        UpgradeUtil.installApk(builder.getApkFile());
+        UpgradeUtil.installApk(mDownloadBuilder.getApkFile());
     }
 
     @WorkerThread
     private void startDownloadApk() {
         //判断是否缓存并且是否强制重新下载
-        if (!builder.isForceRedownload()) {
-            if (UpgradeUtil.checkApkExist(builder.getApkFile())) {
+        if (!mDownloadBuilder.isForceRedownload()) {
+            if (UpgradeUtil.checkApkExist(mDownloadBuilder.getApkFile())) {
                 install();
                 return;
             }
         }
 
         //如果存在该文件, 则先删除
-        UpgradeUtil.deleteFile(builder.getApkFile());
+        UpgradeUtil.deleteFile(mDownloadBuilder.getApkFile());
 
         //准备下载apk
         mIsDownloadComplete = false;
-        UpgradeUtil.download(builder.getUpgradeInfo().getDownloadUrl(), builder.getApkDir(), builder.getApkName(), new OnCheckDownloadListener() {
+        UpgradeUtil.download(mDownloadBuilder.getUpgradeInfo().getDownloadUrl(), mDownloadBuilder.getApkDir(), mDownloadBuilder.getApkName(), new OnCheckDownloadListener() {
 
             @Override
             public void onCheckerStartDownload() {
@@ -187,7 +186,7 @@ public class VersionService extends Service {
                     return;
                 }
 
-                if (!builder.isSilentDownload()) {
+                if (!mDownloadBuilder.isSilentDownload()) {
                     notificationHelper.showNotification();
                     showDownloadingDialog();
                 }
@@ -199,13 +198,13 @@ public class VersionService extends Service {
                     return;
                 }
 
-                if (!builder.isSilentDownload()) {
+                if (!mDownloadBuilder.isSilentDownload()) {
                     notificationHelper.updateNotification(progress);
                     updateDownloadingDialogProgress(progress);
                 }
 
-                if (builder.getOnDownloadListener() != null) {
-                    builder.getOnDownloadListener().onDownloading(progress);
+                if (mDownloadBuilder.getOnDownloadListener() != null) {
+                    mDownloadBuilder.getOnDownloadListener().onDownloading(progress);
                 }
             }
 
@@ -217,12 +216,12 @@ public class VersionService extends Service {
 
                 mIsDownloadComplete = true;
 
-                if (!builder.isSilentDownload()) {
+                if (!mDownloadBuilder.isSilentDownload()) {
                     notificationHelper.showDownloadCompleteNotifcation(file);
                 }
 
-                if (builder.getOnDownloadListener() != null) {
-                    builder.getOnDownloadListener().onDownloadSuccess(file);
+                if (mDownloadBuilder.getOnDownloadListener() != null) {
+                    mDownloadBuilder.getOnDownloadListener().onDownloadSuccess(file);
                 }
 
                 install();
@@ -234,11 +233,11 @@ public class VersionService extends Service {
                     return;
                 }
 
-                if (builder.getOnDownloadListener() != null) {
-                    builder.getOnDownloadListener().onDownloadFail();
+                if (mDownloadBuilder.getOnDownloadListener() != null) {
+                    mDownloadBuilder.getOnDownloadListener().onDownloadFail();
                 }
 
-                if (!builder.isSilentDownload()) {
+                if (!mDownloadBuilder.isSilentDownload()) {
                     showDownloadFailedDialog();
                     notificationHelper.showDownloadFailedNotification();
 
@@ -272,8 +271,8 @@ public class VersionService extends Service {
             case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
                 UpgradeClient.getInstance().cancelAllMission();
 
-                if (builder.getOnCancelListener() != null) {
-                    builder.getOnCancelListener().onCancel(builder.getUpgradeInfo());
+                if (mDownloadBuilder.getOnCancelListener() != null) {
+                    mDownloadBuilder.getOnCancelListener().onCancel(mDownloadBuilder.getUpgradeInfo());
                 }
             }
             break;
@@ -301,7 +300,17 @@ public class VersionService extends Service {
         }
     }
 
-    public static void enqueueWork() {
+    public static DownloadBuilder getDownloadBuilder() {
+        return mDownloadBuilder;
+    }
+
+    public static void enqueueWork(DownloadBuilder downloadBuilder) {
+        if (downloadBuilder == null) {
+            return;
+        }
+
+        mDownloadBuilder = downloadBuilder;
+
         Context context = UpgradeClient.getInstance().getContext();
 
         Intent intent = new Intent(context, VersionService.class);

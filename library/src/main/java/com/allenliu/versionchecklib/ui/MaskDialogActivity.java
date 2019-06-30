@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
@@ -74,6 +76,13 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             return;
         }
 
+        DownloadBuilder downloadBuilder = VersionService.getDownloadBuilder();
+        if (downloadBuilder == null) {
+            UpgradeClient.getInstance().cancelAllMission();
+            finish();
+            return;
+        }
+
         String dialogType = intent.getStringExtra(EXTRA_DIALOG_TYPE);
         if (dialogType == null) {
             dialogType = "";
@@ -82,7 +91,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
         switch (dialogType) {
 
             case TYPE_VERSION: {
-                showVersionDialog();
+                showVersionDialog(downloadBuilder);
                 dismissDownloadingDialog();
                 dismissDownloadFailedDialog();
             }
@@ -90,7 +99,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
 
             case TYPE_DOWNLOADING: {
                 dismissVersionDialog();
-                showDownloadingDialog();
+                showDownloadingDialog(downloadBuilder);
                 dismissDownloadFailedDialog();
             }
             break;
@@ -98,7 +107,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
             case TYPE_DOWNLOAD_FAILED: {
                 dismissVersionDialog();
                 dismissDownloadingDialog();
-                showDownloadFailedDialog();
+                showDownloadFailedDialog(downloadBuilder);
             }
             break;
 
@@ -111,12 +120,12 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     /**
      * 显示版本信息对话框
      */
-    private void showVersionDialog() {
+    private void showVersionDialog(DownloadBuilder downloadBuilder) {
         if (mVersionDialog == null) {
-            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
+            UpgradeInfo data = downloadBuilder.getUpgradeInfo();
 
-            if (VersionService.builder.getOnCustomDialogListener() != null) {
-                mVersionDialog = VersionService.builder.getOnCustomDialogListener().getVersionDialog(this, data);
+            if (downloadBuilder.getOnCustomDialogListener() != null) {
+                mVersionDialog = downloadBuilder.getOnCustomDialogListener().getVersionDialog(this, data);
             }
             if (mVersionDialog == null) {
                 mVersionDialog = new DefaultVersionDialog.Builder(this)
@@ -166,12 +175,12 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     /**
      * 显示下载对话框
      */
-    private void showDownloadingDialog() {
+    private void showDownloadingDialog(DownloadBuilder downloadBuilder) {
         if (mDownloadingDialog == null) {
-            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
+            UpgradeInfo data = downloadBuilder.getUpgradeInfo();
 
-            if (VersionService.builder.getOnCustomDialogListener() != null) {
-                mDownloadingDialog = VersionService.builder.getOnCustomDialogListener().getDownloadingDialog(this, data);
+            if (downloadBuilder.getOnCustomDialogListener() != null) {
+                mDownloadingDialog = downloadBuilder.getOnCustomDialogListener().getDownloadingDialog(this, data);
             }
             if (mDownloadingDialog == null) {
                 mDownloadingDialog = new DefaultDownloadingDialog.Builder(this)
@@ -218,12 +227,12 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     /**
      * 显示下载失败对话框
      */
-    private void showDownloadFailedDialog() {
+    private void showDownloadFailedDialog(DownloadBuilder downloadBuilder) {
         if (mDownloadFailedDialog == null) {
-            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
+            UpgradeInfo data = downloadBuilder.getUpgradeInfo();
 
-            if (VersionService.builder.getOnCustomDialogListener() != null) {
-                mDownloadFailedDialog = VersionService.builder.getOnCustomDialogListener().getDownloadFailedDialog(this, data);
+            if (downloadBuilder.getOnCustomDialogListener() != null) {
+                mDownloadFailedDialog = downloadBuilder.getOnCustomDialogListener().getDownloadFailedDialog(this, data);
             }
             if (mDownloadFailedDialog == null) {
                 mDownloadFailedDialog = new DefaultDownloadFailedDialog.Builder(this).create();

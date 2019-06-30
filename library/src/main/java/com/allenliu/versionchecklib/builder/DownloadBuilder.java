@@ -216,8 +216,7 @@ public class DownloadBuilder {
             return;
         }
 
-        VersionService.builder = this;
-        VersionService.enqueueWork();
+        VersionService.enqueueWork(this);
     }
 
 }

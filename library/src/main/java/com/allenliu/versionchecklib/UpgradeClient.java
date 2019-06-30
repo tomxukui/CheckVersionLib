@@ -55,10 +55,14 @@ public class UpgradeClient {
      * 取消所有请求
      */
     public void cancelAllMission() {
-        HttpClient.getHttpClient().dispatcher().cancelAll();
-        Intent intent = new Intent(mContext, VersionService.class);
-        VersionService.builder = null;
-        mContext.stopService(intent);
+        try {
+            HttpClient.getHttpClient().dispatcher().cancelAll();
+            Intent intent = new Intent(mContext, VersionService.class);
+            mContext.stopService(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
