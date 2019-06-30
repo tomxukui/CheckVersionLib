@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -38,11 +37,8 @@ public class NotificationHelper {
     private String mTicker;
     private String mContentText;
 
-    private Context mContext;
-
     public NotificationHelper(NotificationBuilder notificationBuilder) {
-        mContext = UpgradeClient.getInstance().getContext();
-        mManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+        mManager = (NotificationManager) UpgradeClient.getInstance().getContext().getSystemService(NOTIFICATION_SERVICE);
         mCurrentProgress = 0;
 
         mSmallIcon = notificationBuilder.getIcon();
@@ -78,13 +74,10 @@ public class NotificationHelper {
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
             notificationChannel.enableLights(false);
             notificationChannel.enableVibration(false);
-            NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (manager != null) {
-                manager.createNotificationChannel(notificationChannel);
-            }
+            mManager.createNotificationChannel(notificationChannel);
         }
 
-        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
+        NotificationCompat.Builder notifcationBuilder = new NotificationCompat.Builder(UpgradeClient.getInstance().getContext(), CHANNEL_ID)
                 .setContentTitle(UpgradeUtil.getString(R.string.app_name))
                 .setContentText(UpgradeUtil.getString(R.string.upgrade_service_running))
                 .setSmallIcon(mSmallIcon)
@@ -92,7 +85,7 @@ public class NotificationHelper {
 
         if (mIsRingtone) {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone ringtone = RingtoneManager.getRingtone(mContext, notification);
+            Ringtone ringtone = RingtoneManager.getRingtone(UpgradeClient.getInstance().getContext(), notification);
             ringtone.play();
         }
 
@@ -151,7 +144,7 @@ public class NotificationHelper {
         mCurrentProgress = 100;
 
         Intent intent = UpgradeUtil.buildInstallApkIntent(file);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(UpgradeClient.getInstance().getContext(), 0, intent, 0);
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_install));
@@ -167,11 +160,11 @@ public class NotificationHelper {
     public void showDownloadFailedNotification() {
         mCurrentProgress = 0;
 
-        Intent intent = new MaskDialogActivity.Builder(mContext)
+        Intent intent = new MaskDialogActivity.Builder(UpgradeClient.getInstance().getContext())
                 .setDownloadFailedType()
                 .create()
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(UpgradeClient.getInstance().getContext(), 0, intent, FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
