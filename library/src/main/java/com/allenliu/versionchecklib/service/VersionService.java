@@ -41,7 +41,9 @@ public class VersionService extends Service {
             EventBus.getDefault().register(this);
         }
 
-        init();
+        if (!mIsServiceAlive) {
+            init();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -53,17 +55,18 @@ public class VersionService extends Service {
         }
 
         mIsServiceAlive = false;
+        stopForeground(true);
+        HttpClient.getHttpClient().dispatcher().cancelAll();
 
         if (notificationHelper != null) {
             notificationHelper.onDestroy();
         }
-
         if (mExecutorService != null) {
             mExecutorService.shutdown();
         }
-
-        stopForeground(true);
-        HttpClient.getHttpClient().dispatcher().cancelAll();
+        if (mDownloadBuilder != null) {
+            mDownloadBuilder = null;
+        }
     }
 
     @Nullable
@@ -81,11 +84,12 @@ public class VersionService extends Service {
             return;
         }
 
+        mIsServiceAlive = true;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
         }
 
-        mIsServiceAlive = true;
         notificationHelper = new NotificationHelper(mDownloadBuilder);
 
         startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
