@@ -55,7 +55,6 @@ public class VersionService extends Service {
         }
 
         mIsServiceAlive = false;
-        stopForeground(true);
         HttpClient.getHttpClient().dispatcher().cancelAll();
 
         if (mExecutorService != null) {
@@ -64,6 +63,8 @@ public class VersionService extends Service {
         if (mNotificationHelper != null) {
             mNotificationHelper.onDestroy();
             mNotificationHelper = null;
+
+            stopForeground(true);
         }
         if (mDownloadBuilder != null) {
             mDownloadBuilder = null;
@@ -87,11 +88,13 @@ public class VersionService extends Service {
 
         mIsServiceAlive = true;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
+        if (!mDownloadBuilder.isSilentDownload()) {
+            if (mDownloadBuilder.isShowNotification()) {
+                mNotificationHelper = new NotificationHelper(mDownloadBuilder.getNotificationBuilder());
+
+                startForeground(NotificationHelper.NOTIFICATION_ID, mNotificationHelper.createServiceNotification());
+            }
         }
-        mNotificationHelper = new NotificationHelper(mDownloadBuilder);
-        startForeground(NotificationHelper.NOTIFICATION_ID, mNotificationHelper.getServiceNotification());
 
         mExecutorService = Executors.newSingleThreadExecutor();
         mExecutorService.submit(new Runnable() {
@@ -189,11 +192,11 @@ public class VersionService extends Service {
                     return;
                 }
 
-                if (!mDownloadBuilder.isSilentDownload()) {
-                    if (mDownloadBuilder.isShowNotification()) {
-                        mNotificationHelper.showNotification();
-                    }
+                if (mNotificationHelper != null) {
+                    mNotificationHelper.showDownloadingNotification();
+                }
 
+                if (!mDownloadBuilder.isSilentDownload()) {
                     showDownloadingDialog();
                 }
             }
@@ -204,11 +207,11 @@ public class VersionService extends Service {
                     return;
                 }
 
-                if (!mDownloadBuilder.isSilentDownload()) {
-                    if (mDownloadBuilder.isShowNotification()) {
-                        mNotificationHelper.updateNotification(progress);
-                    }
+                if (mNotificationHelper != null) {
+                    mNotificationHelper.updateDownloadProgressNotification(progress);
+                }
 
+                if (!mDownloadBuilder.isSilentDownload()) {
                     updateDownloadingDialogProgress(progress);
                 }
 
@@ -225,10 +228,8 @@ public class VersionService extends Service {
 
                 mIsDownloadComplete = true;
 
-                if (!mDownloadBuilder.isSilentDownload()) {
-                    if (mDownloadBuilder.isShowNotification()) {
-                        mNotificationHelper.showDownloadCompleteNotifcation(file);
-                    }
+                if (mNotificationHelper != null) {
+                    mNotificationHelper.showDownloadCompleteNotifcation(file);
                 }
 
                 if (mDownloadBuilder.getOnDownloadListener() != null) {
@@ -248,11 +249,11 @@ public class VersionService extends Service {
                     mDownloadBuilder.getOnDownloadListener().onDownloadFail();
                 }
 
-                if (!mDownloadBuilder.isSilentDownload()) {
-                    if (mDownloadBuilder.isShowNotification()) {
-                        mNotificationHelper.showDownloadFailedNotification();
-                    }
+                if (mNotificationHelper != null) {
+                    mNotificationHelper.showDownloadFailedNotification();
+                }
 
+                if (!mDownloadBuilder.isSilentDownload()) {
                     showDownloadFailedDialog();
 
                 } else {
@@ -299,8 +300,8 @@ public class VersionService extends Service {
                 HttpClient.getHttpClient().dispatcher().cancelAll();
 
                 if (mIsDownloadComplete) {
-                    if (mDownloadBuilder.isShowNotification()) {
-                        mNotificationHelper.showNotification();
+                    if (mNotificationHelper != null) {
+                        mNotificationHelper.showServiceNotification();
                     }
 
                     showVersionDialog();
@@ -309,8 +310,8 @@ public class VersionService extends Service {
             break;
 
             case UpgradeEvent.CANCEL_RETRY_DOWNLOAD: {//用户取消重试
-                if (mDownloadBuilder.isShowNotification()) {
-                    mNotificationHelper.showNotification();
+                if (mNotificationHelper != null) {
+                    mNotificationHelper.showServiceNotification();
                 }
 
                 showVersionDialog();
