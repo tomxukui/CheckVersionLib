@@ -16,23 +16,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * @author AllenLiu
- * @version 1.0
- * @date 2019/4/30
- * @since 1.0
- */
 public class RequestVersionManager {
 
     private RequestVersionManager() {
     }
 
     public static RequestVersionManager getInstance() {
-        return Holder.instance;
+        return SingletonHolder.INSTANCE;
     }
 
-    public static class Holder {
-        static RequestVersionManager instance = new RequestVersionManager();
+    public static class SingletonHolder {
+        static final RequestVersionManager INSTANCE = new RequestVersionManager();
     }
 
     /**
