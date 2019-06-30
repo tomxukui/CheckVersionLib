@@ -5,15 +5,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.callback.OnCustomDialogListener;
 import com.allenliu.versionchecklib.callback.OnDownloadListener;
-import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.http.RequestVersionManager;
 import com.allenliu.versionchecklib.service.VersionService;
+import com.allenliu.versionchecklib.utils.UpgradeUtil;
+
+import java.io.File;
 
 public class DownloadBuilder {
 
@@ -24,13 +27,13 @@ public class DownloadBuilder {
     private OnCancelListener mOnCancelListener;
     private OnDownloadListener mOnDownloadListener;
 
-    private UpgradeInfo mUpgradeInfo;
-    private Integer mNewestVersionCode;
-    private String apkName;
+    private UpgradeInfo mUpgradeInfo;//版本更新信息
+    private String mApkDir;//存储apk的文件目录
+    private String mApkName;//apk的文件名称
+
     private boolean isSilentDownload;
-    private String downloadAPKPath;
+
     private boolean isForceRedownload;
-    private String downloadUrl;
     private boolean isShowDownloadingDialog;
     private boolean isShowNotification;
     private boolean isShowDownloadFailDialog;
@@ -53,7 +56,6 @@ public class DownloadBuilder {
 
     private void initialize() {
         isSilentDownload = false;
-        downloadAPKPath = UpgradeUtil.getDownloadDir();
         isForceRedownload = true;
         isShowDownloadingDialog = true;
         isShowNotification = true;
@@ -95,65 +97,43 @@ public class DownloadBuilder {
 
     /***********************************变量***************************************/
 
+    //版本更新信息
+    public UpgradeInfo getUpgradeInfo() {
+        return mUpgradeInfo;
+    }
+
     public DownloadBuilder setUpgradeInfo(@NonNull UpgradeInfo upgradeInfo) {
         mUpgradeInfo = upgradeInfo;
         return this;
     }
 
-    public UpgradeInfo getUpgradeInfo() {
-        return mUpgradeInfo;
+    //存储apk的文件目录
+    public String getApkDir() {
+        return mApkDir;
     }
 
-    public Integer getNewestVersionCode() {
-        return mNewestVersionCode;
-    }
-
-    public DownloadBuilder setNewestVersionCode(Integer newestVersionCode) {
-        mNewestVersionCode = newestVersionCode;
+    public DownloadBuilder setApkDir(String apkDir) {
+        mApkDir = apkDir;
         return this;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public DownloadBuilder setApkName(String apkName) {
-        this.apkName = apkName;
-        return this;
+    //获取apk的文件名称
+    public String getApkName() {
+        return mApkName;
     }
 
-
-
-
-
+    //获取apk的文件地址
+    public File getApkFile() {
+        return new File(mApkDir, mApkName);
+    }
 
     public DownloadBuilder setSilentDownload(boolean silentDownload) {
         isSilentDownload = silentDownload;
         return this;
     }
 
-    public DownloadBuilder setDownloadAPKPath(String downloadAPKPath) {
-        this.downloadAPKPath = downloadAPKPath;
-        return this;
-    }
-
     public DownloadBuilder setForceRedownload(boolean forceRedownload) {
         isForceRedownload = forceRedownload;
-        return this;
-    }
-
-    public DownloadBuilder setDownloadUrl(@NonNull String downloadUrl) {
-        this.downloadUrl = downloadUrl;
         return this;
     }
 
@@ -176,16 +156,9 @@ public class DownloadBuilder {
         return isSilentDownload;
     }
 
-    public String getDownloadAPKPath() {
-        return downloadAPKPath;
-    }
 
     public boolean isForceRedownload() {
         return isForceRedownload;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
     }
 
     public boolean isShowDownloadingDialog() {
@@ -201,7 +174,6 @@ public class DownloadBuilder {
     }
 
 
-
     public RequestVersionBuilder getRequestVersionBuilder() {
         return mRequestVersionBuilder;
     }
@@ -213,10 +185,6 @@ public class DownloadBuilder {
     public DownloadBuilder setNotificationBuilder(@NonNull NotificationBuilder notificationBuilder) {
         mNotificationBuilder = notificationBuilder;
         return this;
-    }
-
-    public String getApkName() {
-        return apkName;
     }
 
     public boolean isDirectDownload() {
@@ -231,8 +199,8 @@ public class DownloadBuilder {
     public void executeMission() {
         Context context = UpgradeClient.getInstance().getContext();
 
-        if (apkName == null) {
-            apkName = context.getPackageName();
+        if (TextUtils.isEmpty(mApkDir)) {
+            mApkDir = UpgradeUtil.getDefaultApkDir();
         }
 
         if (mNotificationBuilder == null) {
@@ -261,6 +229,22 @@ public class DownloadBuilder {
     }
 
     public void download() {
+        if (mUpgradeInfo == null) {
+            return;
+        }
+
+        String downloadUrl = mUpgradeInfo.getDownloadUrl();
+
+        if (TextUtils.isEmpty(downloadUrl)) {
+            return;
+        }
+
+        mApkName = UpgradeUtil.getApkName(downloadUrl);
+
+        if (mApkName == null) {
+            return;
+        }
+
         VersionService.builder = this;
         VersionService.enqueueWork();
     }

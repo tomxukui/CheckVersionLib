@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 
 import com.allenliu.versionchecklib.callback.OnCheckDownloadListener;
 import com.allenliu.versionchecklib.http.HttpClient;
@@ -17,6 +18,7 @@ import com.allenliu.versionchecklib.http.FileCallBack;
 import com.allenliu.versionchecklib.UpgradeClient;
 
 import java.io.File;
+import java.security.MessageDigest;
 
 import okhttp3.Call;
 import okhttp3.Request;
@@ -92,9 +94,9 @@ public class UpgradeUtil {
     }
 
     /**
-     * 获取下载的文件目录
+     * 获取默认下载的文件目录
      */
-    public static String getDownloadDir() {
+    public static String getDefaultApkDir() {
         Context context = UpgradeClient.getInstance().getContext();
 
         File file;
@@ -122,7 +124,7 @@ public class UpgradeUtil {
     /**
      * 下载apk
      */
-    public static void download(final String url, final String downloadApkPath, final String fileName, final OnCheckDownloadListener listener) {
+    public static void download(final String url, final String fileDir, final String fileName, final OnCheckDownloadListener listener) {
         if (url != null && !url.isEmpty()) {
             Handler handler = new Handler(Looper.getMainLooper());
 
@@ -143,7 +145,7 @@ public class UpgradeUtil {
 
             });
 
-            HttpClient.getHttpClient().newCall(request).enqueue(new FileCallBack(handler, downloadApkPath, fileName) {
+            HttpClient.getHttpClient().newCall(request).enqueue(new FileCallBack(handler, fileDir, fileName) {
 
                 @Override
                 public void onSuccess(final File file, Call call, Response response) {
@@ -196,23 +198,16 @@ public class UpgradeUtil {
 
     /**
      * 检查apk是否存在
-     *
-     * @param apkPath           apk文件存储地址
-     * @param newestVersionCode 开发者认为的最新的版本号
      */
-    public static boolean checkApkExist(String apkPath, Integer newestVersionCode) {
-        File file = new File(apkPath);
-
-        if (file.exists()) {
+    public static boolean checkApkExist(File file) {
+        if (file != null && file.isFile() && file.exists()) {//文件存在
             try {
                 PackageManager pm = UpgradeClient.getInstance().getContext().getPackageManager();
-                PackageInfo info = pm.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+                PackageInfo info = pm.getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
 
                 if (getPackageName().equalsIgnoreCase(info.packageName)) {//相同包名
                     if (getVersionCode() < info.versionCode) {//安装包的版本号大于当前app的版本号
-                        if (newestVersionCode != null && info.versionCode == newestVersionCode) {//传入的最新版本号等于安装包的版本号
-                            return true;
-                        }
+                        return true;
                     }
                 }
 
@@ -224,8 +219,58 @@ public class UpgradeUtil {
         return false;
     }
 
-    public static boolean checkApkExist(String apkPath) {
-        return checkApkExist(apkPath, null);
+    /**
+     * 32位MD5加密
+     */
+    private static String md5Decode(String content) {
+        if (content != null) {
+            try {
+                byte[] hash = MessageDigest.getInstance("MD5").digest(content.getBytes("UTF-8"));
+
+                //对生成的16字节数组进行补零操作
+                StringBuilder hex = new StringBuilder(hash.length * 2);
+                for (byte b : hash) {
+                    if ((b & 0xFF) < 0x10) {
+                        hex.append("0");
+                    }
+                    hex.append(Integer.toHexString(b & 0xFF));
+                }
+
+                return hex.toString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 获取apk名称
+     *
+     * @param downloadUrl 下载地址
+     */
+    public static String getApkName(String downloadUrl) {
+        if (downloadUrl == null) {
+            return null;
+        }
+
+        String name = md5Decode(downloadUrl);
+        if (TextUtils.isEmpty(name)) {//如果加密失败, 则用时间戳命名
+            name = "" + System.currentTimeMillis();
+        }
+
+        return name + ".apk";
+    }
+
+    /**
+     * 删除文件
+     */
+    public static void deleteFile(File file) {
+        if (file != null && file.isFile() && file.exists()) {
+            file.delete();
+        }
     }
 
 }

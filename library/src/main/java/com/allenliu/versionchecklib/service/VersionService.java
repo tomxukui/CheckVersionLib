@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.OnCheckDownloadListener;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
@@ -17,7 +16,6 @@ import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.utils.BuilderHelper;
 import com.allenliu.versionchecklib.utils.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +31,6 @@ public class VersionService extends Service {
     public static DownloadBuilder builder;
 
     private ExecutorService mExecutorService;
-    private BuilderHelper builderHelper;
     private NotificationHelper notificationHelper;
 
     private boolean mIsServiceAlive = false;//服务是否存在
@@ -56,10 +53,10 @@ public class VersionService extends Service {
             EventBus.getDefault().unregister(this);
         }
 
-        builderHelper = null;
         if (notificationHelper != null) {
             notificationHelper.onDestroy();
         }
+
         notificationHelper = null;
         mIsServiceAlive = false;
         if (mExecutorService != null) {
@@ -85,7 +82,6 @@ public class VersionService extends Service {
 
         if (builder != null) {
             mIsServiceAlive = true;
-            builderHelper = new BuilderHelper(builder);
             notificationHelper = new NotificationHelper(builder);
 
             startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
@@ -180,37 +176,25 @@ public class VersionService extends Service {
      * 安装apk
      */
     private void install() {
-        UpgradeUtil.installApk(getDownloadFile());
-    }
-
-    /**
-     * 获取下载的apk文件
-     */
-    private File getDownloadFile() {
-        return new File(builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
+        UpgradeUtil.installApk(builder.getApkFile());
     }
 
     @WorkerThread
     private void startDownloadApk() {
         //判断是否缓存并且是否强制重新下载
-        final String downloadPath = getDownloadFile().getAbsolutePath();
-        if (UpgradeUtil.checkApkExist(downloadPath, builder.getNewestVersionCode()) && !builder.isForceRedownload()) {
-            install();
-            return;
+        if (!builder.isForceRedownload()) {
+            if (UpgradeUtil.checkApkExist(builder.getApkFile())) {
+                install();
+                return;
+            }
         }
 
-        builderHelper.checkAndDeleteAPK();
-        String downloadUrl = builder.getDownloadUrl();
-        if (downloadUrl == null && builder.getUpgradeInfo() != null) {
-            downloadUrl = builder.getUpgradeInfo().getDownloadUrl();
-        }
-        if (downloadUrl == null) {
-            UpgradeClient.getInstance().cancelAllMission();
-            throw new RuntimeException("you must set a download url for download function using");
-        }
+        //如果存在该文件, 则先删除
+        UpgradeUtil.deleteFile(builder.getApkFile());
 
+        //准备下载apk
         mIsDownloadComplete = false;
-        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new OnCheckDownloadListener() {
+        UpgradeUtil.download(builder.getUpgradeInfo().getDownloadUrl(), builder.getApkDir(), builder.getApkName(), new OnCheckDownloadListener() {
 
             @Override
             public void onCheckerStartDownload() {
