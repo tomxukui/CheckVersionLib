@@ -1,6 +1,6 @@
 package com.allenliu.versionchecklib.builder;
 
-import com.allenliu.versionchecklib.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.OnRequestVersionListener;
 import com.allenliu.versionchecklib.http.HttpHeaders;
 import com.allenliu.versionchecklib.http.HttpParams;
 import com.allenliu.versionchecklib.http.HttpRequestMethod;
@@ -11,7 +11,7 @@ public class RequestVersionBuilder {
     private HttpParams mRequestParams;
     private String mRequestUrl;
     private HttpHeaders mHttpHeaders;
-    private RequestVersionListener mRequestVersionListener;
+    private OnRequestVersionListener mOnRequestVersionListener;
 
     public RequestVersionBuilder() {
         mRequestMethod = HttpRequestMethod.GET;
@@ -53,12 +53,13 @@ public class RequestVersionBuilder {
         return this;
     }
 
-    public RequestVersionListener getRequestVersionListener() {
-        return mRequestVersionListener;
+    public OnRequestVersionListener getOnRequestVersionListener() {
+        return mOnRequestVersionListener;
     }
 
-    public DownloadBuilder request(RequestVersionListener requestVersionListener) {
-        mRequestVersionListener = requestVersionListener;
+    public DownloadBuilder request(OnRequestVersionListener listener) {
+        mOnRequestVersionListener = listener;
+
         return new DownloadBuilder(this);
     }
 

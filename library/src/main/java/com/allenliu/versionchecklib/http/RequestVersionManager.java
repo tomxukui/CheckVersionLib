@@ -7,7 +7,7 @@ import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.OnRequestVersionListener;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -64,9 +64,9 @@ public class RequestVersionManager {
 
                 }
 
-                final RequestVersionListener requestVersionListener = requestVersionBuilder.getRequestVersionListener();
+                final OnRequestVersionListener onRequestVersionListener = requestVersionBuilder.getOnRequestVersionListener();
                 Handler handler = new Handler(Looper.getMainLooper());
-                if (requestVersionListener != null) {
+                if (onRequestVersionListener != null) {
                     try {
                         final Response response = client.newCall(request).execute();
                         if (response.isSuccessful()) {
@@ -75,7 +75,7 @@ public class RequestVersionManager {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    UpgradeInfo upgradeInfo = requestVersionListener.onRequestVersionSuccess(result);
+                                    UpgradeInfo upgradeInfo = onRequestVersionListener.onRequestVersionSuccess(result);
                                     if (upgradeInfo != null) {
                                         builder.setUpgradeInfo(upgradeInfo);
                                         builder.download();
@@ -87,7 +87,7 @@ public class RequestVersionManager {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    requestVersionListener.onRequestVersionFailure(response.message());
+                                    onRequestVersionListener.onRequestVersionFailure(response.message());
                                     UpgradeClient.getInstance().cancelAllMission();
                                 }
                             });
@@ -95,14 +95,14 @@ public class RequestVersionManager {
                     } catch (final IOException e) {
                         e.printStackTrace();
                         handler.post(new Runnable() {
+
                             @Override
                             public void run() {
-
-                                requestVersionListener.onRequestVersionFailure(e.getMessage());
+                                onRequestVersionListener.onRequestVersionFailure(e.getMessage());
                                 UpgradeClient.getInstance().cancelAllMission();
                             }
-                        });
 
+                        });
                     }
 
                 } else {
@@ -110,7 +110,6 @@ public class RequestVersionManager {
                 }
             }
         });
-
     }
 
 }
