@@ -295,7 +295,7 @@ public class VersionService extends Service {
                 UpgradeClient.getInstance().cancelAllMission();
 
                 if (builder.getOnCancelListener() != null) {
-                    builder.getOnCancelListener().onCancel();
+                    builder.getOnCancelListener().onCancel(builder.getUpgradeInfo());
                 }
             }
             break;

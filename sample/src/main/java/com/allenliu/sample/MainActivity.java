@@ -16,6 +16,7 @@ import com.allenliu.versionchecklib.builder.NotificationBuilder;
 import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.callback.RequestVersionListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -115,7 +116,13 @@ public class MainActivity extends AppCompatActivity {
             builder.setShowDownloadFailDialog(false);
         }
 
-        builder.setOnCancelListener(() -> Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_SHORT).show());
+        builder.setOnCancelListener(info -> {
+            Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_SHORT).show();
+
+            if (info.isForce()) {
+                finish();
+            }
+        });
 
         //更新界面选择
         switch (radioGroup.getCheckedRadioButtonId()) {
@@ -151,8 +158,12 @@ public class MainActivity extends AppCompatActivity {
         if (address != null && !"".equals(address)) {
             builder.setDownloadAPKPath(address);
         }
-        builder.setOnCancelListener(() -> {
+        builder.setOnCancelListener(info -> {
             Toast.makeText(MainActivity.this, "Cancel Hanlde", Toast.LENGTH_SHORT).show();
+
+            if (info.isForce()) {
+                finish();
+            }
         });
         builder.executeMission();
     }
