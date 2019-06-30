@@ -49,21 +49,20 @@
             android:textSize="12sp" />
 
         <RadioGroup
-            android:id="@+id/radioGroup2"
+            android:id="@+id/rg_downloading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn21"
+                android:id="@+id/rb_default_downloading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="默认界面" />
 
             <RadioButton
-                android:id="@+id/btn22"
-
+                android:id="@+id/rb_custom_downloading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自定义界面" />
@@ -80,21 +79,20 @@
             android:textSize="12sp" />
 
         <RadioGroup
-            android:id="@+id/radioGroup3"
+            android:id="@+id/rg_download_failed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn31"
+                android:id="@+id/btn_default_download_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="默认界面" />
 
             <RadioButton
-                android:id="@+id/btn32"
-
+                android:id="@+id/btn_custom_download_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自定义界面" />

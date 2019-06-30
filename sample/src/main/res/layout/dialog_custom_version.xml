@@ -13,8 +13,8 @@
         <ImageView
             android:layout_width="300dp"
             android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/custom_bg" />
+            android:background="@drawable/custom_bg"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,11 +24,11 @@
             android:padding="15dp">
 
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:text="@string/update_title"
                 android:textColor="@android:color/black"
                 android:textSize="13sp" />
 
@@ -37,18 +37,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/updatecontent"
                 android:textColor="#666"
                 android:textSize="12sp" />
 
             <Button
-                android:layout_marginTop="10dp"
-                android:id="@id/versionchecklib_version_dialog_commit"
+                android:id="@+id/btn_commit"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_corner"
                 android:text="升级"
                 android:textColor="@android:color/white" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </LinearLayout>

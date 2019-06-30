@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.allenliu.sample.dialog.CustomDownloadFailedDialog;
+import com.allenliu.sample.dialog.CustomDownloadingDialog;
 import com.allenliu.sample.dialog.CustomVersionDialog;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
@@ -24,6 +26,8 @@ import com.allenliu.versionchecklib.dialog.VersionDialog;
 public class MainActivity extends AppCompatActivity {
 
     private RadioGroup rg_version;
+    private RadioGroup rg_downloading;
+    private RadioGroup rg_download_failed;
 
     private EditText etAddress;
     private CheckBox forceUpdateCheckBox;
@@ -36,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox showDownloadingCheckBox;
     private CheckBox customNotificationCheckBox;
     private CheckBox showDownloadFailedCheckBox;
-    private RadioGroup radioGroup2, radioGroup3;
     private DownloadBuilder builder;
 
     @Override
@@ -48,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         rg_version = findViewById(R.id.rg_version);
+        rg_downloading = findViewById(R.id.rg_downloading);
+        rg_download_failed = findViewById(R.id.rg_download_failed);
 
         etAddress = findViewById(R.id.etAddress);
-        radioGroup2 = findViewById(R.id.radioGroup2);
-        radioGroup3 = findViewById(R.id.radioGroup3);
 
         silentDownloadCheckBox = findViewById(R.id.checkbox2);
         forceUpdateCheckBox = findViewById(R.id.checkbox);
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         return null;
 
                     case R.id.rb_custom_version:
-                        return new CustomVersionDialog(context);
+                        return new CustomVersionDialog(context, upgradeInfo);
 
                     default:
                         return null;
@@ -142,31 +145,38 @@ public class MainActivity extends AppCompatActivity {
             //下载进度界面选择
             @Override
             public DownloadingDialog getDownloadingDialog(Context context, UpgradeInfo upgradeInfo) {
-                return null;
+                switch (rg_downloading.getCheckedRadioButtonId()) {
+
+                    case R.id.rb_default_downloading:
+                        return null;
+
+                    case R.id.rb_custom_downloading:
+                        return new CustomDownloadingDialog(context, upgradeInfo);
+
+                    default:
+                        return null;
+
+                }
             }
 
             @Override
             public DownloadFailedDialog getDownloadFailedDialog(Context context, UpgradeInfo upgradeInfo) {
-                return null;
+                switch (rg_download_failed.getCheckedRadioButtonId()) {
+
+                    case R.id.btn_default_download_failed:
+                        return null;
+
+                    case R.id.btn_custom_download_failed:
+                        return new CustomDownloadFailedDialog(context, upgradeInfo);
+
+                    default:
+                        return null;
+
+                }
             }
 
         });
 
-
-
-        switch (radioGroup2.getCheckedRadioButtonId()) {
-            case R.id.btn21:
-                break;
-            case R.id.btn22:
-                break;
-        }
-        //下载失败界面选择
-        switch (radioGroup3.getCheckedRadioButtonId()) {
-            case R.id.btn31:
-                break;
-            case R.id.btn32:
-                break;
-        }
         //自定义下载路径
         builder.setApkDir(getExternalFilesDir("AllenVersionPath2").getAbsolutePath());
         String address = etAddress.getText().toString();
@@ -200,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private UpgradeInfo createUpgradeInfo() {
         UpgradeInfo data = new UpgradeInfo();
-        data.setTitle(getString(R.string.update_title));
+        data.setTitle("更新提示");
         data.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
         data.setContent(getString(R.string.updatecontent));
         return data;
