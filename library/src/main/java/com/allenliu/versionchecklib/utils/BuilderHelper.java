@@ -1,7 +1,6 @@
 package com.allenliu.versionchecklib.utils;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 
 import java.io.File;
