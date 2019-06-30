@@ -32,6 +32,21 @@ public class UpgradeUtil {
     }
 
     /**
+     * 获取版本号
+     */
+    public static int getVersionCode() {
+        try {
+            PackageManager pm = UpgradeClient.getInstance().getContext().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            return pi == null ? -1 : pi.versionCode;
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
      * 获取资源文字
      */
     public static String getString(@StringRes int resId) {
@@ -186,33 +201,27 @@ public class UpgradeUtil {
      * @param newestVersionCode 开发者认为的最新的版本号
      */
     public static boolean checkApkExist(String apkPath, Integer newestVersionCode) {
-        Context context = UpgradeClient.getInstance().getContext();
-
         File file = new File(apkPath);
-        boolean result = false;
 
         if (file.exists()) {
             try {
-                PackageManager pm = context.getPackageManager();
+                PackageManager pm = UpgradeClient.getInstance().getContext().getPackageManager();
                 PackageInfo info = pm.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
 
-                //判断安装包存在并且包名一样并且版本号不一样
-                if (context.getPackageName().equalsIgnoreCase(info.packageName) && context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode != info.versionCode) {
-                    //判断开发者传入的最新版本号是否大于缓存包的版本号，大于那么相当于没有缓存
-                    if (newestVersionCode != null && info.versionCode < newestVersionCode) {
-                        result = false;
-
-                    } else {
-                        result = true;
+                if (getPackageName().equalsIgnoreCase(info.packageName)) {//相同包名
+                    if (getVersionCode() < info.versionCode) {//安装包的版本号大于当前app的版本号
+                        if (newestVersionCode != null && info.versionCode == newestVersionCode) {//传入的最新版本号等于安装包的版本号
+                            return true;
+                        }
                     }
                 }
 
             } catch (Exception e) {
-                result = false;
+                e.printStackTrace();
             }
         }
 
-        return result;
+        return false;
     }
 
     public static boolean checkApkExist(String apkPath) {

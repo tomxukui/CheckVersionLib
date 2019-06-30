@@ -25,7 +25,7 @@ public class DownloadBuilder {
     private OnDownloadListener mOnDownloadListener;
 
     private UpgradeInfo mUpgradeInfo;
-    private Integer newestVersionCode;
+    private Integer mNewestVersionCode;
     private String apkName;
     private boolean isSilentDownload;
     private String downloadAPKPath;
@@ -39,6 +39,7 @@ public class DownloadBuilder {
     private DownloadBuilder(@Nullable RequestVersionBuilder requestVersionBuilder, @Nullable UpgradeInfo upgradeInfo) {
         mRequestVersionBuilder = requestVersionBuilder;
         mUpgradeInfo = upgradeInfo;
+
         initialize();
     }
 
@@ -92,10 +93,25 @@ public class DownloadBuilder {
         return this;
     }
 
+    /***********************************变量***************************************/
 
+    public DownloadBuilder setUpgradeInfo(@NonNull UpgradeInfo upgradeInfo) {
+        mUpgradeInfo = upgradeInfo;
+        return this;
+    }
 
+    public UpgradeInfo getUpgradeInfo() {
+        return mUpgradeInfo;
+    }
 
+    public Integer getNewestVersionCode() {
+        return mNewestVersionCode;
+    }
 
+    public DownloadBuilder setNewestVersionCode(Integer newestVersionCode) {
+        mNewestVersionCode = newestVersionCode;
+        return this;
+    }
 
 
 
@@ -116,29 +132,13 @@ public class DownloadBuilder {
         return this;
     }
 
-    public DownloadBuilder setUpgradeInfo(@NonNull UpgradeInfo upgradeInfo) {
-        mUpgradeInfo = upgradeInfo;
-        return this;
-    }
 
-    public UpgradeInfo getUpgradeInfo() {
-        return mUpgradeInfo;
-    }
 
 
 
 
     public DownloadBuilder setSilentDownload(boolean silentDownload) {
         isSilentDownload = silentDownload;
-        return this;
-    }
-
-    public Integer getNewestVersionCode() {
-        return newestVersionCode;
-    }
-
-    public DownloadBuilder setNewestVersionCode(Integer newestVersionCode) {
-        this.newestVersionCode = newestVersionCode;
         return this;
     }
 
