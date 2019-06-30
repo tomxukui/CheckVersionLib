@@ -30,10 +30,4 @@ public class BuilderHelper {
         }
     }
 
-    public void checkForceUpdate() {
-        if (builder.getForceUpdateListener() != null) {
-            builder.getForceUpdateListener().onShouldForceUpdate();
-        }
-    }
-
 }

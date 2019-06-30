@@ -14,7 +14,6 @@ import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
-import com.allenliu.versionchecklib.callback.ForceUpdateListener;
 import com.allenliu.versionchecklib.http.RequestVersionManager;
 import com.allenliu.versionchecklib.service.VersionService;
 
@@ -37,7 +36,6 @@ public class DownloadBuilder {
     private CustomDownloadingDialogListener customDownloadingDialogListener;
     private CustomVersionDialogListener customVersionDialogListener;
     private OnCancelListener onCancelListener;
-    private ForceUpdateListener forceUpdateListener;
     private UpgradeInfo mUpgradeInfo;
     private Integer newestVersionCode;
     private String apkName;
@@ -64,15 +62,6 @@ public class DownloadBuilder {
         isShowNotification = true;
         isDirectDownload = false;
         isShowDownloadFailDialog = true;
-    }
-
-    public ForceUpdateListener getForceUpdateListener() {
-        return forceUpdateListener;
-    }
-
-    public DownloadBuilder setForceUpdateListener(ForceUpdateListener forceUpdateListener) {
-        this.forceUpdateListener = forceUpdateListener;
-        return this;
     }
 
     public DownloadBuilder setApkName(String apkName) {

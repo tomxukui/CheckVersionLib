@@ -10,7 +10,6 @@ import android.support.annotation.WorkerThread;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
-import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
@@ -293,12 +292,10 @@ public class VersionService extends Service {
             break;
 
             case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
-                builderHelper.checkForceUpdate();
                 UpgradeClient.getInstance().cancelAllMission();
 
-                OnCancelListener listener = builder.getOnCancelListener();
-                if (listener != null) {
-                    listener.onCancel();
+                if (builder.getOnCancelListener() != null) {
+                    builder.getOnCancelListener().onCancel();
                 }
             }
             break;

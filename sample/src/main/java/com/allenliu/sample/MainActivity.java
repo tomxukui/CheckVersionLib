@@ -96,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
-        if (forceUpdateCheckBox.isChecked()) {
-            builder.setForceUpdateListener(() -> {
-                forceUpdate();
-            });
-        }
         if (silentDownloadCheckBox.isChecked())
             builder.setSilentDownload(true);
         if (forceDownloadCheckBox.isChecked())
@@ -171,16 +166,6 @@ public class MainActivity extends AppCompatActivity {
 //            return baseDialog;
             return null;
         };
-    }
-
-    /**
-     * 强制更新操作
-     * 通常关闭整个activity所有界面，这里方便测试直接关闭当前activity
-     */
-    private void forceUpdate() {
-
-        Toast.makeText(this, "force update handle", Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     /**

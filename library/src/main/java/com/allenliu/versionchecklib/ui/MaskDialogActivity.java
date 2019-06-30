@@ -178,7 +178,9 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                 mDownloadingDialog = customDownloadingDialogListener.getCustomDownloadingDialog(this, 0, data);
 
             } else {
-                mDownloadingDialog = new DefaultDownloadingDialog.Builder(this).create();
+                mDownloadingDialog = new DefaultDownloadingDialog.Builder(this)
+                        .setForce(data.isForce())
+                        .create();
             }
             mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 

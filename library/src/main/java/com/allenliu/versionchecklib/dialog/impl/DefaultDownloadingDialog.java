@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.service.VersionService;
 
 public class DefaultDownloadingDialog extends Dialog implements DownloadingDialog {
 
@@ -21,6 +20,8 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
     private TextView tv_install;
 
     private OnClickListener mOnInstallListener;
+
+    private boolean mForce;
 
     public DefaultDownloadingDialog(@NonNull Context context) {
         super(context, R.style.versionCheckLib_BaseDialog);
@@ -40,12 +41,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
     private void setView() {
         setCanceledOnTouchOutside(false);
-        if (VersionService.builder != null && VersionService.builder.getForceUpdateListener() != null) {
-            setCancelable(false);
-
-        } else {
-            setCancelable(true);
-        }
+        setCancelable(!mForce);
 
         tv_cancel.setOnClickListener(new View.OnClickListener() {
 
@@ -66,6 +62,10 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
             }
 
         });
+    }
+
+    private void setForce(boolean force) {
+        mForce = force;
     }
 
     @Override
@@ -99,6 +99,11 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
 
         public Builder(Context context) {
             mDialog = new DefaultDownloadingDialog(context);
+        }
+
+        public Builder setForce(boolean force) {
+            mDialog.setForce(force);
+            return this;
         }
 
         public DefaultDownloadingDialog create() {
