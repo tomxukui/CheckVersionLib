@@ -10,9 +10,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.UpgradeClient;
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
-import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         if (onlyDownloadCheckBox.isChecked()) {
             builder = UpgradeClient
                     .getInstance()
-                    .downloadOnly(crateUIData());
+                    .downloadOnly(createUpgradeInfo());
         } else {
             builder = UpgradeClient
                     .getInstance()
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
                     .request(new RequestVersionListener() {
                         @Nullable
                         @Override
-                        public UIData onRequestVersionSuccess(String result) {
+                        public UpgradeInfo onRequestVersionSuccess(String result) {
                             Toast.makeText(MainActivity.this, "request successful", Toast.LENGTH_SHORT).show();
-                            return crateUIData();
+                            return createUpgradeInfo();
                         }
 
                         @Override
@@ -235,12 +235,12 @@ public class MainActivity extends AppCompatActivity {
      * 这里可以构造UI需要显示的数据
      * UIData 内部是一个Bundle
      */
-    private UIData crateUIData() {
-        UIData uiData = UIData.create();
-        uiData.setTitle(getString(R.string.update_title));
-        uiData.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
-        uiData.setContent(getString(R.string.updatecontent));
-        return uiData;
+    private UpgradeInfo createUpgradeInfo() {
+        UpgradeInfo data = new UpgradeInfo();
+        data.setTitle(getString(R.string.update_title));
+        data.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
+        data.setContent(getString(R.string.updatecontent));
+        return data;
     }
 
     @Override

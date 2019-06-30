@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
@@ -35,13 +36,13 @@ public class DownloadBuilder {
     private CustomVersionDialogListener customVersionDialogListener;
     private OnCancelListener onCancelListener;
     private ForceUpdateListener forceUpdateListener;
-    private UIData versionBundle;
+    private UpgradeInfo mUpgradeInfo;
     private Integer newestVersionCode;
     private String apkName;
 
-    public DownloadBuilder(RequestVersionBuilder requestVersionBuilder, UIData versionBundle) {
+    public DownloadBuilder(RequestVersionBuilder requestVersionBuilder, UpgradeInfo upgradeInfo) {
         this.requestVersionBuilder = requestVersionBuilder;
-        this.versionBundle = versionBundle;
+        mUpgradeInfo = upgradeInfo;
         initialize();
     }
 
@@ -70,13 +71,13 @@ public class DownloadBuilder {
         return this;
     }
 
-    public DownloadBuilder setVersionBundle(@NonNull UIData versionBundle) {
-        this.versionBundle = versionBundle;
+    public DownloadBuilder setUpgradeInfo(@NonNull UpgradeInfo upgradeInfo) {
+        mUpgradeInfo = upgradeInfo;
         return this;
     }
 
-    public UIData getVersionBundle() {
-        return versionBundle;
+    public UpgradeInfo getUpgradeInfo() {
+        return mUpgradeInfo;
     }
 
     public DownloadBuilder setOnCancelListener(OnCancelListener cancelListener) {

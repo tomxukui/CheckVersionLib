@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
 import com.allenliu.versionchecklib.dialog.DownloadingDialog;
 import com.allenliu.versionchecklib.dialog.VersionDialog;
@@ -15,7 +16,6 @@ import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
-import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
@@ -116,7 +116,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
      */
     private void showVersionDialog() {
         if (mVersionDialog == null) {
-            UIData data = VersionService.builder.getVersionBundle();
+            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
             CustomVersionDialogListener customVersionDialogListener = VersionService.builder.getCustomVersionDialogListener();
 
             if (customVersionDialogListener != null) {
@@ -126,7 +126,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                 mVersionDialog = new DefaultVersionDialog.Builder(this)
                         .setTitle(data.getTitle())
                         .setMessage(data.getContent())
-                        .force(data.getForce())
+                        .force(data.isForce())
                         .create();
             }
             mVersionDialog.setOnDismissListener(this);
@@ -171,7 +171,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
      */
     private void showDownloadingDialog() {
         if (mDownloadingDialog == null) {
-            UIData data = VersionService.builder.getVersionBundle();
+            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
             CustomDownloadingDialogListener customDownloadingDialogListener = VersionService.builder.getCustomDownloadingDialogListener();
 
             if (customDownloadingDialogListener != null) {
@@ -221,7 +221,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
      */
     private void showDownloadFailedDialog() {
         if (mDownloadFailedDialog == null) {
-            UIData data = VersionService.builder.getVersionBundle();
+            UpgradeInfo data = VersionService.builder.getUpgradeInfo();
             CustomDownloadFailedListener customDownloadFailedListener = VersionService.builder.getCustomDownloadFailedListener();
 
             if (customDownloadFailedListener != null) {

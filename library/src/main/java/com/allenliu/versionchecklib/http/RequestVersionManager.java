@@ -4,9 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.allenliu.versionchecklib.UpgradeClient;
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.callback.RequestVersionListener;
 
 import java.io.IOException;
@@ -81,9 +81,9 @@ public class RequestVersionManager {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    UIData versionBundle = requestVersionListener.onRequestVersionSuccess(result);
-                                    if (versionBundle != null) {
-                                        builder.setVersionBundle(versionBundle);
+                                    UpgradeInfo upgradeInfo = requestVersionListener.onRequestVersionSuccess(result);
+                                    if (upgradeInfo != null) {
+                                        builder.setUpgradeInfo(upgradeInfo);
                                         builder.download();
                                     }
                                 }

@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.service.VersionService;
 
 public class UpgradeClient {
@@ -47,8 +47,8 @@ public class UpgradeClient {
     /**
      * 只下载请求
      */
-    public DownloadBuilder downloadOnly(@Nullable UIData versionBundle) {
-        return new DownloadBuilder(null, versionBundle);
+    public DownloadBuilder downloadOnly(@Nullable UpgradeInfo upgradeInfo) {
+        return new DownloadBuilder(null, upgradeInfo);
     }
 
     /**

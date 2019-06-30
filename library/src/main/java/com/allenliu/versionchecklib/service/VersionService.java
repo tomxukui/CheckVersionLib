@@ -159,7 +159,7 @@ public class VersionService extends Service {
      * 下载apk
      */
     private void downloadAPK() {
-        if (builder != null && builder.getVersionBundle() != null) {
+        if (builder != null && builder.getUpgradeInfo() != null) {
             if (builder.isDirectDownload()) {
                 startDownloadApk();
 
@@ -212,8 +212,8 @@ public class VersionService extends Service {
 
         builderHelper.checkAndDeleteAPK();
         String downloadUrl = builder.getDownloadUrl();
-        if (downloadUrl == null && builder.getVersionBundle() != null) {
-            downloadUrl = builder.getVersionBundle().getDownloadUrl();
+        if (downloadUrl == null && builder.getUpgradeInfo() != null) {
+            downloadUrl = builder.getUpgradeInfo().getDownloadUrl();
         }
         if (downloadUrl == null) {
             UpgradeClient.getInstance().cancelAllMission();

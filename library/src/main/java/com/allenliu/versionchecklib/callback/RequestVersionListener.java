@@ -2,7 +2,7 @@ package com.allenliu.versionchecklib.callback;
 
 import android.support.annotation.Nullable;
 
-import com.allenliu.versionchecklib.builder.UIData;
+import com.allenliu.versionchecklib.bean.UpgradeInfo;
 
 /**
  * Created by allenliu on 2018/1/12.
@@ -10,12 +10,12 @@ import com.allenliu.versionchecklib.builder.UIData;
 
 public interface RequestVersionListener {
     /**
-     *
      * @param result the result string of request
      * @return developer should return version bundle ,to use when showing UI page,could be null
      */
     @Nullable
-    UIData onRequestVersionSuccess(String result);
+    UpgradeInfo onRequestVersionSuccess(String result);
+
     void onRequestVersionFailure(String message);
 
 }
