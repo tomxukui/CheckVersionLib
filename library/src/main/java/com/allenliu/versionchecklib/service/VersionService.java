@@ -80,46 +80,44 @@ public class VersionService extends Service {
             startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
         }
 
-        if (builder != null) {
-            mIsServiceAlive = true;
-            notificationHelper = new NotificationHelper(builder);
-
-            startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
-
-            mExecutorService = Executors.newSingleThreadExecutor();
-            mExecutorService.submit(new Runnable() {
-
-                @Override
-                public void run() {
-                    downloadAPK();
-                }
-
-            });
-
-        } else {
+        if (builder == null) {
             UpgradeClient.getInstance().cancelAllMission();
+            return;
         }
+
+        mIsServiceAlive = true;
+        notificationHelper = new NotificationHelper(builder);
+
+        startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getServiceNotification());
+
+        mExecutorService = Executors.newSingleThreadExecutor();
+        mExecutorService.submit(new Runnable() {
+
+            @Override
+            public void run() {
+                downloadAPK();
+            }
+
+        });
     }
 
     /**
      * 显示版本对话框
      */
     private void showVersionDialog() {
-        if (builder != null) {
-            Intent intent = new MaskDialogActivity.Builder(this)
-                    .setVersionType()
-                    .create()
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new MaskDialogActivity.Builder(this)
+                .setVersionType()
+                .create()
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            startActivity(intent);
-        }
+        startActivity(intent);
     }
 
     /**
      * 显示下载对话框
      */
     private void showDownloadingDialog() {
-        if (builder != null && builder.isShowDownloadingDialog()) {
+        if (builder.isShowDownloadingDialog()) {
             Intent intent = new MaskDialogActivity.Builder(this)
                     .setDownloadingType()
                     .create()
@@ -140,35 +138,23 @@ public class VersionService extends Service {
      * 显示下载失败对话框
      */
     private void showDownloadFailedDialog() {
-        if (builder != null) {
-            Intent intent = new MaskDialogActivity.Builder(this)
-                    .setDownloadFailedType()
-                    .create()
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new MaskDialogActivity.Builder(this)
+                .setDownloadFailedType()
+                .create()
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            startActivity(intent);
-        }
+        startActivity(intent);
     }
 
     /**
      * 下载apk
      */
     private void downloadAPK() {
-        if (builder != null && builder.getUpgradeInfo() != null) {
-            if (builder.isDirectDownload()) {
-                startDownloadApk();
-
-            } else {
-                if (builder.isSilentDownload()) {
-                    startDownloadApk();
-
-                } else {
-                    showVersionDialog();
-                }
-            }
+        if (builder.isSilentDownload()) {
+            startDownloadApk();
 
         } else {
-            UpgradeClient.getInstance().cancelAllMission();
+            showVersionDialog();
         }
     }
 
@@ -206,14 +192,17 @@ public class VersionService extends Service {
 
             @Override
             public void onCheckerDownloading(int progress) {
-                if (mIsServiceAlive && builder != null) {
-                    if (!builder.isSilentDownload()) {
-                        notificationHelper.updateNotification(progress);
-                        updateDownloadingDialogProgress(progress);
-                    }
-                    if (builder.getOnDownloadListener() != null) {
-                        builder.getOnDownloadListener().onDownloading(progress);
-                    }
+                if (!mIsServiceAlive) {
+                    return;
+                }
+
+                if (!builder.isSilentDownload()) {
+                    notificationHelper.updateNotification(progress);
+                    updateDownloadingDialogProgress(progress);
+                }
+
+                if (builder.getOnDownloadListener() != null) {
+                    builder.getOnDownloadListener().onDownloading(progress);
                 }
             }
 
@@ -221,16 +210,19 @@ public class VersionService extends Service {
             public void onCheckerDownloadSuccess(File file) {
                 mIsDownloadComplete = true;
 
-                if (mIsServiceAlive) {
-                    if (!builder.isSilentDownload()) {
-                        notificationHelper.showDownloadCompleteNotifcation(file);
-                    }
-                    if (builder.getOnDownloadListener() != null) {
-                        builder.getOnDownloadListener().onDownloadSuccess(file);
-                    }
-
-                    install();
+                if (!mIsServiceAlive) {
+                    return;
                 }
+
+                if (!builder.isSilentDownload()) {
+                    notificationHelper.showDownloadCompleteNotifcation(file);
+                }
+
+                if (builder.getOnDownloadListener() != null) {
+                    builder.getOnDownloadListener().onDownloadSuccess(file);
+                }
+
+                install();
             }
 
             @Override

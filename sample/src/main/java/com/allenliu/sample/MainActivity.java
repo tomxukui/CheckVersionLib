@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         if (!showDownloadFailedCheckBox.isChecked())
             builder.setShowDownloadFailDialog(false);
         if (silentDownloadCheckBoxAndInstall.isChecked()) {
-            builder.setDirectDownload(true);
             builder.setShowNotification(false);
             builder.setShowDownloadingDialog(false);
             builder.setShowDownloadFailDialog(false);

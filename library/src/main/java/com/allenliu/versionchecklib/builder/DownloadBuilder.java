@@ -31,13 +31,13 @@ public class DownloadBuilder {
     private String mApkDir;//存储apk的文件目录
     private String mApkName;//apk的文件名称
 
-    private boolean isSilentDownload;
+    private boolean mIsForceRedownload;//是否强制下载(不使用缓存文件)
+    private boolean mIsSilentDownload;//是否静默下载
 
-    private boolean isForceRedownload;
+
     private boolean isShowDownloadingDialog;
     private boolean isShowNotification;
     private boolean isShowDownloadFailDialog;
-    private boolean isDirectDownload;
 
     private DownloadBuilder(@Nullable RequestVersionBuilder requestVersionBuilder, @Nullable UpgradeInfo upgradeInfo) {
         mRequestVersionBuilder = requestVersionBuilder;
@@ -55,66 +55,96 @@ public class DownloadBuilder {
     }
 
     private void initialize() {
-        isSilentDownload = false;
-        isForceRedownload = true;
+        mIsForceRedownload = true;
+        mIsSilentDownload = false;
+
+
+
         isShowDownloadingDialog = true;
         isShowNotification = true;
-        isDirectDownload = false;
         isShowDownloadFailDialog = true;
     }
 
-    /***********************************监听事件***************************************/
-
-    //自定义对话框的回调
-    public OnCustomDialogListener getOnCustomDialogListener() {
-        return mOnCustomDialogListener;
-    }
-
+    //设置自定义对话框的回调
     public DownloadBuilder setOnCustomDialogListener(@Nullable OnCustomDialogListener listener) {
         mOnCustomDialogListener = listener;
         return this;
     }
 
-    //取消更新的回调
-    public OnCancelListener getOnCancelListener() {
-        return mOnCancelListener;
-    }
-
+    //设置取消更新的回调
     public DownloadBuilder setOnCancelListener(OnCancelListener cancelListener) {
         mOnCancelListener = cancelListener;
         return this;
     }
 
-    //下载apk的回调
-    public OnDownloadListener getOnDownloadListener() {
-        return mOnDownloadListener;
-    }
-
+        //设置下载apk的回调
     public DownloadBuilder setOnDownloadListener(@Nullable OnDownloadListener listener) {
         mOnDownloadListener = listener;
         return this;
     }
 
-    /***********************************变量***************************************/
-
-    //版本更新信息
-    public UpgradeInfo getUpgradeInfo() {
-        return mUpgradeInfo;
-    }
-
+    //设置版本更新信息
     public DownloadBuilder setUpgradeInfo(@NonNull UpgradeInfo upgradeInfo) {
         mUpgradeInfo = upgradeInfo;
         return this;
     }
 
-    //存储apk的文件目录
-    public String getApkDir() {
-        return mApkDir;
-    }
-
+    //设置存储apk的文件目录
     public DownloadBuilder setApkDir(String apkDir) {
         mApkDir = apkDir;
         return this;
+    }
+
+    //设置是否强制下载
+    public DownloadBuilder setForceRedownload(boolean forceRedownload) {
+        mIsForceRedownload = forceRedownload;
+        return this;
+    }
+
+    //设置是否静默下载
+    public DownloadBuilder setSilentDownload(boolean silentDownload) {
+        mIsSilentDownload = silentDownload;
+        return this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //获取自定义对话框的回调
+    public OnCustomDialogListener getOnCustomDialogListener() {
+        return mOnCustomDialogListener;
+    }
+
+    //获取取消更新的回调
+    public OnCancelListener getOnCancelListener() {
+        return mOnCancelListener;
+    }
+
+    //获取下载apk的回调
+    public OnDownloadListener getOnDownloadListener() {
+        return mOnDownloadListener;
+    }
+
+    //获取版本更新信息
+    public UpgradeInfo getUpgradeInfo() {
+        return mUpgradeInfo;
+    }
+
+    //获取存储apk的文件目录
+    public String getApkDir() {
+        return mApkDir;
     }
 
     //获取apk的文件名称
@@ -127,15 +157,36 @@ public class DownloadBuilder {
         return new File(mApkDir, mApkName);
     }
 
-    public DownloadBuilder setSilentDownload(boolean silentDownload) {
-        isSilentDownload = silentDownload;
-        return this;
+    //获取是否强制下载
+    public boolean isForceRedownload() {
+        return mIsForceRedownload;
     }
 
-    public DownloadBuilder setForceRedownload(boolean forceRedownload) {
-        isForceRedownload = forceRedownload;
-        return this;
+    //获取是否静默下载
+    public boolean isSilentDownload() {
+        return mIsSilentDownload;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public DownloadBuilder setShowDownloadingDialog(boolean showDownloadingDialog) {
         isShowDownloadingDialog = showDownloadingDialog;
@@ -152,14 +203,8 @@ public class DownloadBuilder {
         return this;
     }
 
-    public boolean isSilentDownload() {
-        return isSilentDownload;
-    }
 
 
-    public boolean isForceRedownload() {
-        return isForceRedownload;
-    }
 
     public boolean isShowDownloadingDialog() {
         return isShowDownloadingDialog;
@@ -184,15 +229,6 @@ public class DownloadBuilder {
 
     public DownloadBuilder setNotificationBuilder(@NonNull NotificationBuilder notificationBuilder) {
         mNotificationBuilder = notificationBuilder;
-        return this;
-    }
-
-    public boolean isDirectDownload() {
-        return isDirectDownload;
-    }
-
-    public DownloadBuilder setDirectDownload(boolean directDownload) {
-        isDirectDownload = directDownload;
         return this;
     }
 
