@@ -263,6 +263,14 @@ public class VersionService extends Service {
         });
     }
 
+    private void cancelUpgrade() {
+        UpgradeClient.getInstance().cancelAllMission();
+
+        if (mDownloadBuilder.getOnCancelListener() != null) {
+            mDownloadBuilder.getOnCancelListener().onCancel(mDownloadBuilder.getUpgradeInfo());
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpgradeEvent(UpgradeEvent event) {
         switch (event.type) {
@@ -283,11 +291,7 @@ public class VersionService extends Service {
             break;
 
             case UpgradeEvent.CANCEL_UPGRADE: {//用户取消更新
-                UpgradeClient.getInstance().cancelAllMission();
-
-                if (mDownloadBuilder.getOnCancelListener() != null) {
-                    mDownloadBuilder.getOnCancelListener().onCancel(mDownloadBuilder.getUpgradeInfo());
-                }
+                cancelUpgrade();
             }
             break;
 
@@ -295,15 +299,20 @@ public class VersionService extends Service {
                 HttpClient.getHttpClient().dispatcher().cancelAll();
 
                 if (mIsDownloadComplete) {
-                    showVersionDialog();
+                    if (mDownloadBuilder.isShowNotification()) {
+                        mNotificationHelper.showNotification();
+                    }
 
-                } else {
-                    showDownloadFailedDialog();
+                    showVersionDialog();
                 }
             }
             break;
 
             case UpgradeEvent.CANCEL_RETRY_DOWNLOAD: {//用户取消重试
+                if (mDownloadBuilder.isShowNotification()) {
+                    mNotificationHelper.showNotification();
+                }
+
                 showVersionDialog();
             }
             break;
