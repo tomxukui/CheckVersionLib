@@ -64,7 +64,6 @@ public class DownloadBuilder {
         isShowNotification = true;
         isDirectDownload = false;
         isShowDownloadFailDialog = true;
-        mNotificationBuilder = NotificationBuilder.create();
     }
 
     public ForceUpdateListener getForceUpdateListener() {
@@ -240,6 +239,9 @@ public class DownloadBuilder {
             apkName = context.getPackageName();
         }
 
+        if (mNotificationBuilder == null) {
+            mNotificationBuilder = NotificationBuilder.create();
+        }
         if (mNotificationBuilder.getIcon() == 0) {
             final PackageManager pm = context.getPackageManager();
             final ApplicationInfo applicationInfo;
