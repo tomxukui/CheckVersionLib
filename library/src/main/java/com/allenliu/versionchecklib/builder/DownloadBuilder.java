@@ -20,6 +20,13 @@ public class DownloadBuilder {
     private RequestVersionBuilder mRequestVersionBuilder;
     private NotificationBuilder mNotificationBuilder;
 
+    private OnCustomDialogListener mOnCustomDialogListener;
+    private OnCancelListener mOnCancelListener;
+    private OnDownloadListener mOnDownloadListener;
+
+    private UpgradeInfo mUpgradeInfo;
+    private Integer newestVersionCode;
+    private String apkName;
     private boolean isSilentDownload;
     private String downloadAPKPath;
     private boolean isForceRedownload;
@@ -28,14 +35,6 @@ public class DownloadBuilder {
     private boolean isShowNotification;
     private boolean isShowDownloadFailDialog;
     private boolean isDirectDownload;
-
-    private OnCustomDialogListener mOnCustomDialogListener;
-    private OnCancelListener onCancelListener;
-    private OnDownloadListener mOnDownloadListener;
-
-    private UpgradeInfo mUpgradeInfo;
-    private Integer newestVersionCode;
-    private String apkName;
 
     private DownloadBuilder(@Nullable RequestVersionBuilder requestVersionBuilder, @Nullable UpgradeInfo upgradeInfo) {
         mRequestVersionBuilder = requestVersionBuilder;
@@ -61,8 +60,6 @@ public class DownloadBuilder {
         isShowDownloadFailDialog = true;
     }
 
-
-
     /***********************************监听事件***************************************/
 
     //自定义对话框的回调
@@ -77,11 +74,11 @@ public class DownloadBuilder {
 
     //取消更新的回调
     public OnCancelListener getOnCancelListener() {
-        return onCancelListener;
+        return mOnCancelListener;
     }
 
     public DownloadBuilder setOnCancelListener(OnCancelListener cancelListener) {
-        this.onCancelListener = cancelListener;
+        mOnCancelListener = cancelListener;
         return this;
     }
 
