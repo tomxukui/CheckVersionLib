@@ -1,5 +1,6 @@
 package com.allenliu.sample;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,16 +10,22 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.allenliu.sample.dialog.CustomVersionDialog;
 import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
+import com.allenliu.versionchecklib.callback.OnCustomDialogListener;
 import com.allenliu.versionchecklib.callback.OnRequestVersionListener;
+import com.allenliu.versionchecklib.dialog.DownloadFailedDialog;
+import com.allenliu.versionchecklib.dialog.DownloadingDialog;
+import com.allenliu.versionchecklib.dialog.VersionDialog;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RadioGroup rg_version;
+
     private EditText etAddress;
-    private RadioGroup radioGroup;
     private CheckBox forceUpdateCheckBox;
     private CheckBox silentDownloadCheckBox;
     private CheckBox silentDownloadCheckBoxAndInstall;
@@ -40,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        rg_version = findViewById(R.id.rg_version);
+
         etAddress = findViewById(R.id.etAddress);
-        radioGroup = findViewById(R.id.radioGroup);
         radioGroup2 = findViewById(R.id.radioGroup2);
         radioGroup3 = findViewById(R.id.radioGroup3);
 
@@ -54,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         customNotificationCheckBox = findViewById(R.id.checkbox7);
         showDownloadFailedCheckBox = findViewById(R.id.checkbox8);
         silentDownloadCheckBoxAndInstall = findViewById(R.id.checkbox20);
-
     }
 
     public void v2Click(View view) {
@@ -113,17 +120,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //更新界面选择
-        switch (radioGroup.getCheckedRadioButtonId()) {
-            case R.id.btn1:
-                break;
-            case R.id.btn2:
-                break;
-            case R.id.btn3:
-                break;
-        }
+        builder.setOnCustomDialogListener(new OnCustomDialogListener() {
 
-        //下载进度界面选择
+            //更新界面选择
+            @Override
+            public VersionDialog getVersionDialog(Context context, UpgradeInfo upgradeInfo) {
+                switch (rg_version.getCheckedRadioButtonId()) {
+
+                    case R.id.rb_default_version:
+                        return null;
+
+                    case R.id.rb_custom_version:
+                        return new CustomVersionDialog(context);
+
+                    default:
+                        return null;
+
+                }
+            }
+
+            //下载进度界面选择
+            @Override
+            public DownloadingDialog getDownloadingDialog(Context context, UpgradeInfo upgradeInfo) {
+                return null;
+            }
+
+            @Override
+            public DownloadFailedDialog getDownloadFailedDialog(Context context, UpgradeInfo upgradeInfo) {
+                return null;
+            }
+
+        });
+
+
+
         switch (radioGroup2.getCheckedRadioButtonId()) {
             case R.id.btn21:
                 break;

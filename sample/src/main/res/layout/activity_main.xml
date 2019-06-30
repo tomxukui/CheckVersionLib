@@ -6,43 +6,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:gravity="top|center_horizontal"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginTop="5dp"
             android:text="更新界面选择:"
             android:textColor="@android:color/black"
             android:textSize="12sp" />
 
         <RadioGroup
-            android:id="@+id/radioGroup"
+            android:id="@+id/rg_version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn1"
+                android:id="@+id/rb_default_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="默认界面" />
 
             <RadioButton
-                android:id="@+id/btn2"
+                android:id="@+id/rb_custom_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义界面1" />
-
-            <RadioButton
-                android:id="@+id/btn3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="自定义界面2" />
+                android:text="自定义界面" />
 
         </RadioGroup>
 
