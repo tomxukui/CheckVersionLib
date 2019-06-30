@@ -81,7 +81,7 @@ public class DefaultDownloadingDialog extends Dialog implements DownloadingDialo
             tv_status.setText(progress < 100 ? R.string.upgrade_downloading : R.string.upgrade_download_complete);
         }
         if (tv_progress != null) {
-            tv_progress.setText(String.format(UpgradeUtil.getString(R.string.versionchecklib_progress), progress));
+            tv_progress.setText(String.format(UpgradeUtil.getString(R.string.upgrade_progress), progress));
         }
         if (tv_install != null) {
             tv_install.setVisibility(progress < 100 ? View.GONE : View.VISIBLE);

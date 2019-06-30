@@ -81,7 +81,7 @@ public class VersionService extends Service {
      */
     private void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification(this));
+            startForeground(NotificationHelper.NOTIFICATION_ID, NotificationHelper.createSimpleNotification());
         }
 
         if (builder != null) {
@@ -198,7 +198,7 @@ public class VersionService extends Service {
      * 获取下载的apk文件
      */
     private File getDownloadFile() {
-        return new File(builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
+        return new File(builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()));
     }
 
     @WorkerThread
@@ -221,7 +221,7 @@ public class VersionService extends Service {
         }
 
         mIsDownloadComplete = false;
-        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.versionchecklib_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
+        UpgradeUtil.download(downloadUrl, builder.getDownloadAPKPath(), getString(R.string.upgrade_download_apkname, builder.getApkName() != null ? builder.getApkName() : getPackageName()), new DownloadListener() {
 
             @Override
             public void onCheckerStartDownload() {

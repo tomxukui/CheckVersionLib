@@ -20,7 +20,7 @@ public class BuilderHelper {
     public void checkAndDeleteAPK() {
         //判断versioncode与当前版本不一样的apk是否存在，存在删除安装包
         try {
-            File file = new File(builder.getDownloadAPKPath(), UpgradeUtil.getString(R.string.versionchecklib_download_apkname, UpgradeUtil.getPackageName()));
+            File file = new File(builder.getDownloadAPKPath(), UpgradeUtil.getString(R.string.upgrade_download_apkname, UpgradeUtil.getPackageName()));
 
             if (!UpgradeUtil.checkApkExist(file.getAbsolutePath())) {
                 file.delete();
