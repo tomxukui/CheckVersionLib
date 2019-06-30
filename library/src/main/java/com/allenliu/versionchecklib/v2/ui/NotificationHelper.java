@@ -15,7 +15,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
-import com.allenliu.versionchecklib.utils.VersionFileProvider;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -84,21 +83,13 @@ public class NotificationHelper {
      */
     public void showDownloadCompleteNotifcation(File file) {
         isDownloadSuccess = true;
+
         if (!versionBuilder.isShowNotification()) {
             return;
         }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        Uri uri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = VersionFileProvider.getUriForFile(mContext, mContext.getPackageName() + ".versionProvider", file);
-            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } else {
-            uri = Uri.fromFile(file);
-        }
-        //设置intent的类型
-        i.setDataAndType(uri,
-                "application/vnd.android.package-archive");
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i, 0);
+
+        Intent intent = UpgradeUtil.buildInstallApkIntent(file);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setContentText(mContext.getString(R.string.versionchecklib_download_finish));
         notificationBuilder.setProgress(100, 100, false);

@@ -46,13 +46,12 @@ public class UpgradeUtil {
     }
 
     /**
-     * 安装apk
+     * 创建安装apk的Intent
      */
-    public static void installApk(File file) {
+    public static Intent buildInstallApkIntent(File file) {
         Context context = AllenVersionChecker.getInstance().getContext();
 
         Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -63,7 +62,8 @@ public class UpgradeUtil {
             uri = Uri.fromFile(file);
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
-        context.startActivity(intent);
+
+        return intent;
     }
 
     /**
