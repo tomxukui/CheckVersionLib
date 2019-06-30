@@ -1,14 +1,12 @@
-package com.allenliu.versionchecklib.v2.net;
+package com.allenliu.versionchecklib.http;
 
 import android.os.Handler;
 import android.os.Looper;
 
-import com.allenliu.versionchecklib.http.AllenHttp;
-import com.allenliu.versionchecklib.http.HttpRequestMethod;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
+import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
 
 import java.io.IOException;
@@ -46,24 +44,24 @@ public class RequestVersionManager {
             @Override
             public void run() {
                 RequestVersionBuilder requestVersionBuilder = builder.getRequestVersionBuilder();
-                OkHttpClient client = AllenHttp.getHttpClient();
+                OkHttpClient client = HttpClient.getHttpClient();
                 HttpRequestMethod requestMethod = requestVersionBuilder.getRequestMethod();
                 Request request = null;
 
                 switch (requestMethod) {
 
                     case GET: {
-                        request = AllenHttp.get(requestVersionBuilder).build();
+                        request = HttpClient.get(requestVersionBuilder).build();
                     }
                     break;
 
                     case POST: {
-                        request = AllenHttp.post(requestVersionBuilder).build();
+                        request = HttpClient.post(requestVersionBuilder).build();
                     }
                     break;
 
                     case POSTJSON: {
-                        request = AllenHttp.postJson(requestVersionBuilder).build();
+                        request = HttpClient.postJson(requestVersionBuilder).build();
                     }
                     break;
 

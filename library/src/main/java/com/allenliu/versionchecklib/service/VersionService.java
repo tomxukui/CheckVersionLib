@@ -11,15 +11,15 @@ import android.support.annotation.WorkerThread;
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.callback.DownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
-import com.allenliu.versionchecklib.http.AllenHttp;
+import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.ui.BuilderHelper;
-import com.allenliu.versionchecklib.v2.ui.NotificationHelper;
+import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.utils.BuilderHelper;
+import com.allenliu.versionchecklib.utils.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +67,7 @@ public class VersionService extends Service {
             mExecutorService.shutdown();
         }
         stopForeground(true);
-        AllenHttp.getHttpClient().dispatcher().cancelAll();
+        HttpClient.getHttpClient().dispatcher().cancelAll();
     }
 
     @Nullable
@@ -314,7 +314,7 @@ public class VersionService extends Service {
             break;
 
             case UpgradeEvent.CANCEL_DOWNLOADING: {//用户取消下载
-                AllenHttp.getHttpClient().dispatcher().cancelAll();
+                HttpClient.getHttpClient().dispatcher().cancelAll();
 
                 if (mIsDownloadComplete) {
                     showVersionDialog();

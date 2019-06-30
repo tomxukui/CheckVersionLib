@@ -3,7 +3,7 @@ package com.allenliu.versionchecklib.v2.callback;
 import android.content.Context;
 
 import com.allenliu.versionchecklib.dialog.VersionDialog;
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.builder.UIData;
 
 /**
  * Created by allenliu on 2018/1/18.

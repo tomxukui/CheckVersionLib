@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.ui;
+package com.allenliu.versionchecklib.utils;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -16,10 +16,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.allenliu.versionchecklib.R;
 import com.allenliu.versionchecklib.ui.MaskDialogActivity;
-import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
+import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.builder.NotificationBuilder;
 
 import java.io.File;
 

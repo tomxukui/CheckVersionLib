@@ -1,6 +1,6 @@
 package com.allenliu.versionchecklib.http;
 
-import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
+import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class AllenHttp {
+public class HttpClient {
 
     private static OkHttpClient client;
 

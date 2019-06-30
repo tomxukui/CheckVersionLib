@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.builder;
+package com.allenliu.versionchecklib.builder;
 
 import android.os.Bundle;
 

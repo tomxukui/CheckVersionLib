@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.builder;
+package com.allenliu.versionchecklib.builder;
 
 /**
  * Created by allenliu on 2018/1/19.

@@ -2,7 +2,7 @@ package com.allenliu.sample;
 
 import android.app.Application;
 
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.AllenVersionChecker;
 
 public class Mapp extends Application {
 

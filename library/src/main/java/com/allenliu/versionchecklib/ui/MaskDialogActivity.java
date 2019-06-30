@@ -15,7 +15,7 @@ import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;

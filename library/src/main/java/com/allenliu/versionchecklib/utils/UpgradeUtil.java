@@ -12,9 +12,9 @@ import android.os.Looper;
 import android.support.annotation.StringRes;
 
 import com.allenliu.versionchecklib.callback.DownloadListener;
-import com.allenliu.versionchecklib.http.AllenHttp;
+import com.allenliu.versionchecklib.http.HttpClient;
 import com.allenliu.versionchecklib.http.FileCallBack;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.AllenVersionChecker;
 
 import java.io.File;
 
@@ -128,7 +128,7 @@ public class UpgradeUtil {
 
             });
 
-            AllenHttp.getHttpClient().newCall(request).enqueue(new FileCallBack(handler, downloadApkPath, fileName) {
+            HttpClient.getHttpClient().newCall(request).enqueue(new FileCallBack(handler, downloadApkPath, fileName) {
 
                 @Override
                 public void onSuccess(final File file, Call call, Response response) {

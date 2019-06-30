@@ -1,4 +1,4 @@
-package com.allenliu.versionchecklib.v2.builder;
+package com.allenliu.versionchecklib.builder;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -8,12 +8,12 @@ import android.support.annotation.NonNull;
 import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
-import com.allenliu.versionchecklib.v2.net.RequestVersionManager;
+import com.allenliu.versionchecklib.http.RequestVersionManager;
 import com.allenliu.versionchecklib.service.VersionService;
 
 public class DownloadBuilder {

@@ -2,7 +2,7 @@ package com.allenliu.versionchecklib.v2.callback;
 
 import android.support.annotation.Nullable;
 
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.builder.UIData;
 
 /**
  * Created by allenliu on 2018/1/12.

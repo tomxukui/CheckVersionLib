@@ -1,14 +1,14 @@
-package com.allenliu.versionchecklib.v2;
+package com.allenliu.versionchecklib;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import com.allenliu.versionchecklib.http.AllenHttp;
-import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.RequestVersionBuilder;
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.http.HttpClient;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.builder.RequestVersionBuilder;
+import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.service.VersionService;
 
 /**
@@ -56,7 +56,7 @@ public class AllenVersionChecker {
      * 取消所有请求
      */
     public void cancelAllMission() {
-        AllenHttp.getHttpClient().dispatcher().cancelAll();
+        HttpClient.getHttpClient().dispatcher().cancelAll();
         Intent intent = new Intent(mContext, VersionService.class);
         VersionService.builder = null;
         mContext.stopService(intent);

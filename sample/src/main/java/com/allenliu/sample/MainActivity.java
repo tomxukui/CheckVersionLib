@@ -9,10 +9,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
-import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
-import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.AllenVersionChecker;
+import com.allenliu.versionchecklib.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.builder.NotificationBuilder;
+import com.allenliu.versionchecklib.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
