@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.callback.ApkDownloadListener;
@@ -19,7 +20,7 @@ import com.allenliu.versionchecklib.service.VersionService;
 
 public class DownloadBuilder {
 
-    private RequestVersionBuilder requestVersionBuilder;
+    private RequestVersionBuilder mRequestVersionBuilder;
     private boolean isSilentDownload;
     private String downloadAPKPath;
     private boolean isForceRedownload;
@@ -40,10 +41,18 @@ public class DownloadBuilder {
     private Integer newestVersionCode;
     private String apkName;
 
-    public DownloadBuilder(RequestVersionBuilder requestVersionBuilder, UpgradeInfo upgradeInfo) {
-        this.requestVersionBuilder = requestVersionBuilder;
+    private DownloadBuilder(@Nullable RequestVersionBuilder requestVersionBuilder, @Nullable UpgradeInfo upgradeInfo) {
+        mRequestVersionBuilder = requestVersionBuilder;
         mUpgradeInfo = upgradeInfo;
         initialize();
+    }
+
+    public DownloadBuilder(@NonNull RequestVersionBuilder requestVersionBuilder) {
+        this(requestVersionBuilder, null);
+    }
+
+    public DownloadBuilder(@NonNull UpgradeInfo upgradeInfo) {
+        this(null, upgradeInfo);
     }
 
     private void initialize() {
@@ -198,7 +207,7 @@ public class DownloadBuilder {
     }
 
     public RequestVersionBuilder getRequestVersionBuilder() {
-        return requestVersionBuilder;
+        return mRequestVersionBuilder;
     }
 
     public NotificationBuilder getNotificationBuilder() {

@@ -48,7 +48,7 @@ public class UpgradeClient {
      * 只下载请求
      */
     public DownloadBuilder downloadOnly(@Nullable UpgradeInfo upgradeInfo) {
-        return new DownloadBuilder(null, upgradeInfo);
+        return new DownloadBuilder(upgradeInfo);
     }
 
     /**

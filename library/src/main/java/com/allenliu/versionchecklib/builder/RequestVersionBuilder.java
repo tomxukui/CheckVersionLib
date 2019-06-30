@@ -59,7 +59,7 @@ public class RequestVersionBuilder {
 
     public DownloadBuilder request(RequestVersionListener requestVersionListener) {
         mRequestVersionListener = requestVersionListener;
-        return new DownloadBuilder(this, null);
+        return new DownloadBuilder(this);
     }
 
 }
