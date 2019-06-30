@@ -97,18 +97,12 @@ public class MainActivity extends AppCompatActivity {
             builder.setSilentDownload(true);
         if (forceDownloadCheckBox.isChecked())
             builder.setForceRedownload(true);
-        if (!showDownloadingCheckBox.isChecked())
-            builder.setShowDownloadingDialog(false);
         if (!showNotificationCheckBox.isChecked())
             builder.setShowNotification(false);
         if (customNotificationCheckBox.isChecked())
             builder.setNotificationBuilder(createCustomNotification());
-        if (!showDownloadFailedCheckBox.isChecked())
-            builder.setShowDownloadFailDialog(false);
         if (silentDownloadCheckBoxAndInstall.isChecked()) {
             builder.setShowNotification(false);
-            builder.setShowDownloadingDialog(false);
-            builder.setShowDownloadFailDialog(false);
         }
 
         builder.setOnCancelListener(info -> {

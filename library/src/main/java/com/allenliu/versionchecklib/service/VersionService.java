@@ -117,14 +117,12 @@ public class VersionService extends Service {
      * 显示下载对话框
      */
     private void showDownloadingDialog() {
-        if (builder.isShowDownloadingDialog()) {
-            Intent intent = new MaskDialogActivity.Builder(this)
-                    .setDownloadingType()
-                    .create()
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new MaskDialogActivity.Builder(this)
+                .setDownloadingType()
+                .create()
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            startActivity(intent);
-        }
+        startActivity(intent);
     }
 
     /**
@@ -235,9 +233,8 @@ public class VersionService extends Service {
                 }
 
                 if (!builder.isSilentDownload()) {
-                    if (builder.isShowDownloadFailDialog()) {
-                        showDownloadFailedDialog();
-                    }
+                    showDownloadFailedDialog();
+
                     notificationHelper.showDownloadFailedNotification();
 
                 } else {

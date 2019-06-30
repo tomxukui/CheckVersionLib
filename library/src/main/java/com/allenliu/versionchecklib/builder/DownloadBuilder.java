@@ -33,11 +33,7 @@ public class DownloadBuilder {
 
     private boolean mIsForceRedownload;//是否强制下载(不使用缓存文件)
     private boolean mIsSilentDownload;//是否静默下载
-
-
-    private boolean isShowDownloadingDialog;
-    private boolean isShowNotification;
-    private boolean isShowDownloadFailDialog;
+    private boolean mIsShowNotification;//是否显示通知栏
 
     private DownloadBuilder(@Nullable RequestVersionBuilder requestVersionBuilder, @Nullable UpgradeInfo upgradeInfo) {
         mRequestVersionBuilder = requestVersionBuilder;
@@ -57,12 +53,7 @@ public class DownloadBuilder {
     private void initialize() {
         mIsForceRedownload = true;
         mIsSilentDownload = false;
-
-
-
-        isShowDownloadingDialog = true;
-        isShowNotification = true;
-        isShowDownloadFailDialog = true;
+        mIsShowNotification = true;
     }
 
     //设置自定义对话框的回调
@@ -77,7 +68,7 @@ public class DownloadBuilder {
         return this;
     }
 
-        //设置下载apk的回调
+    //设置下载apk的回调
     public DownloadBuilder setOnDownloadListener(@Nullable OnDownloadListener listener) {
         mOnDownloadListener = listener;
         return this;
@@ -107,20 +98,16 @@ public class DownloadBuilder {
         return this;
     }
 
+    //设置是否显示通知栏
+    public DownloadBuilder setShowNotification(boolean showNotification) {
+        mIsShowNotification = showNotification;
+        return this;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public DownloadBuilder setNotificationBuilder(@NonNull NotificationBuilder notificationBuilder) {
+        mNotificationBuilder = notificationBuilder;
+        return this;
+    }
 
     //获取自定义对话框的回调
     public OnCustomDialogListener getOnCustomDialogListener() {
@@ -164,60 +151,13 @@ public class DownloadBuilder {
 
     //获取是否静默下载
     public boolean isSilentDownload() {
-        return mIsSilentDownload;
+        return mIsSilentDownload && (mUpgradeInfo != null && mUpgradeInfo.isForce());
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public DownloadBuilder setShowDownloadingDialog(boolean showDownloadingDialog) {
-        isShowDownloadingDialog = showDownloadingDialog;
-        return this;
-    }
-
-    public DownloadBuilder setShowNotification(boolean showNotification) {
-        isShowNotification = showNotification;
-        return this;
-    }
-
-    public DownloadBuilder setShowDownloadFailDialog(boolean showDownloadFailDialog) {
-        isShowDownloadFailDialog = showDownloadFailDialog;
-        return this;
-    }
-
-
-
-
-    public boolean isShowDownloadingDialog() {
-        return isShowDownloadingDialog;
-    }
-
+    //获取是否显示通知栏
     public boolean isShowNotification() {
-        return isShowNotification;
+        return mIsShowNotification;
     }
-
-    public boolean isShowDownloadFailDialog() {
-        return isShowDownloadFailDialog;
-    }
-
 
     public RequestVersionBuilder getRequestVersionBuilder() {
         return mRequestVersionBuilder;
@@ -225,11 +165,6 @@ public class DownloadBuilder {
 
     public NotificationBuilder getNotificationBuilder() {
         return mNotificationBuilder;
-    }
-
-    public DownloadBuilder setNotificationBuilder(@NonNull NotificationBuilder notificationBuilder) {
-        mNotificationBuilder = notificationBuilder;
-        return this;
     }
 
     public void executeMission() {
@@ -256,7 +191,7 @@ public class DownloadBuilder {
             }
         }
 
-        if (checkWhetherNeedRequestVersion()) {
+        if (mRequestVersionBuilder != null) {
             RequestVersionManager.getInstance().requestVersion(this);
 
         } else {
@@ -283,10 +218,6 @@ public class DownloadBuilder {
 
         VersionService.builder = this;
         VersionService.enqueueWork();
-    }
-
-    private boolean checkWhetherNeedRequestVersion() {
-        return getRequestVersionBuilder() != null;
     }
 
 }
