@@ -13,7 +13,7 @@ import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
-import com.allenliu.versionchecklib.callback.RequestVersionListener;
+import com.allenliu.versionchecklib.callback.OnRequestVersionListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
                     .getInstance()
                     .requestVersion()
                     .setRequestUrl("https://www.baidu.com")
-                    .request(new RequestVersionListener() {
-                        @Nullable
+                    .request(new OnRequestVersionListener() {
+
                         @Override
                         public UpgradeInfo onRequestVersionSuccess(String result) {
                             Toast.makeText(MainActivity.this, "request successful", Toast.LENGTH_SHORT).show();
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onRequestVersionFailure(String message) {
                             Toast.makeText(MainActivity.this, "request failed", Toast.LENGTH_SHORT).show();
-
                         }
+
                     });
         }
         if (silentDownloadCheckBox.isChecked())
