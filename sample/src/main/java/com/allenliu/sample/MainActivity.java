@@ -13,10 +13,6 @@ import com.allenliu.versionchecklib.UpgradeClient;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.builder.NotificationBuilder;
-import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
-import com.allenliu.versionchecklib.callback.OnCancelListener;
 import com.allenliu.versionchecklib.callback.RequestVersionListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -129,10 +125,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn1:
                 break;
             case R.id.btn2:
-                builder.setCustomVersionDialogListener(createCustomDialogOne());
                 break;
             case R.id.btn3:
-                builder.setCustomVersionDialogListener(createCustomDialogTwo());
                 break;
         }
 
@@ -141,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn21:
                 break;
             case R.id.btn22:
-                builder.setCustomDownloadingDialogListener(createCustomDownloadingDialog());
                 break;
         }
         //下载失败界面选择
@@ -149,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn31:
                 break;
             case R.id.btn32:
-                builder.setCustomDownloadFailedListener(createCustomDownloadFailedDialog());
                 break;
         }
         //自定义下载路径
@@ -166,54 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.executeMission();
-    }
-
-    /**
-     * 务必用库传回来的context 实例化你的dialog
-     */
-    private CustomDownloadFailedListener createCustomDownloadFailedDialog() {
-        return (context, versionBundle) -> {
-//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_download_failed_dialog);
-//            return baseDialog;
-            return null;
-        };
-    }
-
-    /**
-     * 自定义下载中对话框，下载中会连续回调此方法 updateUI
-     * 务必用库传回来的context 实例化你的dialog
-     */
-    private CustomDownloadingDialogListener createCustomDownloadingDialog() {
-        return (context, progress, versionBundle) -> new CustomDownloadingDialog(context);
-    }
-
-    /**
-     * 务必用库传回来的context 实例化你的dialog
-     * 自定义的dialog UI参数展示，使用versionBundle
-     *
-     * @return
-     */
-    private CustomVersionDialogListener createCustomDialogOne() {
-        return (context, versionBundle) -> {
-//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_one_layout);
-//            TextView textView = baseDialog.findViewById(R.id.tv_msg);
-//            textView.setText(versionBundle.getContent());
-//            return baseDialog;
-
-            return null;
-        };
-    }
-
-    private CustomVersionDialogListener createCustomDialogTwo() {
-        return (context, versionBundle) -> {
-//            BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.custom_dialog_two_layout);
-//            TextView textView = baseDialog.findViewById(R.id.tv_msg);
-//            textView.setText(versionBundle.getContent());
-//            baseDialog.setCanceledOnTouchOutside(true);
-//            return baseDialog;
-
-            return null;
-        };
     }
 
     private NotificationBuilder createCustomNotification() {

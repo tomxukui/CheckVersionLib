@@ -16,9 +16,6 @@ import com.allenliu.versionchecklib.dialog.impl.DefaultDownloadingDialog;
 import com.allenliu.versionchecklib.dialog.impl.DefaultVersionDialog;
 import com.allenliu.versionchecklib.event.DownloadingProgressEvent;
 import com.allenliu.versionchecklib.event.UpgradeEvent;
-import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.service.VersionService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -117,18 +114,18 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     private void showVersionDialog() {
         if (mVersionDialog == null) {
             UpgradeInfo data = VersionService.builder.getUpgradeInfo();
-            CustomVersionDialogListener customVersionDialogListener = VersionService.builder.getCustomVersionDialogListener();
 
-            if (customVersionDialogListener != null) {
-                mVersionDialog = customVersionDialogListener.getCustomVersionDialog(this, data);
-
-            } else {
+            if (VersionService.builder.getOnCustomDialogListener() != null) {
+                mVersionDialog = VersionService.builder.getOnCustomDialogListener().getVersionDialog(this, data);
+            }
+            if (mVersionDialog == null) {
                 mVersionDialog = new DefaultVersionDialog.Builder(this)
                         .setTitle(data.getTitle())
                         .setMessage(data.getContent())
                         .force(data.isForce())
                         .create();
             }
+
             mVersionDialog.setOnDismissListener(this);
             mVersionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -172,16 +169,16 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     private void showDownloadingDialog() {
         if (mDownloadingDialog == null) {
             UpgradeInfo data = VersionService.builder.getUpgradeInfo();
-            CustomDownloadingDialogListener customDownloadingDialogListener = VersionService.builder.getCustomDownloadingDialogListener();
 
-            if (customDownloadingDialogListener != null) {
-                mDownloadingDialog = customDownloadingDialogListener.getCustomDownloadingDialog(this, 0, data);
-
-            } else {
+            if (VersionService.builder.getOnCustomDialogListener() != null) {
+                mDownloadingDialog = VersionService.builder.getOnCustomDialogListener().getDownloadingDialog(this, data);
+            }
+            if (mDownloadingDialog == null) {
                 mDownloadingDialog = new DefaultDownloadingDialog.Builder(this)
                         .setForce(data.isForce())
                         .create();
             }
+
             mDownloadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
@@ -224,14 +221,14 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
     private void showDownloadFailedDialog() {
         if (mDownloadFailedDialog == null) {
             UpgradeInfo data = VersionService.builder.getUpgradeInfo();
-            CustomDownloadFailedListener customDownloadFailedListener = VersionService.builder.getCustomDownloadFailedListener();
 
-            if (customDownloadFailedListener != null) {
-                mDownloadFailedDialog = customDownloadFailedListener.getCustomDownloadFailed(this, data);
-
-            } else {
+            if (VersionService.builder.getOnCustomDialogListener() != null) {
+                mDownloadFailedDialog = VersionService.builder.getOnCustomDialogListener().getDownloadFailedDialog(this, data);
+            }
+            if (mDownloadFailedDialog == null) {
                 mDownloadFailedDialog = new DefaultDownloadFailedDialog.Builder(this).create();
             }
+
             mDownloadFailedDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
@@ -240,6 +237,7 @@ public class MaskDialogActivity extends AppCompatActivity implements DialogInter
                 }
 
             });
+
             mDownloadFailedDialog.setOnConfirmListener(new DialogInterface.OnClickListener() {
 
                 @Override

@@ -9,11 +9,9 @@ import android.support.annotation.Nullable;
 import com.allenliu.versionchecklib.bean.UpgradeInfo;
 import com.allenliu.versionchecklib.callback.ApkDownloadListener;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
+import com.allenliu.versionchecklib.callback.OnCustomDialogListener;
 import com.allenliu.versionchecklib.utils.UpgradeUtil;
 import com.allenliu.versionchecklib.UpgradeClient;
-import com.allenliu.versionchecklib.callback.CustomDownloadFailedListener;
-import com.allenliu.versionchecklib.callback.CustomDownloadingDialogListener;
-import com.allenliu.versionchecklib.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.http.RequestVersionManager;
 import com.allenliu.versionchecklib.service.VersionService;
 
@@ -32,9 +30,7 @@ public class DownloadBuilder {
     private boolean isDirectDownload;
     private ApkDownloadListener apkDownloadListener;
 
-    private CustomDownloadFailedListener customDownloadFailedListener;
-    private CustomDownloadingDialogListener customDownloadingDialogListener;
-    private CustomVersionDialogListener customVersionDialogListener;
+    private OnCustomDialogListener mOnCustomDialogListener;
     private OnCancelListener onCancelListener;
     private UpgradeInfo mUpgradeInfo;
     private Integer newestVersionCode;
@@ -83,18 +79,12 @@ public class DownloadBuilder {
         return this;
     }
 
-    public DownloadBuilder setCustomDownloadFailedListener(CustomDownloadFailedListener customDownloadFailedListener) {
-        this.customDownloadFailedListener = customDownloadFailedListener;
-        return this;
+    public OnCustomDialogListener getOnCustomDialogListener() {
+        return mOnCustomDialogListener;
     }
 
-    public DownloadBuilder setCustomDownloadingDialogListener(CustomDownloadingDialogListener customDownloadingDialogListener) {
-        this.customDownloadingDialogListener = customDownloadingDialogListener;
-        return this;
-    }
-
-    public DownloadBuilder setCustomVersionDialogListener(CustomVersionDialogListener customVersionDialogListener) {
-        this.customVersionDialogListener = customVersionDialogListener;
+    public DownloadBuilder setOnCustomDialogListener(@Nullable OnCustomDialogListener listener) {
+        mOnCustomDialogListener = listener;
         return this;
     }
 
@@ -179,20 +169,8 @@ public class DownloadBuilder {
         return apkDownloadListener;
     }
 
-    public CustomDownloadFailedListener getCustomDownloadFailedListener() {
-        return customDownloadFailedListener;
-    }
-
     public OnCancelListener getOnCancelListener() {
         return onCancelListener;
-    }
-
-    public CustomDownloadingDialogListener getCustomDownloadingDialogListener() {
-        return customDownloadingDialogListener;
-    }
-
-    public CustomVersionDialogListener getCustomVersionDialogListener() {
-        return customVersionDialogListener;
     }
 
     public RequestVersionBuilder getRequestVersionBuilder() {
