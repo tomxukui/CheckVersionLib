@@ -1,67 +1,63 @@
 package com.allenliu.versionchecklib.builder;
 
-/**
- * Created by allenliu on 2018/1/19.
- */
-
 public class NotificationBuilder {
 
-    private int icon;
-    private String contentTitle;
-    private String ticker;
-    private String contentText;
-    private boolean isRingtone;
+    private int mIcon;//图标
+    private String mContentTitle;//标题
+    private String mTicker;
+    private String mContentText;//内容
+    private boolean mIsRingtone;//是否响铃
 
     public static NotificationBuilder create() {
         return new NotificationBuilder();
     }
 
     private NotificationBuilder() {
-        isRingtone = false;
+        mIsRingtone = false;
     }
 
     public int getIcon() {
-        return icon;
+        return mIcon;
     }
 
     public NotificationBuilder setIcon(int icon) {
-        this.icon = icon;
+        mIcon = icon;
         return this;
     }
 
     public String getContentTitle() {
-        return contentTitle;
+        return mContentTitle;
     }
 
     public NotificationBuilder setContentTitle(String contentTitle) {
-        this.contentTitle = contentTitle;
+        mContentTitle = contentTitle;
         return this;
     }
 
     public String getTicker() {
-        return ticker;
+        return mTicker;
     }
 
     public NotificationBuilder setTicker(String ticker) {
-        this.ticker = ticker;
+        mTicker = ticker;
         return this;
     }
 
     public String getContentText() {
-        return contentText;
+        return mContentText;
     }
 
     public NotificationBuilder setContentText(String contentText) {
-        this.contentText = contentText;
+        mContentText = contentText;
         return this;
     }
 
     public boolean isRingtone() {
-        return isRingtone;
+        return mIsRingtone;
     }
 
     public NotificationBuilder setRingtone(boolean ringtone) {
-        isRingtone = ringtone;
+        mIsRingtone = ringtone;
         return this;
     }
 
