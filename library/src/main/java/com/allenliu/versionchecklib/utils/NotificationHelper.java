@@ -118,6 +118,8 @@ public class NotificationHelper {
      * 显示下载的通知栏
      */
     public void showDownloadingNotification() {
+        mCurrentProgress = 0;
+
         mBuilder.setContentTitle(mContentTitle);
         mBuilder.setTicker(mTicker);
         mBuilder.setContentText(String.format(mContentText, 0));
@@ -146,12 +148,14 @@ public class NotificationHelper {
      * 显示下载完成的通知
      */
     public void showDownloadCompleteNotifcation(File file) {
+        mCurrentProgress = 100;
+
         Intent intent = UpgradeUtil.buildInstallApkIntent(file);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_install));
-        mBuilder.setProgress(100, 100, false);
+        mBuilder.setProgress(100, mCurrentProgress, false);
 
         mManager.cancelAll();
         mManager.notify(NOTIFICATION_ID, mBuilder.build());
@@ -161,6 +165,8 @@ public class NotificationHelper {
      * 显示下载失败的通知
      */
     public void showDownloadFailedNotification() {
+        mCurrentProgress = 0;
+
         Intent intent = new MaskDialogActivity.Builder(mContext)
                 .setDownloadFailedType()
                 .create()
@@ -169,7 +175,7 @@ public class NotificationHelper {
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setContentText(UpgradeUtil.getString(R.string.upgrade_download_fail_retry));
-        mBuilder.setProgress(100, 0, false);
+        mBuilder.setProgress(100, mCurrentProgress, false);
 
         mManager.cancelAll();
         mManager.notify(NOTIFICATION_ID, mBuilder.build());
@@ -177,12 +183,7 @@ public class NotificationHelper {
 
     public void onDestroy() {
         if (mManager != null) {
-            try {
-                mManager.cancel(NOTIFICATION_ID);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            mManager.cancel(NOTIFICATION_ID);
         }
     }
 

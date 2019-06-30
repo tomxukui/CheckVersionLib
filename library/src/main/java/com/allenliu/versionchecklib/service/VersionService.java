@@ -60,12 +60,19 @@ public class VersionService extends Service {
         if (mExecutorService != null) {
             mExecutorService.shutdown();
         }
-        if (mNotificationHelper != null) {
-            mNotificationHelper.onDestroy();
-            mNotificationHelper = null;
 
-            stopForeground(true);
+        if (mNotificationHelper != null) {
+            try {
+                mNotificationHelper.onDestroy();
+                stopForeground(true);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mNotificationHelper = null;
         }
+
         if (mDownloadBuilder != null) {
             mDownloadBuilder = null;
         }
